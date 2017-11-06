@@ -22,10 +22,10 @@ class memberregistration extends Model
    public function bank() {
     return $this->hasMany('App\bank','userId','userId');
    }
-use SoftDeletes;
+   use SoftDeletes;
    protected $table='memberregistrations';
 
     protected $dates = ['deleted_at'];
-   
+     
 
 }
