@@ -8,16 +8,16 @@ class memberregistration extends Model
 { 
     
    public function country() {
-    return $this->belongsTo('App\Country','countryId','id');
+    return $this->belongsTo('App\country','countryId','id');
    }
    public function address() {
-    return $this->hasMany('App\Address','userId','userId');
+    return $this->hasMany('App\address','userId','userId');
    }
    public function tcnmerge() {
     return $this->hasMany('App\tcnrequest','userId','userId');
    }
    public function proof() {
-    return $this->belongsTo('App\Proofs','userId','userId');
+    return $this->belongsTo('App\proofs','userId','userId');
    }
    public function bank() {
     return $this->hasMany('App\bank','userId','userId');

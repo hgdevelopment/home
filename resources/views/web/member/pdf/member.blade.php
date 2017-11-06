@@ -127,7 +127,7 @@ page-break-after: always;
             <td>CASTE</td>
             <th>: {{ucfirst($memberregistration->caste)}}</th>
             <td>NATIONALITY</td>
-            <th>: {{-- {{ucfirst($memberregistration->country->countryName)}} --}}</th>
+            <th>: {{ucfirst($memberregistration->country->countryName)}}</th>
           </tr>
           <tr><td></td><td></td></tr>
           <tr>
