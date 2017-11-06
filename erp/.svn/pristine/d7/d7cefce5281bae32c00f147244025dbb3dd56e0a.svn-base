@@ -1,0 +1,129 @@
+@extends('layout.erp')
+@section('banner')
+<div class="col-lg-12" align="center" style="background-color:#ffcf29">
+   <img src="{{url('/')}}/new_heading.png" class="img-responsive">
+</div>
+@endsection
+@section('sidebar')
+@include('partial.header')
+@include('partial.aside')
+@endsection
+@section('body')
+<style type="text/css">
+  .sticky{
+    background: #eaffe4;
+    margin: 10px;
+    box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.23);
+    padding: 5px;
+  }
+</style>
+<div class="bg-light lter b-b wrapper-md">
+   <h1 class="m-n font-thin h3">Benefit Declaration</h1>
+</div>
+
+@foreach($tcnmaster as $tcnmasters)
+    <div class="col-md-3 sticky" id="tcndiv{{$tcnmasters->id}}"><img style="float: right" src="https://png.icons8.com/pin/office/30" title="Pin" width="20" height="20">
+
+        <h4 class="font-thin m-t-none m-b">{{$tcnmasters->tcnType}}</h4>
+        <div class="">
+            <div class="">
+                <span>INR: {{$tcnmasters->inr}}</span>
+            </div>
+            <div class="">
+                <span>AED: {{$tcnmasters->aed}}</span>
+            </div>
+            <div class="">
+                <span>SAR: {{$tcnmasters->sar}}</span>
+            </div>
+            <div class="">
+                <span>CAD: {{$tcnmasters->cad}}</span>
+            </div>
+            <div class="">
+                <span>USD: {{$tcnmasters->usd}}</span>
+            </div>
+
+            <div class="">
+                <span>Locking period: {{$tcnmasters->benefitLockingDuration}}</span>
+            </div>
+            <br>
+
+            <a class="btn btn-success" id='tcn{{$tcnmasters->id}}'>Generate</a>
+        </div>
+
+
+
+<div class="col-md-12" id="tcn{{$tcnmasters->id}}show">
+<form action="{{URL::to('/')}}/admin/benefit/add" method="post" id="form{{$tcnmasters->id}}">
+{{ csrf_field() }}
+
+<label>Choose month</label>
+<select name="month" id="month{{$tcnmasters->id}}" class="form-control" required="">
+<option value="">select</option>
+@php
+$i=0;$j=7;
+while($j>0){
+echo '<option style="background:#84ffa1;" value="'.carbon::now()->subMonths($j)->format('Y/m').'">'.carbon::now()->subMonths($j)->format('F Y').'</option>'; 
+$j--;
+}
+while($i<5){
+echo '<option style="background:#ffeeb5;" value="'.carbon::now()->subMonths($i)->format('Y/m').'">'.carbon::now()->subMonths($i)->format('F Y').'</option>'; 
+$i++;
+}
+@endphp
+</select><br>
+<input type="hidden" name="tcn" id="tcn{{$tcnmasters->id}}ajax" class="form-control" placeholder="" value="{{$tcnmasters->id}}">
+<label>INR</label>
+<input type="text" name="inr" id="inr{{$tcnmasters->id}}" class="form-control" placeholder="" value="" required="">
+
+
+
+<label>AED</label>
+<input type="text" name="aed" id="aed{{$tcnmasters->id}}" class="form-control" placeholder="" value="" required="">
+
+
+<label>SAR</label>
+<input type="text" name="sar" id="sar{{$tcnmasters->id}}" class="form-control" placeholder="" value="" required="">
+
+
+
+<label>USD</label>
+<input type="text" name="usd" id="usd{{$tcnmasters->id}}" class="form-control" placeholder="" value="" required="">
+
+
+
+<label>CAD</label>
+<input type="text" name="cad" id="cad{{$tcnmasters->id}}" class="form-control" placeholder="" value="" required=""><br>
+
+<input type="hidden" name="edit" id="edit{{$tcnmasters->id}}">
+<input type="hidden" name="declared" id="declared{{$tcnmasters->id}}">
+<input type="hidden" name="updated" id="updated{{$tcnmasters->id}}">
+<button type="button" class="btn btn-success" id="submit{{$tcnmasters->id}}" name="declare" style="float: right;">Declare</button>
+<button type="button" class="btn btn-danger" id="update{{$tcnmasters->id}}" name="update" style="float: right;">Update</button>
+<p id="statusajax{{$tcnmasters->id}}"></p>
+
+
+</form>
+</div>
+
+
+
+    </div>
+@endforeach
+
+
+
+
+<div class="col-md-12"><br></div>
+
+
+
+@endsection
+@section('jquery')
+<script type="text/javascript">
+var value = $('#scheme').val();
+        if(value == '') {
+            $('#declare').attr('disabled',true);
+        }
+</script>
+</script>
+@endsection

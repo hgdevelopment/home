@@ -1,0 +1,328 @@
+<?php
+
+namespace App\Http\Controllers\admin;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Controller;
+use App\dsa;
+use App\login;
+use App\proofs;
+use App\address;
+use App\paymentdetails;
+use App\reference;
+use App\bank;
+use App\country;
+use Carbon\Carbon;
+use Auth;
+class dsaApproveController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $dsa= dsa::join('logins','logins.id','=','userId')->select('logins.username as code', 'dsas.*')->where('status','=','Active')->get();
+        return view('admin.dsa.viewApproveDsa',compact('dsa'));
+
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */ 
+    public function show()
+    {
+
+        $dsa= dsa::join('logins','logins.id','=','dsas.userId')->select('logins.username as code', 'dsas.*')->onlyTrashed()->get();
+        return view('admin.dsa.viewRemoveDsa',compact('dsa'));
+
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+
+        $dsaDetails=dsa::join('logins','logins.id','=','userId')->select('logins.username as code', 'logins.status as status', 'dsas.*')->where('userId', $id)->first();
+        $dsaAddress=dsa::join('addresses','addresses.userId','=','dsas.userId')->where('addresses.userId', $id)->get();
+        $dsaProof=proofs::join('dsas','dsas.userId','=','proofs.userId')->where('proofs.userId', $id)->first();
+        $dsapaymentdetails=paymentdetails::join('dsas','dsas.userId','=','paymentdetails.userId')->where('paymentdetails.userId', $id)->first();
+        $dsabank=dsa::join('banks','banks.userId','=','dsas.userId')->where('banks.userId', $id)->first();
+        $dsareference=dsa::join('references','references.userId','=','dsas.userId')->where('references.userId', $id)->first();
+        $countryname = dsa::join('countries','countries.id','=','dsas.countryId')
+        ->select('countries.countryName as countryNames')
+        ->where('userId', $id)
+        ->first();
+        return view('admin.dsa.editApproveDsa',compact('dsaDetails','dsaAddress','dsaProof','dsapaymentdetails','dsabank','dsareference','countryname'));
+
+    }
+      public function removeDsa($id)
+    {
+
+        $dsaDetails=dsa::join('logins','logins.id','=','userId')->select('logins.username as code', 'logins.status as status', 'dsas.*')->where('userId', $id)->onlyTrashed()->first();
+        $dsaAddress=dsa::join('addresses','addresses.userId','=','dsas.userId')->where('addresses.userId', $id)->onlyTrashed()->get();
+        $dsaProof=proofs::join('dsas','dsas.userId','=','proofs.userId')->where('proofs.userId', $id)->first();
+        $dsapaymentdetails=paymentdetails::join('dsas','dsas.userId','=','paymentdetails.userId')->where('paymentdetails.userId', $id)->first();
+        $dsabank=bank::join('dsas','dsas.userId','=','banks.userId')->where('banks.userId', $id)->first();
+        $dsareference=dsa::join('references','references.userId','=','dsas.userId')->where('references.userId', $id)->first();
+        $countryname = dsa::join('countries','countries.id','=','dsas.countryId')
+        ->select('countries.countryName as countryNames')
+        ->where('userId', $id)
+        ->first();
+        return view('admin.dsa.editApproveDsa',compact('dsaDetails','dsaAddress','dsaProof','dsapaymentdetails','dsabank','dsareference','countryname'));
+
+    }
+
+    public function ApproveDsaEdit($id)
+    {
+
+        $dsaDetails=dsa::join('logins','logins.id','=','userId')->select('logins.username as code', 'logins.status as status', 'dsas.*')->where('userId', $id)->first();
+        $dsaAddress=dsa::join('addresses','addresses.userId','=','dsas.userId')->where('addresses.userId', $id)->get();
+        $dsaProof=proofs::join('dsas','dsas.userId','=','proofs.userId')->where('proofs.userId', $id)->first();
+        $dsapaymentdetails=paymentdetails::join('dsas','dsas.userId','=','paymentdetails.userId')->where('paymentdetails.userId', $id)->first();
+        $dsabank=dsa::join('banks','banks.userId','=','dsas.userId')->where('banks.userId', $id)->first();
+        $dsareference=dsa::join('references','references.userId','=','dsas.userId')->where('references.userId', $id)->first();
+        $listTypes= ['country'=>country::all(),
+                    'proof_type'=>['aadhar', 'license', 'pancard', 'passport','VoterId'],
+                    'pay_mode'=>['cheque','online','DD','other'],
+                    'relationship'=>['Family','Friend']];
+        return view('admin.dsa.editApproveDsaDetails',compact('dsaDetails','dsaAddress','dsaProof','dsapaymentdetails','dsabank','dsareference','listTypes'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $userId)
+    {
+        $login = login::where('id','=',$userId)->first();
+        $dsa = dsa::where('userId',$userId)->first();
+        $address = address::where('typeOfAddress','=','official')->where('userId',$userId)->first();
+        $address1 = address::where('typeOfAddress','=','permanent')->where('userId',$userId)->first();
+        $address2 = address::where('typeOfAddress','=','correspondance')->where('userId',$userId)->first();
+        $address3 = address::where('typeOfAddress','=','referance')->where('userId',$userId)->first();
+        $proof = proofs::where('userId', $userId)->first();
+        $paymentdetails = paymentdetails::where('type','=','DSA Payment')->where('userId', $userId)->first();
+        $reference = reference::where('userId', $userId)->first();
+        $bank = bank::where('typeOfAccount','=','DSA Incentive')->where('userId', $userId)->first();
+
+             $this->validate($request,[
+            'name'=>'required',
+            'dob'=>'required',
+            'gender'=>'required',
+            'maritalStatus'=>'required',
+            'mobileNo'=>'required',
+            'country'=>'required',
+            'permanentAddress'=>'required',
+            'permanentCity'=>'required',
+            'permanentState'=>'required',
+            'permanentPin'=>'required',
+            'corrsAddress'=>'required',
+            'corrsCity'=>'required',
+
+            'corrsState'=>'required',
+            'corrsPin'=>'required',
+            'typeOfProof'=>'required',
+
+            'paymentMode'=>'required',
+            'number'=>'required',
+            'depositDate'=>'required',
+            'bankName'=>'required',
+            'branch'=>'required',
+            'accountNo'=>'required',
+
+
+            'holderName'=>'required',
+            'incaccountnumber'=>'required',
+            'incbankName'=>'required',
+            'incBranchName'=>'required',
+            'incIfscCode'=>'required',
+
+            ]);
+
+ 
+
+        $address->address=$request->officialAddress;
+        $address->city=$request->officialCity;
+        $address->pin=$request->officialPin;
+        $address->state=$request->officialState;
+        $address->save();
+
+
+        $address1->address=$request->permanentAddress;
+        $address1->city=$request->permanentCity;
+        $address1->pin=$request->permanentPin;
+        $address1->state=$request->permanentState;
+        $address1->save();
+
+
+        $address2->address=$request->corrsAddress;
+        $address2->city=$request->corrsCity;
+        $address2->pin=$request->corrsPin;
+        $address2->state=$request->corrsState;
+        $address2->save();
+
+
+        $address3->address=$request->refaddress;
+        $address3->city=$request->refDistrict;
+        $address3->pin=$request->refPin;
+        $address3->state=$request->refState;
+        $address3->save();
+
+
+
+        $reference->name=$request->refName;
+        $reference->referenceRelation=$request->relationship;
+        $reference->referenceMobileNumber=$request->refMobileNo;
+        $reference->referenceEmail=$request->refEmail;
+        $reference->save();
+        if (!empty($request->photo)) 
+        {
+                     //photo upload
+        $profilepic = 'PHOTO'.time().'.'.$request->photo->getClientOriginalExtension();
+        $request->photo->move(storage_path('img/dsa_img'), $profilepic);
+            $dsa->photo = $profilepic;
+        }
+        else
+        {
+            $dsa->photo = $request->photo_update;
+
+        }
+        if (!empty($request->signature)) 
+        {
+        //siganture
+            $signature = 'SIGNATURE'.time().'.'.$request->signature->getClientOriginalExtension();
+            $request->signature->move(storage_path('img/dsa_img'), $signature);
+            $dsa->signature = $signature;
+        }
+        else
+        {
+            $dsa->signature = $request->signature_update;
+        }
+        if (!empty($request->IdProof)) 
+        {
+                  //IdProof
+            $IdProof = 'PROOF'.time().'.'.$request->IdProof->getClientOriginalExtension();
+            $request->IdProof->move(storage_path('img/proof'), $IdProof);
+            $proof->file = $IdProof;
+        }
+        else
+        {
+             $proof->file = $request->IdProof_update;
+        }
+        if (!empty($request->Payproof)) 
+        {
+            //payProof
+        $payProof = 'PAYPROOF'.time().'.'.$request->Payproof->getClientOriginalExtension();
+        $request->Payproof->move(storage_path('img/payProof'), $payProof);
+        $paymentdetails->file=$payProof; 
+        }
+        else
+        {
+            $paymentdetails->file = $request->Payproof_update;
+        }
+        if (!empty($request->Accproof)) 
+        {
+        //AccProof
+            $accProof = 'ACCPROOF'.time().'.'.$request->Accproof->getClientOriginalExtension();
+            $request->Accproof->move(storage_path('img/Accproof'), $accProof);
+            $bank->Accproof=$accProof;
+         }
+        else
+        {
+             $bank->Accproof= $request->Accproof_update;
+        }
+   
+
+        $session=Auth::guard('admin')->user();
+        $sessionId=$session->id;
+
+        $dsa->companyName=$request->companyName;
+        $dsa->name=$request->name;
+        $dsa->guardian=$request->guardian;
+        $dsa->dob=date("Y-m-d", strtotime($request->dob));
+        $dsa->gender=$request->gender;
+        $dsa->religion=$request->religion;
+        $dsa->countryId=$request->country;
+        $dsa->maritalStatus=$request->maritalStatus;
+        $dsa->aboutHeera=$request->aboutHeera;
+        $dsa->mobileNumber=$request->mobileNo;
+        $dsa->mobileId=$request->conId;
+        $dsa->telePhoneNo=$request->telePhoneNo;
+        $dsa->addedDate=Carbon::now();
+        $dsa->email=$request->email;
+        $dsa->addedId=$sessionId;
+        $dsa->save();
+
+        $proof->typeOfProof=$request->typeOfProof;
+        $proof->proofNumber=$request->idNumber;
+        $proof->save();
+
+
+        $paymentdetails->paymentDate=date("Y-m-d", strtotime($request->depositDate));
+        $paymentdetails->transactionNumber=$request->number;
+        $paymentdetails->payment_mode=$request->paymentMode;
+        $paymentdetails->addedDate=Carbon::now();
+        $paymentdetails->bank=$request->bankName;
+        $paymentdetails->branch=$request->branch;
+        $paymentdetails->accountNumber=$request->accountNo;
+        $paymentdetails->save();
+
+        $bank->bankName=$request->incbankName;
+        $bank->branchName=$request->incBranchName;
+        $bank->ifsc=$request->incIfscCode;
+        $bank->accountHolderName=$request->holderName;
+        $bank->accountNumber=$request->incaccountnumber;
+        $bank->save();
+        return redirect ('/admin/dsaApprove/'.$userId.'/edit');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Request $request)
+    {
+        $id=$request->id;
+        $login = login::where('id','=',$id)->first();
+        $login->status='Block';
+        $login->save();
+        $delete=dsa::where('userId','=',$id)->first();
+        $delete->delete();
+    }
+}

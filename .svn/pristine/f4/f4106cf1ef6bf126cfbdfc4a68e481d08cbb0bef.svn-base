@@ -1,0 +1,49 @@
+@php
+use \App\Http\Controllers\Controller;
+@endphp
+
+
+
+	<input type="hidden" name="company_id" id="company_id" value="{{  $request->company_id }}">
+			<table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="0" width="100%" id="table"  >
+				<thead>
+					<tr>
+						<th bgcolor="cornsilk">Allowances</th>
+						<th bgcolor="cornsilk">Percentage <span class="text-danger">%</span></th>
+						<th bgcolor="cornsilk">Action</th>
+					</tr>
+				</thead>
+				<body>
+				<?php $i=1; ?>
+					@foreach($salary_temp as $salary_temp)
+					<tr>
+						<td>{{ $salary_temp->allowances }}</td>
+						<td>{{ $salary_temp->percentage }}{{-- <input type="text" class="form-control" name="percentage" id="percentage" value=""> --}}</td>
+						<td>
+						<a onclick="change_temp('{{ $salary_temp->id }}','edit')" class="active" style="border: none;"><i class="fa fa-pencil text-success" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+						<a onclick="change_temp('{{ $salary_temp->id }}','delete')" class="active" style="border: none;"><i style="color: #f05050;" class="fa fa-close text-danger text-active" aria-hidden="true"></i></a>
+
+						</td>
+					</tr>
+					<?php $i++; ?>
+					@endforeach
+					<tr>
+						<td>
+						<input type="text" class="form-control" name="allowances{{ $i }}" id="allowances{{ $i }}" value="" >
+						<span class="text-danger allowances">Enter Allowance Name</span>
+						</td>
+						<td>
+						<input type="text" class="form-control" name="percentage{{ $i }}" id="percentage{{ $i }}" value="">
+						<span class="text-danger percentage">Enter Valuable Percentage</span>
+
+						</td>
+
+						<td><input type="button" class="btn btn-success" value="Add+" onclick="add_temp('{{ $i }}')"></td>
+					</tr>
+
+					<tr>
+						<td colspan="3" align="center"><input type="submit" value="Save" class="btn btn-danger"></td>
+					</tr>
+				</body>
+			</table>
+

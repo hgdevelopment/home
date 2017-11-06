@@ -1,0 +1,105 @@
+<?php
+namespace App\Http\Controllers\hr;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Session;
+use App\hr_resignation;
+use DB;
+use Auth;
+use Mail;
+use PDF;
+class resignationController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+      $user=Auth::guard('admin')->user()->username;  
+      $login=\DB::table('logins')->where('username','=',$user)
+      ->join('hr_emp_personal_details','hr_emp_personal_details.user_id','=','logins.id')
+      ->join('hr_designation','hr_designation.id','=','hr_emp_personal_details.designation_id')
+      ->select('hr_designation.designation_name','hr_emp_personal_details.name')
+      ->get();
+      foreach($login as $logins)
+
+      return view('hr.resignation.apply_resignation',compact('user','logins'));
+
+    }
+   
+
+    
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+
+
+
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    
+    public function store(Request $request)
+    { 
+       
+        $user=\DB::table('logins')->where('username','=',$request->from)
+        ->join('hr_emp_personal_details','hr_emp_personal_details.user_id','=','logins.id')
+        ->get();
+        foreach($user as $users)
+        $userid=$users->id;
+        $user=$users->name;
+        $applyresignation= new hr_resignation();
+        $applyresignation->resign_employee=$userid;
+        $applyresignation->resign_reason=$request->resign_reason;
+        $applyresignation->resign_status='applied';
+        $applyresignation->resign_date=date("Y-m-d",strtotime($request->resign_date));       
+        $applyresignation->save();
+        Session::flash('message', 'Resignation Applied  Successfully!');
+
+
+
+        $data = array( 'heading' =>'RESIGNATION',
+                        
+                        'employeecode' =>$request->from,
+                        'resigndate'=>date("Y-m-d",strtotime($request->resign_date)),
+                        'reason'=>$request->reason);
+        Mail::send('hr.resignation.resignationmail',compact('data'), function ($message) use ($user,$userid)
+        {
+            $message->from('heeraerptl@gmail.com', 'Resignation Applied');
+            $message->to('phpdiniya@gmail.com')->subject('Resignation Applied by'.' '.$user.' ('.$userid.') ');
+        }); 
+
+        $resign=\DB::table('logins')->where('username','=',$request->from)
+        ->join('hr_emp_personal_details','hr_emp_personal_details.user_id','=','logins.id')
+        ->join('hr_emp_address','hr_emp_personal_details.user_id','=','hr_emp_address.user_id')
+        ->join('hr_designation','hr_designation.id','=','hr_emp_personal_details.designation_id')
+        ->join('hr_companies','hr_companies.id','=','hr_emp_personal_details.company_id')  
+        ->join('hr_branch','hr_branch.company_id','=','hr_companies.id')       
+        ->join('countries','countries.id','=','hr_emp_address.country')
+        ->get(); 
+        foreach($resign as $resigns)
+
+        $pdf =PDF::loadView('hr.resignation.apply_resignation_pdf',compact('resigns'));
+        return $pdf->stream();   
+        return redirect('/hr/resignation/apply_resignation');
+
+
+
+    }
+   
+   
+    
+
+}

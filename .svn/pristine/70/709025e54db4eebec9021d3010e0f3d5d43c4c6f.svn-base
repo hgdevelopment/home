@@ -1,0 +1,375 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Application Form - {{$memberregistration->code}}</title>
+<link href = "https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+<style type="text/css" media="screen">
+html,body{
+margin:0px;
+padding: 10px;
+}
+.header-bar{
+background: #bbb;
+}
+.header-bar h3{
+font-size: 16px;
+padding:6px;
+}
+.table-data{
+width: 100%;
+}
+.table-data tr th,.table-data tr td{
+font-size: 14px;
+padding:2px;
+}
+.table-data tr th{
+position: relative;
+padding-left:8px;
+}
+.table-data tr td{
+padding-right:8px;
+}
+.table-data tr th:before{
+top:5px;
+left:0px;
+font-size: 14px;
+font-weight: bold;
+
+}
+.table-data tr td:nth-child(3){
+padding-left:20px;
+}
+.pull-left{
+float: left;
+}
+.pull-right{
+float: right;
+}
+.clear-fix{
+clear:both;
+}
+.clear-fix:before{
+clear:both;
+}
+.clear-fix:after{
+clear:both;
+}
+.sub-content{
+font-size: 14px;
+font-weight: 400px !important;
+}
+</style>
+<style>
+.personal_details{
+border:1px solid #bbb;
+font-size:12px;
+width:100% !important;
+}
+.personal_details tr td,
+.personal_details tr th,
+{
+border:1px solid #bbb;
+}
+.page-break {
+page-break-after: always;
+}
+.page-break {
+  page-break-after: always;
+}
+.heading-1{
+  background-color:#FFF58F;
+}
+</style>
+</head>
+<body>
+  <header id="header" class="">
+    <img src="{{URL::to('/') }}/img/tcnmaster/header.png" alt="">
+  </header>
+  <div style="border: 1px solid #FFF58F;margin-top:5px">
+    <div class="section" style="float:right; margin:5px 10px 0 0">
+      <table style="border:1px solid">
+        <tbody>
+          <tr>
+            <td><img class="profile-img" src="{{URL::to('/') }}/storage/img/member_img/{{$memberregistration->photo}}" alt="" width="120" height="150"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="section" style="float:left; margin:100px 0 0 10px">
+      <table>
+        <tbody>
+          <tr>
+            <th>APPLICATION NUMBER</th><th>: {{ucfirst($memberregistration->code)}} </th>
+          </tr>
+          <tr><td></td></tr>
+          <tr>
+            <th>NAME</th><th>: {{ucfirst($memberregistration->name)}} </th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <br><br><br><br><br><br><br><br>
+
+    <div class="section">
+      <div class="header-bar">
+        <h3 class="heading-1">Personal Details</h3>
+      </div>
+      <table class="table-data personal-details">
+        <tbody>
+          <tr>
+            <td width="20%">DATE OF BIRTH</td>
+            <th width="20%" >: {{$memberregistration->dob}}</th>
+            <td width="30%" >GENDER</td>
+            <th width="40%" >: {{ucfirst($memberregistration->gender)}}</th>
+          </tr>
+          <tr><td></td><td></td></tr>
+          <tr>
+            <td>CASTE</td>
+            <th>: {{ucfirst($memberregistration->caste)}}</th>
+            <td>NATIONALITY</td>
+            <th>: {{ucfirst($memberregistration->country->countryName)}}</th>
+          </tr>
+          <tr><td></td><td></td></tr>
+          <tr>
+            <td>RELIGION</td>
+            <th>: {{ucfirst($memberregistration->religion)}}</th>
+            <td>EDUCATION</td>
+            <th>: {{$memberregistration->education}}</th>
+          </tr>
+          <tr><td></td><td></td></tr>
+          <tr>
+            <td>OCCUPATION</td>
+            <th>: {{$memberregistration->occupation}}</th>
+            <td>MARITAL STATUS</td>
+            <th>: {{$memberregistration->maritalStatus}}</th>
+          </tr>
+          <tr><td></td><td></td></tr>
+          <tr>
+            <td>MOBILE</td>
+            <th>: {{$memberregistration->mobileId}} {{$memberregistration->mobileNo}}</th>
+            <td>EMAIL</td>
+            <th>: {{$memberregistration->email}}</th>
+          </tr>
+          <tr><td></td><td></td></tr>
+          <tr>
+            <td>FATHER'S / HUSBAND'S NAME</td>
+            <th>: {{$memberregistration->guardian}}</th>
+            <td>HOW DO YOU KNOW ABOUT HEERA</td>
+            <th>: {{$memberregistration->aboutHeera}}</th>
+          </tr>
+        </tbody>
+      </table>
+    </div>  
+
+    @foreach ($memberregistration->address as $element)
+    <div class="section">
+      <div class="header-bar">
+          @if($element->typeOfAddress == "correspondance")
+            <h3 class="heading-1">Correspondence Address</h3>
+          @else
+             <h3 class="heading-1">{{ucfirst($element->typeOfAddress)}} Address</h3>
+          @endif
+      </div>
+      <table class="table-data personal-details">
+        <tbody>
+          <tr>
+            <td width="25%">ADDRESS</td>
+            <th width="25%">: {{$element->address}}</th>
+            <td width="25%">CITY</td>
+            <th width="25%">: {{$element->city}}</th>
+          </tr>
+          <tr>
+            <td>STATE</td>
+            <th>: {{$element->state}}</th>
+            <td>PIN</td>
+            <th>: {{$element->pin}}</th>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    @endforeach
+    <div class="page-break"></div>
+    <div class="section">
+      <div class="header-bar">
+        <h3 class="heading-1">Membership Details</h3>
+      </div>
+        <table class="table-data personal-details">
+        <tbody>
+          <tr>
+            <td width="25%">INR : AMOUNT HOLDING : </td>
+            <th>{{ json_decode($memberregistration->membership_details)->inr->type }}</th>
+            <td>AMOUNT APPLYING FOR :</td>
+            <th width="25%" >{{ json_decode($memberregistration->membership_details)->inr->amount }}</th>
+          </tr>
+          <tr>
+            <td>AED : AMOUNT HOLDING :</td>
+            <th>{{ json_decode($memberregistration->membership_details)->aed->type }}</th>
+            <td>AMOUNT APPLYING FOR :</td>
+            <th>{{ json_decode($memberregistration->membership_details)->aed->amount }}</th>
+          </tr>
+          <tr>
+            <td>USD : AMOUNT HOLDING :</td>
+            <th>{{ json_decode($memberregistration->membership_details)->usd->type }}</th>
+            <td>AMOUNT APPLYING FOR :</td>
+            <th>{{ json_decode($memberregistration->membership_details)->usd->amount }}</th>
+          </tr>
+          <tr>
+            <td>SAR : AMOUNT HOLDING : </td>
+            <th>{{ json_decode($memberregistration->membership_details)->sar->type }}</th>
+            <td>AMOUNT APPLYING FOR :</td>
+            <th>{{ json_decode($memberregistration->membership_details)->sar->amount }}</th>
+          </tr>
+          <tr>
+            <td>CAD : AMOUNT HOLDING :</td>
+            <th>{{ json_decode($memberregistration->membership_details)->cad->type }}</th>
+            <td>AMOUNT APPLYING FOR :</td>
+            <th>{{ json_decode($memberregistration->membership_details)->cad->amount }}</th>
+          </tr>
+          <tr><td></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="section">
+      <div class="header-bar">
+        <h3 class="heading-1">Proof Details</h3>
+      </div>
+      <table class="table-data personal-details">
+        <tr>
+          <th><u>{{ucfirst($memberregistration->proof->typeOfProof)}} Details</u><br><br>
+              <img class="profile-img" src="{{URL::to('/') }}/storage/img/proof/{{$memberregistration->proof->file}}" alt="" width="120" height="150"><br><br>
+              Proof Number : {{$memberregistration->proof->proofNumber}}
+          </th>
+        </tr>
+      </table>
+    </div>
+    <hr style="border: 1px solid #FFCF29;">
+    <div class="section">
+      <table class="table-data personal-details">
+        <tr>
+          <td style="font-size:1.1em; width:50%;">Name: <b>{{ucfirst($memberregistration->name)}}</b></td>
+          <td style="font-size:1.1em; width:50%;  text-align: right;">Signature<br>
+          <img src="{{URL::to('/') }}/storage/img/member_img/{{$memberregistration->singnature}}" width="130" height="60" alt="" /></td>
+        </tr>
+      </table>
+    </div>
+
+    <hr style="border: 1px solid #FFCF29;">
+
+    <div class="section ">
+      <p style="text-align:center; font-size:12px;">Note: Your Membership Request Form should be submitted and approved before you fill in your Application Form</p>
+      <div class="header-bar">
+        <h3 class="heading-1">Heera Gold Terms & Conditions</h3>
+      </div>
+      <table class="table-data personal-details">
+        <tbody>
+          <tr>
+            <td>1. HG TCN member must be above 18 years of age, can be a Resident Indian, NRI or a foreigner.</td>
+          </tr>
+          <tr>
+            <td>2. HG TCN member must be a Muslim.</td>
+          </tr>
+          <tr>
+            <td>3. Nomination facility is available; up to two nominees are permissible to every member. However can extend if needed.</td>
+          </tr>
+          <tr>
+            <td>4. All supportive documents should be relevant to member/s.</td>
+          </tr>
+          <tr>
+            <td>5. Copy of Residence proof and Photo ID of the member/s and the nominee/s is required. Original of the same can also be demanded for verification.</td>
+          </tr>
+          <tr>
+            <td>6. HG will not bear any responsibility for any loss due to mistake in filling of the name and/or any detail in, any of the HG form.</td>
+          </tr>
+          <tr>
+            <td>7. All eligible benefits and gifts will be issued on the applicant name, which is filled in the enrolment form only.</td>
+          </tr>
+          <tr>
+            <td>8. HG reserves the right to terminate the enrolment if any of the document or the information submitted by the applicant is found to be unauthentic or in any other related case.</td>
+          </tr>
+          <tr>
+            <td>9. Member/s willing to change any details provided in enrolment form must fill the update form and consult HG for the same. Changes will be effected post two weeks from receiving the details.</td>
+          </tr>
+          <tr>
+            <td>10. Membership applications will be accepted on or before last working day of every month. Application will not be accepted after the specified date in any case.</td>
+          </tr>
+          <tr>
+            <td>11. One time registration fees will be charged on every membership of HG TCN @ 0.2% on membership amount (for eg. : 200/- INR for every 1,00,000/- INR and respectively).</td>
+          </tr>
+          <tr>
+            <td>12. Registration fees for HG TCN are non-refundable.</td>
+          </tr>
+          <tr>
+            <td>13. HG strictly condemns the payment done by money earned from non-islamic/illegal source, including interest/theft/burglary/or any other related action, which is &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;against the constitution of the respective country. HG reserves the right to take necessary action in the respective case, and the action may be extended up to &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;legal proceedings as per the case may be. </td>
+          </tr>
+          <tr>
+            <td>14. Payments are accepted only through bank, cash payments will not be accepted in any case.</td>
+          </tr>
+          <tr>
+            <td>15. Member/s are warned, not to hand over cash to any HG office/Executive/Person/ organisation or any one, as HG restricts the acceptance of cash in any case. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;However, person willing for cash payment may deposit the amount in respective HG bank account and hand over the bank pay-in-slip with enrolment form to any &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HG office.</td>
+          </tr>
+          <tr>
+            <td>16. It is the accountability of HG TCN member/s to verify with their bank, whether the membership amount has been deducted from their respective bank &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;account. HG takes no responsibility in case of non-remittance of money. HG reserves the right to impose penalty on the respective member up to the extent of &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;loss.</td>
+          </tr>
+          <tr>
+            <td>17. No buy back proceeding will be affected within the lock-in period of respective TCN under any circumstances.</td>
+          </tr>
+          <tr>
+            <td>18. Buy back request shall be submitted one month prior from date of withdrawal on or before 1st of respective month, subject to completion of lock-in period.</td>
+          </tr>
+          <tr>
+            <td>19. All documents issued by HG (Agreement cum Receipt & Membership Card or any other) must be returned if the member wishes to discontinue or as per the &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;demand of HG.</td>
+          </tr>
+          <tr>
+            <td>20. HG Scheme member/s is/are deemed to be continued unless and until buyback request is submitted or else if HG terminates the membership.</td>
+          </tr>
+          <tr>
+            <td>21. Withdrawal amount will be remitted to members account in the first week of every month along with the benefit/loss of that particular TCN.</td>
+          </tr>
+          <tr>
+            <td>22. As per Almighty's order in the Holy Quran, ''O you who believe! Whenever you enter into deals with one another involving future obligations for a certain term, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;write it down.' (2:282), HG is bound to all the terms and conditions stated in the enrolment form of the respective TCN, and so is the member also eligible to &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;terms and conditions mentioned in it.<td/>
+          </td>
+          <tr>
+            <td>23. HG, bound by the Islamic Law, will not pay any interest to any member under any circumstances.</td>
+          </tr>
+          <tr>
+            <td>24. HG Scheme Member/s shall attend a minimum of five meetings out of twelve in a particular year to be well informed with updates.<td>
+          </td>
+          <tr>
+            <td>25. HG reserves all the right to change/modify the terms and conditions without any prior notice, and the same will be effective thereafter.</td>
+          </tr>
+          <tr>
+            <td>Note:We were only concentrating on Business trades.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section ">
+      <div class="header-bar">
+        <h3 class="heading-1">For Office Use Only</h3>
+      </div>
+      <table class="table sub-content " cellspacing="0" cellpadding="6" style="width:100% !important;">
+        <tbody>
+          <tr>
+            <th style="width:70%;">RECEIVED BY :</th>
+            <th >DATE :</th>
+          </tr>
+          <tr>
+            <th >DATA ENTRY BY :</th>
+            <th >DATE :</th>
+          </tr>
+          <tr>
+            <th >AGREEMENT PRINTED ON :</th>
+            <th >DATE :</th>
+          </tr>
+          <tr>
+            <th >VERIFIED BY :</th>
+            <th >DATE :</th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+ 
+  </div>
+</body>
+</html>

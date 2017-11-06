@@ -1,0 +1,93 @@
+@extends('admin.layout.erp1')
+@section('banner')
+  <div class="col-lg-12" align="center" style="background-color:#ffcf29">
+  <img src="{{ URL::asset('img/new_heading.png') }}" class="img-responsive">
+  </div>
+@endsection
+@section('sidebar')
+@include('admin.partial.header')
+@include('admin.partial.aside')
+@endsection
+@section('body')
+<link rel="stylesheet" type="text/css" href="{{ URL::asset('css/jquery.timepicker.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ URL::asset('css/daterangepicker.css') }}" />
+<link rel="stylesheet" href="{{ URL::asset('css/sweetalert.css') }}" type="text/css" />
+<style type="text/css">
+#installationForm .tab-content {
+    margin-top: 20px;
+}
+ #installationForm  .form-group {
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+}
+</style>
+<div class="app-content-body fade-in-up ng-scope" ui-view="" style=""><div  class="fade-in-down ng-scope"><div class="hbox hbox-auto-xs hbox-auto-sm ng-scope">
+  <div class="col">
+    @include('hr.employee.partial.header')
+    <div class="padder">      
+    	<br/>
+    	
+ 
+
+	{{-- expr --}}
+
+  <div class="row" style="margin-top:15px;">
+      <div class="col-sm-12">
+      <div class="panel-default">
+      	<div class="panel-heading">
+      		Qualification
+      	</div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Course</th>
+               <th>Institution/University</th>
+               <th>Year Of Passing</th>
+               <th>Marks</th>
+               <th>Specialization</th>
+            </tr>
+          </thead>
+          <tbody>
+             @foreach ($qualification as $element)
+            <tr>
+              <td>{{$element->course}}</td>
+              <td>{{$element->university}}</td>
+              <td>{{$element->pass_out}}</td>
+              <td>{{$element->marks}}</td>
+              <td>{{$element->specialization}}</td>
+            </tr>
+            @endforeach
+          </tbody>
+        </table>
+      	 
+       
+         </div>
+      </div>
+      </div>
+  </div>
+
+    </div>
+  </div>
+  
+</div></div></div>
+
+@endsection
+@section('jquery')
+<script src="{{ URL::asset('js/moment.min.js') }}"></script>
+<script src="{{ URL::asset('js/wizard/jquery.bootstrap.wizard.min.js') }}"></script>
+<script src="{{ URL::asset('js/wizard/form_wizard.js') }}"></script>
+<script src="{{ URL::asset('js/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ URL::asset('js/jquery.timepicker.js') }}"></script>
+<script src="{{ URL::asset('js/timerange/datepair.js') }}"></script>
+<script src="{{ URL::asset('js/timerange/jquery.datepair.js') }}"></script>
+<script src="{{ URL::asset('js/daterangepicker.js') }}"></script>
+<script src="{{ URL::asset('js/sweetalert.min.js') }}"></script>
+<script>
+	$(function(){
+		$('body').on('click','.view-employee',function(e){
+          e.preventDefault();
+          alert(1);
+		});
+	})
+</script>
+@endsection

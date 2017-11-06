@@ -1,0 +1,86 @@
+<?php
+namespace App\Http\Controllers\hr;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Session;
+use App\hr_resignation;
+use DB;
+use Auth;
+use Mail;
+class resignationController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+      $user=Auth::guard('admin')->user()->username;  
+      $login=\DB::table('logins')->where('username','=',$user)
+      ->join('hr_emp_personal_details','hr_emp_personal_details.user_id','=','logins.id')
+      ->join('hr_designation','hr_designation.id','=','hr_emp_personal_details.designation_id')
+      ->select('hr_designation.designation_name','hr_emp_personal_details.name')
+      ->get();
+      foreach($login as $logins)
+
+      return view('hr.resignation.apply_resignation',compact('user','logins'));
+
+    }
+   
+
+    
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+
+
+
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    
+    public function store(Request $request)
+    { 
+       
+        $user=\DB::table('logins')->where('username','=',$request->from)->get();
+        foreach($user as $users)
+        $userid=$users->id;
+        $applyresignation= new hr_resignation();
+        $applyresignation->resign_employee=$userid;
+        $applyresignation->resign_date=date("Y-m-d",strtotime($request->resign_date));       
+        $applyresignation->save();
+        Session::flash('message', 'Resignation Applied  Successfully!');
+
+
+
+        $data = array( 'heading' =>'APPLY RESIGNTION',
+                        
+                        'employeecode' =>$request->from,
+                        'resigndate'=>date("Y-m-d",strtotime($request->resign_date)),
+                        'reason'=>$request->reason);
+        Mail::send('hr.resignation.resignationmail',compact('data'), function ($message) 
+        {
+            $message->from('heeraerptl@gmail.com', 'Resignation Applied');
+            $message->to('phpdiniya@gmail.com')->subject('Resignation Applied');
+        }); 
+        return redirect('/hr/resignation/apply_resignation');
+
+
+
+    }
+   
+   
+    
+
+}

@@ -1,0 +1,150 @@
+@extends('admin.layout.erp1')
+@section('banner')
+<div class="col-lg-12" align="center" style="background-color:#ffcf29">
+<img src="{{ URL::to('/') }}/new_heading.png" class="img-responsive">
+</div>
+@endsection
+
+@section('sidebar')
+@include('admin.partial.header')
+@include('admin.partial.aside')
+@endsection
+
+@section('body')
+
+<div class="bg-light lter b-b wrapper-md">
+<h1 class="m-n font-normal h3">Generate Salary</h1>
+</div>
+
+<div class="wrapper-md" id="wrapper-md" ng-controller="FormDemoCtrl">
+
+
+
+	<div class="panel panel-warning" id="getAllowances_panel">
+
+      	<div class="panel-heading bold">Employee Details </div>
+      	  <div class="panel-body">
+      	  <div class="row">
+      	  	
+           <div class="col-md-6 col-xs-12 divTableCell">
+              Employee ID:
+               <b class="data-lab">{{$data[0]->code}}</b>
+            </div>
+            <div class="col-md-6 col-xs-12 divTableCell">
+              Company:
+               <b class="data-lab">{{$data[0]->company_name}}</b>
+            </div>
+            <div class="col-md-6 col-xs-12 divTableCell">
+              Name:
+              <b class="data-lab">{{$data[0]->salutation_name}} {{$data[0]->name}}</b>
+            </div>
+            <div class="col-md-6 col-xs-12 divTableCell">
+              Branch:
+              <b class="data-lab">{{$data[0]->branch_name}}</b>
+            </div>
+            <div class="col-md-6 col-xs-12 divTableCell">
+              Designation:
+             <b class="data-lab">{{$data[0]->designation_name}}</b> 
+            </div>
+
+            <div class="col-md-6 col-xs-12 divTableCell">
+                Department:
+              <b class="data-lab">{{$data[0]->department_name}}</b>
+            </div>
+         </div>
+          </div>
+      	</div> 
+    <div class="row">  	
+	    <div class="col-md-4">  	
+			<div class="panel panel-warning" id="getAllowances_panel">
+
+		      	<div class="panel-heading bold">Earnings </div>
+		      	<div class="panel-body">
+		      	  <div class="row">
+		      	  	@php 
+		      	  	$salaryAllowance=DB::table('hr_salary_allowance')->where('company_id',$data[0]->company_id)->get();
+		      	  	@endphp
+		      	  	@foreach($salaryAllowance as $salaryAllowance)
+		           <div class="col-md-12 col-xs-12 divTableCell">
+		              {{ strtoupper($salaryAllowance->allowances) }}:
+		               <b class="data-lab">{{$data[0]->salary/100*$salaryAllowance->percentage}}</b>
+		            </div>
+		      	  	@endforeach
+
+		         </div>
+		        </div>
+		    </div> 
+		</div>    
+
+	    <div class="col-md-6">  	
+			<div class="panel panel-warning" id="getAllowances_panel">
+
+		      	<div class="panel-heading bold">deductions </div>
+		      	<div class="panel-body">
+		      	  <div class="row">
+		      	  	
+		           <div class="col-md-12 col-xs-12 divTableCell">
+		              No of Leaves:
+		               <b class="data-lab"><input class="form-control" style="width: 80px"  type="text" name="no_of_leaves_amount" id="no_of_leaves_amount"></b>
+		               <b class="data-lab"><input class="form-control" style="width: 50px"  type="text" name="no_of_leaves" id="no_of_leaves"></b>
+		            </div>
+
+		            <div class="col-md-12 col-xs-12 divTableCell">
+		              HalfDay Leaves:
+		               <b class="data-lab"><input class="form-control" style="width: 80px"  type="text" name="no_of_leaves_amount" id="no_of_leaves_amount"></b>
+		               <b class="data-lab"><input class="form-control" style="width: 50px"  type="text" name="no_of_leaves" id="no_of_leaves"></b>
+		            </div>
+
+		            <div class="col-md-12 col-xs-12 divTableCell">
+		              One minute late:
+		               <b class="data-lab"><input class="form-control" style="width: 80px"  type="text" name="no_of_leaves_amount" id="no_of_leaves_amount"></b>
+		               <b class="data-lab"><input class="form-control" style="width: 50px"  type="text" name="no_of_leaves" id="no_of_leaves"></b>
+		            </div>
+
+		            <div class="col-md-12 col-xs-12 divTableCell">
+		              above One minute late:
+		               <b class="data-lab"><input class="form-control" style="width: 80px"  type="text" name="no_of_leaves_amount" id="no_of_leaves_amount"></b>
+		               <b class="data-lab"><input class="form-control" style="width: 50px"  type="text" name="no_of_leaves" id="no_of_leaves"></b>
+		            </div>
+
+		         </div>
+		        </div>
+		    </div> 
+		</div>    
+	</div>	
+</div>
+
+@endsection
+@section('jquery')
+<script type="text/javascript">
+$(".chosen-select").chosen({width:'100%'});
+
+function getBranches()
+{
+var company = $('#company').val();
+
+
+
+$.ajax({
+type: "get",
+url: "{{URL::to('/') }}/hr/salaryMaster/create",
+data:{process:'getBranches',company:company},
+	success: function (data) 
+	{
+	    $('#branch').html('').trigger("chosen:updated");  
+
+
+		$('#branch').append('<option value=" ">--Select--</option>').trigger("chosen:updated");
+
+		for (var i=0;i<data.length;i++)
+		{
+		$('#branch').append('<option value="'+data[i].id+'">'+data[i].branch_name+'</option>').trigger("chosen:updated");    	
+		}
+	}
+});
+
+}	
+</script>
+
+
+@endsection

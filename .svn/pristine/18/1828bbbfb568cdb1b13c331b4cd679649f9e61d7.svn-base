@@ -1,0 +1,111 @@
+<?php
+
+namespace App\Http\Controllers\hr;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use App\hr_designation;
+use App\hr_department;
+
+
+class designationController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $Designation=hr_designation::get();
+        $Departname=hr_designation::join('hr_departments','hr_departments.id','=','hr_designation.department_id')->select('hr_designation.*', 'hr_departments.department_name as name')->get();
+        return view('hr.master.designation',compact('Designation','Departname'));
+    } 
+    
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //\DB::enableQueryLog();dd(\DB::getQueryLog());
+    }
+ 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $designation=new hr_designation();
+        $this->validate($request,[
+            'designationname'=>'required',
+            'deptname'=>'required'
+        ]);
+
+        $designation->designation_name=$request->designationname;
+        $designation->status=1;
+        $designation->department_id=$request->deptname;
+        $designation->save();
+        
+        return redirect('/hr/master/designation');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $editdesignation = hr_designation::where('id',$id)->first(); 
+        $Designation=hr_designation::get();
+        return view('hr.master.editDesignation',compact('editdesignation','Designation'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $designation = hr_designation::find($id);
+        $designation->designation_name= $request->designationname;
+        $designation->department_id=$request->deptname;
+        $designation->save();
+
+        return redirect('/hr/master/designation');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $designation=hr_designation::find($id);
+        $designation->delete();
+    }
+}

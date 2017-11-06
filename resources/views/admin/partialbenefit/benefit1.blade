@@ -1,0 +1,179 @@
+@extends('layout.erp')
+@section('banner')
+<div class="col-lg-12" align="center" style="background-color:#ffcf29">
+   <img src="{{url('/')}}/new_heading.png" class="img-responsive">
+</div>
+@endsection
+@section('sidebar')
+@include('partial.header')
+@include('partial.aside')
+@endsection
+@section('body')
+<div class="bg-light lter b-b wrapper-md">
+   <h1 class="m-n font-thin h3">Benefit Declaration</h1>
+</div>
+
+@foreach($tcnmaster as $tcnmasters)
+    <div class="col-md-2" style=" background: #eaffe4;
+    margin: 10px;
+    box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.23);
+    padding: 5px;
+"><img style="float: right" src="https://png.icons8.com/pin/office/30" title="Pin" width="20" height="20">
+
+        <h4 class="font-thin m-t-none m-b">{{$tcnmasters->tcnType}}</h4>
+        <div class="">
+            <div class="">
+                <span>INR: {{$tcnmasters->inr}}</span>
+            </div>
+            <div class="">
+                <span>AED: {{$tcnmasters->aed}}</span>
+            </div>
+            <div class="">
+                <span>SAR: {{$tcnmasters->sar}}</span>
+            </div>
+            <div class="">
+                <span>CAD: {{$tcnmasters->cad}}</span>
+            </div>
+            <div class="">
+                <span>USD: {{$tcnmasters->usd}}</span>
+            </div>
+
+            <div class="">
+                <span>Locking period: {{$tcnmasters->benefitLockingDuration}}</span>
+            </div>
+        </div>
+
+
+    </div>
+@endforeach
+
+
+<div class="col-md-12"><br></div>
+
+         @if(!isset($editbenefit))
+         <form>
+         {{ csrf_field() }}
+         <div class="col-sm-4"><bR>
+
+                     <label>Select TCN*</label><br>
+                     <select name="scheme"  id="scheme"  value="scheme" class="form-control m-b">
+                        @if(isset($_REQUEST['scheme']))
+                             @php $get = $_GET['scheme']; $a[]=0; $a=explode(',',$get);@endphp
+                             <option value="{{$a[0]}}{{','}}{{ $a[1]}}"> {{$a[1]}} </option>@endif
+
+                        <option value="">--select--</option>
+                        @foreach($tcnmaster as $tcn)
+                        <option value="{{$tcn->id}}{{','}}{{ $tcn->tcnType }}">{{ $tcn->tcnType }}</option>
+                        @endforeach
+                     </select>
+                     <button name="show" type="submit"  value="show" class="btn btn-sm btn-block btn-primary">show</button>
+                  </div>
+                  </form>
+         @endif
+         @if(isset($_REQUEST['show']) || isset($_GET))
+
+<div class="wrapper-md">
+
+<div class="line line-dashed b-b line-lg pull-in"></div>
+
+   <div class="col-md-12"><br></div>
+
+   <div class="panel panel-default">
+   <form @if(isset($editbenefit))  action="{{url('/')}}/admin/benefit/@yield('edit_id')" @else action="{{url('/')}}/admin/benefit"  @endif method="POST"  role="form">
+   {{ csrf_field() }}
+   @section('edit')
+          @show
+      <div class="table-responsive" style="overflow-x: initial;">
+        <table class="table table-striped b-t">
+            <thead>
+               <div class="panel-heading">
+                 <strong>@if(isset($_REQUEST['show'])) {{$a[1]  }}  @endif</strong> Benefit Amount per unit.
+
+               </div>
+               <tr>
+                  <th>Month</th>
+                  <th>Year</th>
+                  <th>INR</th>
+                  <th>AED</th>
+                  <th>USD</th>
+                  <th>SAR</th>
+                  <th>CAD</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td>
+                     <select name="month_name" id="month_name" class="input-sm form-control w-sm inline v-middle" required>
+
+                        @if(isset($editbenefit))
+                        <option value="{{$editbenefit->month}}"   selected>{{date("F", mktime(0, 0, 0, $editbenefit->month, 1))}}</option>
+                        @else
+                         <option value="" >select</option>
+                        <option value="01">Jan</option>
+                        <option value="02">Feb</option>
+                        <option value="03">March</option>
+                        <option value="04">April</option>
+                        <option value="05">May</option>
+                        <option value="06">June</option>4
+                        <option value="07">July</option>
+                        <option value="08">Aug</option>
+                        <option value="09">Sept</option>
+                        <option value="10">Oct</option>
+                        <option value="11">Nov</option>
+                        <option value="12">Dec</option>
+                        @endif
+                     </select>
+                  </td>
+                  <td>
+                     <select name="year_name" id="year_name" class="input-sm form-control w-sm inline v-middle" required>
+                      @if(isset($editbenefit))
+                        <option value="{{$editbenefit->year}}"   selected>{{$editbenefit->month}}</option>
+                        @else
+                        <option value="2017" >2017</option>
+                        <option value="2018" >2018</option>
+                        <option value="2019" >2019</option>
+                        <option value="2020" >2020</option>
+                         @endif
+                     </select>
+                  </td>
+                  <td >
+                     <input type="text" name="inr" id="inr" class="form-control" placeholder="" value="@yield('inr')" required>
+                     <input type="hidden" required name="schemevalue" id="schemevalue"
+                     value="@if(isset( $a[0]))
+                     {{ $a[0] }}
+                     @else
+                       @yield('type')
+                       @endif 
+                      ">
+                  </td>
+                  <td >
+                     <input type="text" name="aed" id="aed" class="form-control" placeholder=" " value="@yield('aed')" required>
+                  </td>
+                  <td >
+                     <input type="text" name="usd" id="usd" class="form-control" placeholder=" " value="@yield('usd')" required>
+                  </td>
+                  <td >
+                     <input type="text" name="sar" id="sar" class="form-control" placeholder=" " value="@yield('sar')" required>
+                  </td>
+                  <td >
+                     <input type="text" name="cad" id="cad" class="form-control" placeholder=" " value="@yield('cad')" required>
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+      <button type="submit" id='declare' class="btn btn-block btn-success" name="submit">Declare</button>
+      </form>
+   </div>
+</div>
+@endif
+@endsection
+@section('jquery')
+<script type="text/javascript">
+    // A random variable for this example
+        var value = $('#scheme').val();
+        if(value == '') {
+            $('#declare').attr('disabled',true);
+        }
+</script>
+@endsection

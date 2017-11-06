@@ -1,0 +1,43 @@
+<div style="background:url({{URL::to('/')}}/img/c4.jpg) center center; background-size:cover">
+      <div class="wrapper-lg bg-white-opacity">
+        <div class="row m-t">
+          <div class="col-sm-7">
+            <a href="" class="thumb-lg pull-left m-r">
+              <img src="{{ URL::asset('/storage/img/employee/'.$data[0]->photo)}}" class="img-circle">
+            </a>
+            <div class="clear m-b">
+              <div class="m-b m-t-sm">
+                <span class="h3 text-black">{{$data[0]->name}}</span>
+                {{-- <small class="m-l ">{{$data[0]->status}}</small> --}}
+              </div>
+              <a href="#" class="btn btn-sm btn-success btn-rounded">{{$data[0]->code}}</a>
+              <a href="#" class="btn btn-sm btn-info btn-rounded">{{$data[0]->designation_name}}</a>
+              
+              
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="pull-right pull-none-xs text-center">
+              <a href="" class="m-b-md inline m">
+                <span class="h3 block font-bold">2k</span>
+                <small>Followers</small>
+              </a>
+              <a href="" class="m-b-md inline m">
+                <span class="h3 block font-bold">250</span>
+                <small>Following</small>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="wrapper bg-white b-b">
+      <ul class="nav nav-pills nav-sm">
+        <li class="active"><a href="{{URL::to('/')}}/hr/employee/view/{{$id}}">Personal Info</a></li>
+        <li><a href="{{URL::to('/')}}/hr/employee/qualification/{{$id}}">Qualification</a></li>
+        <li><a href="{{URL::to('/')}}/hr/employee/certificate/{{$id}}">Certificate</a></li>
+        <li><a href="{{URL::to('/')}}/hr/employee/family/{{$id}}">Family</a></li>
+        <li><a href="{{URL::to('/')}}/hr/employee/experience/{{$id}}">Experience</a></li>
+        <li><a href="{{URL::to('/')}}/hr/employee/reference/{{$id}}">References</a></li>
+      </ul>
+    </div>

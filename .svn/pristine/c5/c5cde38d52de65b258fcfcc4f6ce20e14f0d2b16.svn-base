@@ -1,0 +1,343 @@
+@extends('admin.layout.erp1')
+@section('banner')
+  <div class="col-lg-12" align="center" style="background-color:#ffcf29">
+  <img src="{{ URL::asset('img/new_heading.png') }}" class="img-responsive">
+  </div>
+@endsection
+@section('sidebar')
+@include('admin.partial.header')
+@include('admin.partial.aside')
+@endsection
+@section('body')
+<link rel="stylesheet" type="text/css" href="{{ URL::asset('css/jquery.timepicker.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ URL::asset('css/daterangepicker.css') }}" />
+<link rel="stylesheet" href="{{ URL::asset('css/sweetalert.css') }}" type="text/css" />
+<style type="text/css">
+#installationForm .tab-content {
+    margin-top: 20px;
+}
+ #installationForm  .form-group {
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+}
+</style>
+<div class="app-content-body fade-in-up ng-scope" ui-view="" style=""><div  class="fade-in-down ng-scope"><div class="hbox hbox-auto-xs hbox-auto-sm ng-scope">
+  <div class="col">
+    @include('hr.employee.partial.header')
+    <div class="padder">      
+    	<br/>
+    	<div class="row">
+    	<div class="col-sm-12">
+      <div class="panel-default">
+      	<div class="panel-heading">
+      		Personal Details
+      	</div>
+      	  <div class="panel-body">
+      	   <div class="row">
+           <div class="col-sm-3">
+              <div class="form-group has-feedback has-success">
+              <label for="name">Employee ID:</label>
+               {{$data[0]->code}}
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group  has-feedback has-success">
+              <label for="name">Name:</label>
+               {{$data[0]->salutation_name}} {{$data[0]->name}}
+            </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Guardian's Name:</label>
+              {{$data[0]->salutation_guardian}} {{$data[0]->guardian}}
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Gender:</label>
+              {{$data[0]->gender}}
+              </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Date of Birth:</label>
+             {{date('d-m-Y',strtotime($data[0]->dob))}}
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Marital Status:</label>
+              {{$data[0]->marital_status}}
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group has-feedback has-success">
+              <label for="name">Religion:</label>
+              {{$data[0]->religion}}
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Caste:</label>
+             {{$data[0]->caste}}
+              </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Blood Group:</label>
+             {{$data[0]->bloodgroup}}
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Nationality:</label>
+            {{$data[0]->countryName}}
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Mobile Number:</label>
+             {{$data[0]->mobile}}
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Email:</label>
+              {{$data[0]->email}}
+              </div>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Proof Type:</label>
+              {{$data[0]->proof_type}}
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Proof Number:</label>
+             {{$data[0]->proof_number}}
+              </div>
+            </div>
+
+        </div>
+         </div>
+      </div>
+      </div>
+  </div>
+      <div class="row" style="margin-top:15px;">
+      <div class="col-sm-12">
+      <div class="panel-default">
+      	<div class="panel-heading">
+      		Company Details
+      	</div>
+      	 <div class="panel-body">
+      	   <div class="row">
+           <div class="col-sm-3">
+              <div class="form-group has-feedback has-success">
+              <label for="name">Company:</label>
+               {{$data[0]->company_name}}
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group  has-feedback has-success">
+              <label for="name">Branch:</label>
+              {{$data[0]->branch_name}}
+            </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Department:</label>
+              {{$data[0]->department_name}}
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Designation:</label>
+              {{$data[0]->designation_name}}
+              </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Date of Joining:</label>
+             {{date('d-m-Y',strtotime($data[0]->date_of_joining))}}
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Work Shift:</label>
+              @php
+              $_shift=json_decode($data[0]->work_shift);
+              @endphp
+
+              {{$_shift->from}} - {{$_shift->to}}
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group has-feedback has-success">
+              <label for="name">Monthly Gross Salary:</label>
+              {{$data[0]->salary}}
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Job Type:</label>
+               {{$data[0]->job_type}}
+              </div>
+            </div>
+        </div>
+        <div class="row">{{-- 
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Employee Status:</label>
+             {{$data[0]->status}}
+              </div>
+            </div> --}}
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">User Type:</label>
+         {{$data[0]->userType}}
+              </div>
+            </div>
+            
+        </div>
+       
+         </div>
+      </div>
+      </div>
+  </div>
+@foreach ($address as $element)
+	{{-- expr --}}
+
+  <div class="row" style="margin-top:15px;">
+      <div class="col-sm-12">
+      <div class="panel-default">
+      	<div class="panel-heading">
+      		@if($element->type=='correspondence')
+      		Correspondence Address
+      		@else
+      		Permanent Address
+      		@endif
+      	</div>
+      	 <div class="panel-body">
+      	   <div class="row">
+           <div class="col-sm-3">
+              <div class="form-group has-feedback has-success">
+              <label for="name">Address:</label>
+               {{$element->address}}
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group  has-feedback has-success">
+              <label for="name">City:</label>
+               {{$element->city}}
+            </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">State:</label>
+              {{$element->state}}
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Country:</label>
+              {{$element->countryName}}
+              </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Zip Code:</label>
+             {{$element->zip_code}}
+              </div>
+            </div>
+        </div>
+       
+       
+         </div>
+      </div>
+      </div>
+  </div>
+@endforeach
+
+ <div class="row" style="margin-top:15px;">
+      <div class="col-sm-12">
+      <div class="panel-default">
+      	<div class="panel-heading">
+      		Skills
+      	</div>
+      	 <div class="panel-body">
+      	   <div class="row">
+           <div class="col-sm-3">
+              <div class="form-group has-feedback has-success">
+              <label for="name">Computer:</label>
+               {{$skills[0]->computer}}
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group  has-feedback has-success">
+              <label for="name">Typing Speed:</label>
+               {{$skills[0]->typing_speed}}
+            </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">State:</label>
+              {{$skills[0]->knowldge}}
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Country:</label>
+              {{$skills[0]->hobbies}}
+              </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Zip Code:</label>
+             {{$element->zip_code}}
+              </div>
+            </div>
+        </div>
+       
+       
+         </div>
+      </div>
+      </div>
+  </div>
+    </div>
+  </div>
+  
+</div></div></div>
+
+@endsection
+@section('jquery')
+<script src="{{ URL::asset('js/moment.min.js') }}"></script>
+<script src="{{ URL::asset('js/wizard/jquery.bootstrap.wizard.min.js') }}"></script>
+<script src="{{ URL::asset('js/wizard/form_wizard.js') }}"></script>
+<script src="{{ URL::asset('js/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ URL::asset('js/jquery.timepicker.js') }}"></script>
+<script src="{{ URL::asset('js/timerange/datepair.js') }}"></script>
+<script src="{{ URL::asset('js/timerange/jquery.datepair.js') }}"></script>
+<script src="{{ URL::asset('js/daterangepicker.js') }}"></script>
+<script src="{{ URL::asset('js/sweetalert.min.js') }}"></script>
+<script>
+	$(function(){
+		$('body').on('click','.view-employee',function(e){
+          e.preventDefault();
+          alert(1);
+		});
+	})
+</script>
+@endsection

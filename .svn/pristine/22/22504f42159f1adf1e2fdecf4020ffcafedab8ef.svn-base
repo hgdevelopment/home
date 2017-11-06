@@ -1,0 +1,55 @@
+@if($request->show==1 && $request->userType=='MEM')
+  <label>USER NAME</label>
+  <select class="form-control col-md-6 chosen-select" name="userId" id="userId" onchange="getAccess()">
+    @foreach($table as $users)
+      <option value="{{$users->id}}" @if(isset($request->userId) && $request->userId==$users->id){{'selected'}}@endif>{{$users->code}} - {{$users->name}}</option>
+    @endforeach
+  </select>
+@endif
+
+
+
+@if($request->show==1 && $request->userType=='DSA')
+  <label>USER NAME</label>
+  <select class="form-control col-md-6 chosen-select" name="userId" id="userId" onchange="getAccess()">
+    @foreach($table as $users)
+      <option value="{{$users->id}}" @if(isset($request->userId) && $request->userId==$users->id){{'selected'}}@endif>{{$users->code}} - {{$users->name}}</option>
+    @endforeach
+  </select>
+@endif
+
+{{-- @if($request->show==1 && $request->userType=='OI')
+  <label>USER NAME</label>
+  <select class="form-control col-md-6 chosen-select" name="userId" id="userId" onchange="getAccess()">
+    @foreach($table as $users)
+      <option value="{{$users->id}}">{{$users->code}} - {{$users->name}}</option>
+    @endforeach
+  </select>
+@endif
+ --}}
+
+@if($request->show==2)
+        @foreach($parent as $parents)
+          <div class="col-md-12"><div class="row">&nbsp;</div>
+            <div class="checkbox text-black">
+                  <label class="i-checks">
+                    <input type="checkbox" name="check{{$parents->id}}" id="check{{$parents->id}}" class="" onchange="setCheckBox({{$parents->id}})"  @if(isset($accessIds) && in_array($parents->id,$accessIds)){{'checked'}}@endif /><i class="font-bold"></i>{{strtoupper($parents->menu_name)}}
+                  </label>
+            </div>
+          </div>
+
+          <div class="col-md-12" id="Div{{$parents->id}}">  
+            @foreach($child as $childs)
+            @if($parents->id==$childs->parent_id)
+            <div class="col-md-3 text-black">
+            <input type="checkbox" name="check{{$childs->id}}" id="check{{$childs->id}}" @if(isset($accessIds) && in_array($childs->id,$accessIds)){{'checked'}}@endif  />
+             {{$childs->menu_name}}
+            </div>
+            @endif
+            @endforeach
+
+          </div>
+        @endforeach 
+@endif
+
+

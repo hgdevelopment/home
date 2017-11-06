@@ -1,0 +1,72 @@
+<?php
+
+
+use App\hr_salary_allowance as allowance;
+use App\hr_emp_personal_details as employee;
+
+use App\User;
+use App\hr_company;
+use App\hr_branch;
+?>
+<table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="0" width="100%" id="table"  >
+    <thead>
+      <tr style="background-color: #ffe4c4;">
+		<th>S&nbsp;NO</th>
+		<th>EMP CODE</th>
+		<th>NAME</th>
+		<th>SALARY</th>
+		<th>OVER TIME</th>
+		<th>TOTAL SALARY</th>
+	  </tr>
+    </thead>
+    
+    <tbody>
+    @if(count($employees)==0)
+    <tr >
+    <td colspan="8" align="center">
+	<span class="text-danger">No records found..</span>
+	</td>
+	</tr>
+	@endif
+		<?php $i=1;?>
+		@foreach($employees as $employee)
+		<tr data-expanded="true">
+		<td align="center">{{ $i }}</td>
+		<td>{{ $employee->code }}</td>
+		<td>{{ $employee->salutation_name }} {{ $employee->name }}</td>
+		<td>
+{{-- 		@php
+
+			$Fixedsalary=$employee->salary;
+
+			echo $perHour=($Fixedsalary/30)/8;
+
+
+			$att=DB::table('hr_attendance')->where('staffId',$employee->user_id)->whereYear('date',$request->year)->whereMonth('date',$request->month);
+
+
+			$totalday=$att->get();
+
+			$totalcount=count($att);
+
+			$halfday=$att->where('day','halfday')->get();
+
+			$halfcount=count($halfday);
+
+			$fullday=$att->where('day','fullday')->get();
+
+			$fullcount=count($fullday);
+
+
+
+		@endphp --}}
+
+
+		</td>
+		<td>ot</td>
+		<td>total</td>
+		</tr>
+		<?php $i++;?>
+		@endforeach
+    </tbody>
+</table>

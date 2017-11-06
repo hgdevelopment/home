@@ -1,0 +1,32 @@
+<div class="col-sm-12 row">
+           
+           <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Name:</label>
+              <input type="text" class="form-control f_name" id="f_name" name="f_name[]">
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Relation with Employee:</label>
+              <input type="text" class="form-control" id="f_relation" name="f_relation[]">
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Gender:</label>
+              <select type="text" class="form-control" id="f_gender" name="f_gender[]">
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Mobile:</label>
+              <input type="text" class="form-control" id="f_mobile" name="f_mobile[]">
+              </div>
+            </div>
+            <button type="button" class="delete btn btn-danger btn-sm">Delete</button>
+         </div>

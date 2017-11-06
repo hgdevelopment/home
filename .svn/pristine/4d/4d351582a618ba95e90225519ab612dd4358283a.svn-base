@@ -1,0 +1,103 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Resignation Letter</title>
+
+    <style type="text/css" media="screen">
+        @font-face {
+        font-weight: normal;
+        font-style: normal;
+        font-variant: normal;
+        src: local("GOTHIC"), url("{{URL::to('/') }}/vendor/dompdf.dompdf/lib/fonts/GOTHIC.ttf") format("truetype");
+        }
+        body {
+            font-family: GOTHIC, sans-serif!important;
+        }
+       
+
+
+table{
+    line-height: 14px;
+    font-size: 15px;
+}
+
+    </style>
+</head>
+<body>
+<header id="header" style="text-align:center;padding-top: -30px; ">
+ 
+  <img src="{{URL::to('/') }}/img/tcnmaster/appointment.png" alt="">
+  
+</header>
+<div>
+    <div class="section" style="text-align:center;padding-top: 10px; ">
+        <br><br><br> <br> <br> <br>
+        <table cellspacing="0" cellpadding="0" border="0" align="center">
+        <tr >
+            <td width="450px" align="center">
+                <b style="font-size:23px;padding-bottom: 5px;">Resignation Letter</b><br/><br/>
+            
+            </td>
+        </tr>
+        </table> 
+    </div>
+    <br>
+   
+     <div class="section" style="text-align:center;padding-top: 10px; ">
+        <table  cellspacing="0" cellpadding="0" border="0" align="center">
+          
+           
+            <tr><td >{{ucfirst($resigns->branch_name)}}</td></tr>
+            <tr><td >{{ucfirst($resigns->address1)}},</td></tr>
+            <tr><td >{{ucfirst($resigns->city)}},</td></tr>
+            <tr><td >{{ucfirst($resigns->state)}},</td></tr>
+            <tr><td >{{ucfirst($resigns->pinNo)}}</td></tr>
+                  
+        </table>
+    </div>
+    <div style="margin-left: 70px;padding-top: -20px;line-height: 13px;font-size: 15px;">
+        <table width="100%">
+            <tr><td >&nbsp;</td></tr>
+           
+            <tr><td >{{ucfirst($resigns->salutation_name)}}{{ucfirst($resigns->name)}}</td></tr>
+            <tr><td >{{ucfirst($resigns->address)}},</td></tr>
+            <tr><td >{{ucfirst($resigns->city)}},</td></tr>
+            <tr><td >{{ucfirst($resigns->state)}},</td></tr>
+            <tr><td >{{ucfirst($resigns->countryName)}},</td></tr>
+            <tr><td >{{ucfirst($resigns->zip_code)}}</td></tr>
+            <tr><td >&nbsp;</td></tr>
+            <tr><td></td></tr>
+            <tr><td>Dear Madam,</td></tr>    
+            <br><br>    
+        </table>
+    </div>
+
+    <div >
+        <table width="630px" align="center" >
+            <tr>
+                <td width="40px" valign="top"></td>
+                <td width="590px" valign="top" style="padding:0 30px;text-align: justify;font-size: 15px;">
+                 
+                                I would like to inform you that I am resigning from my position as {{$resigns->designation_name}} for the company.
+                                Thank you very much for the opportunities for professional and personal development that you have provided me.  I have enjoyed working for the company and appreciate the support provided me during my tenure with the company.
+                                If I can be of any help during this transition, please let me know.<br>
+
+
+                                <br><br>
+                                Sincerely,<br><br>
+                                {{ucfirst($resigns->salutation_name)}}{{ucfirst($resigns->name)}}
+
+                </td>
+
+            </tr>
+        </table>
+    </div>
+
+    <br>
+    <br>
+
+   
+
+  
+</body>
+</html>

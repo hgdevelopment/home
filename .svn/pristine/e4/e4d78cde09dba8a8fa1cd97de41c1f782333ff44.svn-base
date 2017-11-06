@@ -1,0 +1,316 @@
+<?php
+
+namespace App\Http\Controllers\hr;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use App\country;
+use App\hr_company;
+use App\hr_branch;
+use App\hr_department;
+use App\hr_designation;
+use App\User;
+use App\hr_emp_personal_details;
+use App\hr_emp_address;
+use App\hr_emp_certificate;
+use App\hr_emp_experience;
+use App\hr_emp_family_details;
+use App\hr_emp_qualification;
+use App\hr_emp_references;
+use App\hr_emp_skills;
+use App\hr_religion;
+use App\log;
+
+use Auth;
+use Mail;
+use DataTables;
+use DB;
+
+
+
+
+class employeeController extends Controller
+{
+    //
+    public function index(){
+
+    }
+    public function addEmployee(){
+    	$listTypes= ['country'=>country::all(),
+                     'company'=>hr_company::all(),
+                     'department'=>hr_department::all(),
+                     'religion'=>hr_religion::all()];
+
+    	return view('hr.employee.add_employee',compact('listTypes'));
+    }
+    public function listEmployee(){
+        $data=['password'=>'4646dt','username'=>'evxvvx','name'=>'gdvd'];
+        return view('hr.employee.list_employee',compact('data'));
+    }
+    public function datatable_employee(Request $request){
+       $data= DB::table('logins')
+
+                     ->join('hr_emp_personal_details', function ($join) {
+                        $join->on('logins.id', '=', 'hr_emp_personal_details.user_id')
+                             ->orderBy('hr_emp_personal_details.company_id', 'desc');
+                         })
+                     ->join('hr_companies', function ($join) {
+                        $join->on('hr_emp_personal_details.company_id', '=', 'hr_companies.id');
+                         })
+                     ->join('hr_branch', function ($join) {
+                        $join->on('hr_emp_personal_details.branch_id', '=', 'hr_branch.id');
+                         })
+                     ->join('hr_departments', function ($join) {
+                        $join->on('hr_emp_personal_details.department_id', '=', 'hr_departments.id');
+                         })
+                     ->join('hr_designation', function ($join) {
+                        $join->on('hr_emp_personal_details.designation_id', '=', 'hr_designation.id');
+                         })
+                     ->select([
+                            DB::raw('@rownum  := @rownum  + 1 AS rownum'),
+                            'hr_emp_personal_details.code as code',
+                            'hr_emp_personal_details.name as name',
+                            'hr_companies.company_name as company',
+                            'hr_branch.branch_name as branch',
+                            'hr_departments.department_name as department',
+                            'hr_designation.designation_name as designation',
+                            'hr_emp_personal_details.gender as gender',
+                            'hr_emp_personal_details.dob as dob',
+                            'logins.userType as usertype',
+                            'logins.status as status']);
+                     
+                     // ->where('logins.status','Active')
+                     // ->get()
+                        if ($name = $request->get('name')) {
+                          //  print($datatable->request->get('name'));
+                             $data->where('hr_emp_personal_details.name', 'like', "$name%");
+                        }
+                        if ($code = $request->get('code')) {
+                            $data->where('hr_emp_personal_details.code', 'like', "$code%");
+                        }
+                        if($usertype = $request->get('usertype') &&  $request->get('usertype')!='All'){
+                            $data->where('logins.userType', '=', $request->get('usertype'));
+                        }else{
+                             $data->whereIn('logins.userType', ['EMP', 'OI', 'ME']);
+                        }
+                        if ($status = $request->get('status')) {
+                            $data->where('logins.status', 'like', "$status%");
+                        }
+        $datatable= DataTables::of($data)
+            ->addColumn('action', function ($data) {
+                return '<div class="dropdown">
+                  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
+                  <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a href="#"><i class="fa fa-eye" aria-hidden="true"></i> View</a></li>
+                    <li><a href="#"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</a></li>
+                  </ul>
+                </div>';  });
+           
+        
+         return $datatable->make(true);
+    }
+
+    public function editEmployee(){
+        $listTypes= ['country'=>country::all(),
+                     'company'=>hr_company::all(),
+                     'department'=>hr_department::all()];
+
+        return view('hr.employee.edit_employee',compact('listTypes'));
+    }
+    public function acadamic_details(){
+    	return view('hr.employee.ajax.acadamic_details');
+    }
+    public function certification_details(){
+    	return view('hr.employee.ajax.certification_details');
+    }
+    public function family_details(){
+    	return view('hr.employee.ajax.family_details');
+    }
+    public function references_details(){
+    	return view('hr.employee.ajax.references_details');
+    }
+    public function work_experience_details(){
+    	return view('hr.employee.ajax.work_experience_details');
+    }
+    public function ajax_branch(Request $request){
+        $branch = hr_branch::where('company_id',$request->_id)->get();
+       return response()->json($branch);
+    }
+    public function ajax_designation(Request $request){
+        $designation = hr_designation::where('department_id',$request->_id)->get();
+       return response()->json($designation);
+    }
+    public function ajax_employee_id_exist(Request $request){
+       $code=str_pad($request->emplyee_id,10,"0",STR_PAD_LEFT);
+       if(User::where('username',$code)->count()>0){
+       	return response()->json(array('valid' => false));
+       }
+
+       return response()->json(array('valid' => true));
+    }
+    public function generateRandomString($length = 4) {
+	    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	    $charactersLength = strlen($characters);
+	    $randomString = '';
+	    for ($i = 0; $i < $length; $i++) {
+	        $randomString .= $characters[rand(0, $charactersLength - 1)];
+	    }
+	    return $randomString;
+	}
+    public function create(Request $request){
+    	$this->validate($request,[
+		'emplyee_id'=>'required',
+		'name'=>'required',
+	    ]);
+	    $user = new User;
+	    $persoanl = new hr_emp_personal_details;
+	    $c_address = new hr_emp_address;
+	    $t_address = new hr_emp_address;
+	    $skills = new hr_emp_skills;
+        $code_username=str_pad($request->emplyee_id,10,"0",STR_PAD_LEFT);
+        $password=$this->generateRandomString();
+	    $user->username=$code_username;
+	    $user->password=Hash::make($password);
+	    $user->userType=$request->scheeme;
+	    $user->status=$request->status;
+	    $user->save();
+	    $username=$code_username;
+        $email_id=$request->email;
+	    $user_id=$user->id;
+        $persoanl_name=$request->name;
+	    //photo upload
+		$profilepic = 'HEERA_EMPLOYEE'.time().'.'.$request->photo->getClientOriginalExtension();
+		$request->photo->move(storage_path('img/employee'), $profilepic);
+         
+	    $persoanl->user_id=$user_id;
+	    $persoanl->name=$request->name;
+        $persoanl->salutation_name=$request->emp_name;
+        $persoanl->salutation_guardian=$request->emp_name_g;
+	    $persoanl->code=$username;
+	    $persoanl->guardian=$request->gname;
+	    $persoanl->gender=$request->gender;
+	    $persoanl->dob=date('Y-m-d',strtotime($request->dob));
+	    $persoanl->marital_status=$request->marital_s;
+	    $persoanl->religion=$request->religion;
+	    $persoanl->caste=$request->caste;
+	    $persoanl->bloodgroup=$request->bloodgroup;
+	    $persoanl->nationality=$request->nationality;
+	    $persoanl->mobile=$request->mobile;
+	    $persoanl->email=$request->email;
+	    $persoanl->photo=$profilepic;
+	    $persoanl->company_id=$request->company;
+	    $persoanl->branch_id=$request->branch;
+	    $persoanl->department_id=$request->department;
+	    $persoanl->designation_id=$request->designation;
+	    $persoanl->date_of_joining=date('Y-m-d',strtotime($request->dateofjoing));
+	    $persoanl->work_shift=json_encode(array('from' => $request->workshift_from, 'to'=>$request->workshift_to));
+	    $persoanl->salary=$request->monthly_sal;
+	    $persoanl->job_type=$request->jobtype;
+	    $persoanl->added_id=Auth::guard('admin')->user()->id;
+	    $persoanl->save();
+
+        $c_address->user_id=$user_id;
+        $c_address->address=$request->c_address;
+        $c_address->city=$request->c_city;
+        $c_address->state=$request->c_state;
+        $c_address->country=$request->c_country;
+        $c_address->zip_code=$request->c_zip;
+        $c_address->type='correspondence';
+        $c_address->save();
+
+        $t_address->user_id=$user_id;
+        $t_address->address=$request->p_address;
+        $t_address->city=$request->p_city;
+        $t_address->state=$request->p_state;
+        $t_address->country=$request->p_country;
+        $t_address->zip_code=$request->p_zip;
+        $t_address->type='permanent';
+        $t_address->save();
+
+        $skills->user_id=$user_id;
+        $skills->computer=$request->computer_skill;
+        $skills->typing_speed=$request->typing_speed;
+        $skills->knowldge=$request->knowledge;
+        $skills->hobbies=$request->hobbies;
+        $skills->save();
+
+
+
+	    for ($i=0; $i<=count($request->course_cer); $i++ ) {
+        	if($request->course_cer[$i]!=''){
+        	$certificate = new hr_emp_certificate;
+        	$certificate->user_id=$user_id;
+        	$certificate->course=$request->course_cer[$i];
+        	$certificate->authority=$request->authority[$i];
+        	$certificate->institution=$request->institution[$i];
+        	$certificate->year=$request->year_cer[$i];
+        	$certificate->save();
+        	}
+        }
+        for ($i=0; $i<=count($request->exp_organisation); $i++ ) {
+        	if($request->exp_organisation[$i]!=''){
+        	$experience = new hr_emp_experience;
+        	$experience->user_id=$user_id;
+        	$experience->organisation=$request->exp_organisation[$i];
+        	$experience->designation=$request->exp_designation[$i];
+        	$experience->responsibilities=$request->exp_responsibilities[$i];
+        	$experience->income=$request->exp_income[$i];
+        	$experience->timeperiod=$request->exp_period[$i].'-'.$request->exp_period_2[$i];
+        	$experience->save();
+        	}
+        }
+
+        for ($i=0; $i<=count($request->f_name); $i++ ) {
+        	if($request->f_name[$i]!=''){
+        	$family = new hr_emp_family_details;
+        	$family->userid=$user_id;
+        	$family->name=$request->f_name[$i];
+        	$family->relationship=$request->f_relation[$i];
+        	$family->gender=$request->f_gender[$i];
+        	$family->mobile=$request->f_mobile[$i];
+        	$family->save();
+        	}
+        }
+        for ($i=0; $i<=count($request->course); $i++ ) {
+        	if($request->course[$i]!=''){
+        	$qualification = new hr_emp_qualification;
+        	$qualification->user_id=$user_id;
+        	$qualification->course=$request->course[$i];
+        	$qualification->university=$request->ac_institution[$i];
+        	$qualification->pass_out=$request->year_pass[$i];
+        	$qualification->marks=$request->mark_pers[$i];
+        	$qualification->specialization=$request->specialization[$i];
+        	$qualification->save();
+        	}
+        }
+        for ($i=0; $i<=count($request->r_name); $i++ ) {
+        	if($request->r_name[$i]!=''){
+        	$reference = new hr_emp_references;
+        	$reference->user_id=$user_id;
+        	$reference->name=$request->r_name[$i];
+        	$reference->mobile_no=$request->r_mobile[$i];
+        	$reference->email_id=$request->r_email[$i];
+        	$reference->relationship=$request->r_relationship[$i];
+        	$reference->save();
+        	}
+        }
+            $log = new log();
+            $log->ip_address =  \Request::getClientIp(true);
+            $log->user = Auth::guard('admin')->user()->id;
+            $log->actions = "Created Employee-".$code_username;
+            $log->save();
+
+        // $data=['password'=>$password,'username'=>$username,'name'=>$persoanl_name];
+        // Mail::send('hr.employee.mail.employee', compact('data'), function ($message) use ($email_id){
+        // $message->from('heeraerptl@gmail.com', 'Heera Groups');
+        // $message->to($email_id)->subject('Your Login Details-Heera Groups');
+        // });
+
+
+
+	    
+	   return response()->json(array('result' => true));
+    }
+}

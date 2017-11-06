@@ -1,0 +1,127 @@
+<?php
+
+namespace App\Http\Controllers\hr;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use App\hr_salary_master;
+use App\hr_salary_master_temp;
+use App\hr_company;
+use Auth;
+use DB;
+use Alert;
+use Mail;
+class salaryMasterController extends Controller
+{
+
+
+
+    public function index()
+    {   
+        if(Controller::userAccessRights('Salary')!=1) return redirect(' ');
+           
+
+        $company=hr_company::where('status','1')->get();
+        return View('hr.master.salaryMaster',compact('company'));
+    }
+
+
+
+
+    public function create(Request $request)
+    {
+
+        $logins=Auth::guard('admin')->user();
+
+        if(Controller::userAccessRights('Salary')!=1) return redirect(' ');
+
+            
+        //**************************Show Company Allowances Details***********************//
+
+        //**************************_______________________________***********************//
+
+        if($request->process=='getAllowances')
+        {
+
+
+        // $tempDelete=hr_salary_master_temp::where('user_id',$logins->id)->where('company_id',$request->company_id)->delete();
+
+
+        // $salary_master=hr_salary_master::where('company_id',$id)->get();
+
+
+        // foreach ($salary_master as $salary_master)
+        // {
+    
+        //     $insert        =hr_salary_master_temp::insert([
+        //     'company_id'   => $salary_master->company_id, 
+        //     'allowances'   => $salary_master->allowances, 
+        //     'percentage'   => $salary_master->percentage, 
+        //     'user_id'      => $logins->id, 
+
+        //     ]);
+        // }
+
+
+        $salary_temp=hr_salary_master_temp::where('user_id',$logins->id)->where('company_id',$request->company_id)->get();
+
+        return view('hr.master.salaryMasterAjax',compact('request','salary_temp')); 
+
+
+        }
+
+
+            
+        //**************************Add  Company Allowances Details in Temp Table***********************//
+
+        //**************************_______________________________***********************//
+
+        if($request->process=='add_temp')
+        {
+
+            $insert        ==DB::table('hr_salary_master_temp')->insert([
+            'company_id'   => $request->company_id, 
+            'allowances'   => $request->allowances, 
+            'percentage'   => $request->percentage, 
+            'user_id'      => $logins->id
+
+            ]);
+        } 
+    }
+
+
+
+
+    public function store(Request $request)
+    {
+        
+    }
+
+
+
+    public function show($id)
+    {
+    }
+
+
+
+    public function edit($id)
+    {
+        //
+    }
+
+
+
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+
+
+    public function destroy($id)
+    {
+        //
+    }
+}

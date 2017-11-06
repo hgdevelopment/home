@@ -1,0 +1,29 @@
+<div class="col-sm-12 row">
+           
+           <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Name:</label>
+              <input type="text" class="form-control" id="r_name" name="r_name[]">
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Mobile No:</label>
+              <input type="text" class="form-control" id="r_mobile" name="r_mobile[]">
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Email ID:</label>
+              <input type="text" class="form-control" id="r_email" name="r_email[]">
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Relationship:</label>
+              <input type="text" class="form-control" id="r_relationship" name="r_relationship[]">
+              </div>
+            </div>
+            
+            <button type="button" class="delete btn btn-danger btn-sm">Delete</button>
+         </div>

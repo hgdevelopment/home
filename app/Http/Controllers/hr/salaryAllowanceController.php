@@ -1,0 +1,243 @@
+<?php
+
+namespace App\Http\Controllers\hr;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use App\hr_salary_allowance;
+use App\hr_salary_allowance_temp;
+use App\hr_company;
+use Auth;
+use DB;
+use Alert;
+use Mail;
+
+class salaryAllowanceController extends Controller
+{
+
+
+
+    public function index()
+    {   
+        if(Controller::userAccessRights('Salary Allowance')!=1) return redirect()->back();
+           
+        $company=hr_company::where('status','1')->get();
+        return View('hr.master.salaryAllowance',compact('company'));
+    }
+
+
+
+
+    public function create(Request $request)
+    {
+
+        $logins=Auth::guard('admin')->user();
+
+        if(Controller::userAccessRights('Salary Allowance')!=1) return redirect()->back();
+
+            
+        //**************************Show Company Allowances Details***********************//
+
+        //**************************_______________________________***********************//
+
+        if($request->process=='getAllowances')
+        {
+
+
+
+        $tempDelete=hr_salary_allowance_temp::where('company_id',$request->company_id)->delete();
+
+
+        $salary_master=hr_salary_allowance::where('company_id',$request->company_id)->get();
+
+
+        foreach ($salary_master as $salary_master)
+        {
+
+            $insert        =DB::table('hr_salary_allowance_temp')->insert([
+            'company_id'   => $salary_master->company_id, 
+            'allowances'   => $salary_master->allowances, 
+            'percentage'   => $salary_master->percentage, 
+            'user_id'      => $logins->id
+            ]);
+        }
+
+
+        $company=hr_company::find($request->company_id);
+
+        $salary_temp=hr_salary_allowance_temp::where('user_id',$logins->id)->where('company_id',$request->company_id)->get();
+
+        return view('hr.master.salaryAllowanceAjax',compact('request','salary_temp','company')); 
+
+
+        }
+           
+
+
+
+
+
+
+
+
+
+        //**************************Show Company Temp Table Allowances Details***********************//
+
+        //**************************_______________________________***********************//
+
+
+        if($request->process=='tempAllowances')
+        {
+        $company=hr_company::find($request->company_id);
+
+        $salary_temp=hr_salary_allowance_temp::where('user_id',$logins->id)->where('company_id',$request->company_id)->get();
+
+        return view('hr.master.salaryAllowanceAjax',compact('request','salary_temp','company')); 
+
+
+        }
+
+
+
+
+
+
+
+
+            
+        //**************************Add  Company Allowances Details in Temp Table***********************//
+
+        //**************************_______________________________***********************//
+
+        if($request->process=='add_temp')
+        {
+
+            $insert        ==DB::table('hr_salary_allowance_temp')->insert([
+            'company_id'   => $request->company_id, 
+            'allowances'   => ucfirst($request->allowances), 
+            'percentage'   => $request->percentage, 
+            'user_id'      => $logins->id
+
+            ]);
+        }
+
+
+
+
+
+
+
+
+        //************************** UPDATE  Company Allowances Details ***********************//
+
+        //**************************_______________________________***********************//
+
+
+        if($request->process=='updateAllowances')
+        {
+
+        DB::table('hr_salary_allowance_temp')->where('id', $request->id)->update(['allowances' => ucfirst($request->allowances), 'percentage' => $request->percentage]);
+
+        }   
+
+
+
+
+        //************************** DELETE  Company Allowances Details ***********************//
+
+        //**************************_______________________________***********************//
+
+
+        if($request->process=='deleteAllowances')
+        {
+
+        $tempDelete=hr_salary_allowance_temp::where('id',$request->id)->delete();
+
+        }   
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+    public function store(Request $request)
+    {
+        $logins=Auth::guard('admin')->user();
+
+        $company_id= $request->company_id;
+
+
+        $tempDelete=hr_salary_allowance::where('company_id',$company_id)->delete();
+
+
+       $tempSelect=hr_salary_allowance_temp::where('company_id',$company_id)->where('user_id',$logins->id)->get();
+
+       foreach($tempSelect as $temp)
+       {
+            $salaryMaster=new hr_salary_allowance;
+            $salaryMaster->company_id=$temp->company_id;
+            $salaryMaster->allowances=$temp->allowances;
+            $salaryMaster->percentage=$temp->percentage;
+            $salaryMaster->user_id=$temp->user_id;
+            $salaryMaster->save();
+       }
+
+
+
+        $tempDelete=hr_salary_allowance_temp::where('company_id',$company_id)->delete();
+
+
+        $type='Salary Allowance';
+        $report='Create Salary Allowance. Company Name : '.$request->company_name;
+
+        Controller::logReport($type,$report);
+
+
+        return redirect('hr/salaryAllowance/'.$company_id);
+    }
+
+
+
+    public function show($id)
+    {
+
+
+        $company=hr_company::where('status','1')->get();
+
+        return View('hr.master.salaryAllowance',compact('company','id'));
+
+    }
+
+
+
+    public function edit($id)
+    {
+        //
+    }
+
+
+
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+
+
+    public function destroy($id)
+    {
+        //
+    }
+}

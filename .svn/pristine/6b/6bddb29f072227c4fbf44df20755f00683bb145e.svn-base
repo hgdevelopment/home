@@ -1,0 +1,246 @@
+<?php
+
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great! 
+|
+*/
+
+Route::get('MarkAllSeen' ,'NotificationController@AllSeen');
+
+Route::group(['middleware' => ['web']], function () 
+{
+    Route::get('/', 'auth\LoginController@showLoginForm');
+    Route::post('/login', ['as'=>'login','uses'=>'auth\LoginController@login']);
+    Route::get('/logout', ['as'=>'logout','uses'=>'auth\LoginController@logout']);   
+    Route::get('/forget_password',['as'=>'forgetpassword','uses'=>'web\ForgetPasswordController@index']);
+    Route::post('/submit_username',['as'=>'submitusername','uses'=>'web\ForgetPasswordController@findemail']);
+
+    Route::get('member/create/{id}','web\memberController@show'); 
+    Route::get('member/{id}/edit','web\memberController@edit');
+    Route::put('member/creates/{id}','web\memberController@update');
+     Route::get('web/member/memberconfrim/{id}','web\memberController@viewcreated');
+     Route::get('member/countryIds','web\memberController@checkCountryId');
+
+    Route::resource('web/member/createMember', 'web\memberController');
+    Route::get('web/member/pdf/{id}', 'web\memberController@pdfMember'); //pdf
+    Route::get('web/member/pdfview/{id}', 'web\memberController@viewpdf'); 
+    //pdf
+    Route::post('web/enquiryreg/validation',['as'=>'web.validation.enquiry','uses'=>'web\enquiryregController@validation'] );
+    Route::resource('enquiryreg','web\enquiryregController');
+     
+         ////outsite DSA///
+    Route::get('web/dsa/pdf/{id}', 'web\dsaController@pdfDsa'); //pdf
+    Route::get('web/dsa/pdfview/{id}', 'web\dsaController@viewpdf'); //pdf
+    Route::get('web/countryId','web\dsaController@checkCountryId');//check country Id link
+    Route::get('web/checkAcc','web\dsaController@checkAccount');//check heera account link
+    Route::get('web/dsa/viewDsaRequest','web\dsaController@show');
+    Route::resource('web/dsaCreate', 'web\dsaController');
+});
+
+
+
+Route::group(['middleware' => ['user']], function () 
+{
+    Route::get('web/profile', ['as'=>'web.profile','uses'=>'web\pageController@profile']);
+    Route::get('web/dashboard', ['as'=>'web.dashboard','uses'=>'web\pageController@index']);
+
+    Route::resource('web/tcnapplication', 'web\tcnController');
+    Route::get('web/tcn', ['as'=>'web.tcninfo','uses'=>'web\pageController@tcn']);
+    Route::get('web/tcndetails/{id}', ['as'=>'web.tcninfo.details','uses'=>'web\pageController@tcndetails']);
+    Route::post('web/tcnmasterAjax', ['as'=>'web.ajax.tcnmaster','uses'=>'web\tcnController@tcnmasterAjax']);
+    Route::resource('web/tcnwithDrawal','web\tcnwithDrawalController');
+
+    Route::get('web/application', ['as'=>'web.application','uses'=>'web\pageController@application']);
+    Route::post('web/changeimg', ['as'=>'web.changeimg','uses'=>'web\profileController@changeProfileImg']);
+
+    Route::post('web/ajaxproof', ['as'=>'web.ajax.proof','uses'=>'web\tcnController@nomineeProofAjax']);
+    Route::post('web/ajaxproof_two', ['as'=>'web.ajax.proof_two','uses'=>'web\tcnController@nomineeProofAjax_two']);
+    Route::post('web/ajaxbank', ['as'=>'web.ajax.bank','uses'=>'web\tcnController@benifitAccountAjax']);
+    Route::post('web/ajaxnominee', ['as'=>'web.ajax.nominee','uses'=>'web\tcnController@nomineeDetailsAjax']);
+    Route::post('web/ajaxnominee_two', ['as'=>'web.ajax.nominee_two','uses'=>'web\tcnController@nomineeDetailsAjax_two']);
+    Route::post('web/heeraAccountAjax', ['as'=>'web.ajax.heeraAccount','uses'=>'web\tcnController@heeraAccountAjax']);
+
+    Route::resource('web/nominee','web\nomineeController');
+    Route::get('web/tcn_request_listDataTable', 'web\tcnRequestController@listTcnNotConfirmDataTable');
+    Route::resource('web/tcnRequest', 'web\tcnRequestController');
+
+    include'surezweb.php';
+
+
+    Route::get('web/member/viewMember', 'web\memberController@viewMemberList');
+    Route::get('web/member/createdByOther', 'web\memberController@createdByOther');
+    Route::post('web/member/createdByOther', 'web\memberController@createdByOther');
+    Route::resource('web/member','web\memberController');
+
+    Route::get('web/enquiry_report','web\enquiryregController@report');
+    Route::post('web/enquiry_report/view','web\enquiryregController@reportview'); 
+
+    /*Route::post('web/partialWithdraw/viewData', 'web\partialWithdrawalController@viewData'); */ 
+    Route::get('web/partialWithdraw/{id}','web\partialWithdrawalController@show');
+    Route::post('web/partialWithdraw/withdraw', 'web\partialWithdrawalController@withdraw'); 
+    Route::resource('web/partialWithdraw', 'web\partialWithdrawalController'); 
+
+
+});
+
+Route::group(['middleware' => ['admin']], function () 
+{
+
+    Route::get('admin/dashboard', ['as'=>'admin.dashboard','uses'=>'admin\pageController@index']);
+    
+    Route::get('admin/allnotification','NotificationController@allnotification');
+
+    /*Bank  Module - Priya*/
+    Route::get('admin/bankmaster/delete','admin\bankmasterController@destroy');
+    Route::get('admin/bankmaster/checkAccId','admin\bankmasterController@checkAccId');
+    Route::get('admin/bankmaster/checkAccNo','admin\bankmasterController@checkAccNo');
+    Route::resource('admin/bankmaster','admin\bankmasterController');
+    Route::post('admin/bankmasteradd','admin\bankmasterController@add');
+
+    
+
+    /*Enquiry  Module - Diniya*/
+    Route::get('admin/viewsolvedenquiry','admin\enquiryregController@solvedview');
+    Route::get('admin/enquiryregview','admin\enquiryregController@show');
+    Route::get('admin/enquiryhandling/{id}','admin\enquiryregController@view');
+    Route::post('admin/enquiryhandling','admin\enquiryregController@insert');
+    Route::get('admin/enquirysolveview','admin\enquiryregController@solve');
+    Route::get('admin/enquirysolving/{id}','admin\enquiryregController@solveview');
+    Route::post('admin/enquirysolving','admin\enquiryregController@insertsolve');
+    Route::post('admin/enquiry/enquiryreg/tcn','admin\enquiryregController@display');
+    Route::get('admin/pending_tcn/{id}','admin\enquiryregController@pendingtcn');
+    Route::get('admin/enquiry_report','admin\enquiryregController@report');
+    Route::post('admin/enquiry_report/view','admin\enquiryregController@reportview');
+    Route::resource('admin/enquiryreg','admin\enquiryregController');
+
+
+
+    //Incentive  Module - Diniya
+    Route::resource('admin/categorymaster','admin\categorymasterController');
+    Route::resource('admin/incentivemaster','admin\incentivemasterController');
+
+    
+    Route::get('admin/generate_incentive','admin\IncentiveController@index');
+    Route::post('admin/generate_incentive','admin\IncentiveController@generate');
+    Route::get('admin/generate_incentive/datatable', ['as'=>'generate_incentive.datatbale','uses'=>'admin\IncentiveController@anyData']);
+    Route::get('admin/report_incentive_inner/{id}','admin\IncentiveController@report_incentive_inner');
+    Route::get('admin/report_incentive/{id}','admin\IncentiveController@report_incentive');
+    Route::post('admin/report_incentive_dsa','admin\IncentiveController@report_incentive_dsa');
+    Route::get('admin/report_incentive_dsa/downloadExcel/{id}', 'admin\IncentiveController@IDSAdownloadExcel');
+    Route::get('admin/report_incentive_dsa_all/downloadExcel/{id}', 'admin\IncentiveController@AllDSAdownloadExcel');
+    Route::post('admin/report_incentive_me','admin\IncentiveController@report_incentive_me');
+    Route::get('admin/report_incentive_inner_me/{id}','admin\IncentiveController@report_incentive_inner_me');
+    Route::get('admin/report_incentive_me/downloadExcel/{id}/{u}/{g}', 'admin\IncentiveController@IMEdownloadExcel');
+    Route::get('admin/report_incentive_me_all/downloadExcel/{id}', 'admin\IncentiveController@AllMEdownloadExcel');
+
+    //Partial Withdraw Module - Diniya
+    Route::post('admin/partialWithdrawexcel','admin\partialWithdrawalController@excel');
+    Route::post('admin/partialWithdraw/editwithdraw','admin\partialWithdrawalController@updatewithdraw');
+    Route::get('admin/partialWithdrawedit/{id}','admin\partialWithdrawalController@editrequest');
+    Route::get('admin/partialWithdrawviewing/{id}','admin\partialWithdrawalController@viewing');
+    Route::get('admin/partialWithdrawapproveview/{id}','admin\partialWithdrawalController@approveview');
+    Route::get('admin/partialWithdraw/deny/{id}', 'admin\partialWithdrawalController@deny'); 
+    Route::get('admin/partialWithdraw/viewdeny','admin\partialWithdrawalController@viewdeny'); 
+    Route::post('admin/partialWithdraw/viewapprove','admin\partialWithdrawalController@viewapprovesearch'); 
+    Route::get('admin/partialWithdraw/viewapprove','admin\partialWithdrawalController@viewapprove'); 
+    Route::post('admin/partialWithdraw/approve', 'admin\partialWithdrawalController@action');  
+    Route::get('admin/partialWithdrawview/{id}','admin\partialWithdrawalController@view');
+    Route::get('admin/partialWithdraw/view','admin\partialWithdrawalController@test'); 
+    Route::post('admin/partialWithdraw/viewData', 'admin\partialWithdrawalController@viewData');  
+    Route::get('admin/partialWithdraw/{id}','admin\partialWithdrawalController@show');
+    Route::post('admin/partialWithdraw/withdraw', 'admin\partialWithdrawalController@withdraw'); 
+    Route::resource('admin/partialWithdraw', 'admin\partialWithdrawalController'); 
+
+
+    
+    Route::post('admin/reassigndsa/solve', 'admin\reassignDsaController@solve'); 
+    Route::post('admin/reassigndsa/view', 'admin\reassignDsaController@view');  
+    Route::resource('admin/reassigndsa', 'admin\reassignDsaController');
+
+    Route::post('admin/reassignmember/solve', 'admin\reassignMemberController@solve'); 
+    Route::post('admin/reassignmember/view', 'admin\reassignMemberController@view');  
+    Route::resource('admin/reassignmember', 'admin\reassignMemberController');  
+    
+
+
+    
+    Route::get('admin/tcn_generate_pdf/{id}','admin\tcnviewprintController@generate_tcn_pdf');
+
+    //HR
+    Route::get('hr/employee/add','hr\employeeController@addEmployee');
+    Route::get('hr/employee/edit','hr\employeeController@editEmployee');
+    Route::get('hr/employee/list','hr\employeeController@listEmployee');
+    
+    Route::post('hr/employee/ajax/branch','hr\employeeController@ajax_branch');
+    Route::post('hr/employee/ajax/designation','hr\employeeController@ajax_designation');
+    Route::post('hr/employee/ajax/employee_id_exist','hr\employeeController@ajax_employee_id_exist');
+    Route::post('hr/employee/create','hr\employeeController@create');
+    Route::post('hr/employee/personal/update','hr\employeeController@personal_update');
+    Route::post('hr/employee/company/update','hr\employeeController@company_update');
+    Route::post('hr/employee/address/update','hr\employeeController@address_update');
+    Route::post('hr/employee/address/new','hr\employeeController@address_new');
+    Route::post('hr/employee/skills/update','hr\employeeController@skills_update');
+    Route::post('hr/employee/qualificaton/update','hr\employeeController@qualificaton_update');
+    Route::post('hr/employee/certificate/update','hr\employeeController@certificate_update');
+    Route::post('hr/employee/family/update','hr\employeeController@family_update');
+    Route::post('hr/employee/experience/update','hr\employeeController@experience_update');
+    Route::post('hr/employee/reference/update','hr\employeeController@reference_update');
+    
+
+    Route::get('hr/employee/view/{id}','hr\employeeController@view');
+    Route::get('hr/employee/qualification/{id}','hr\employeeController@qualification');
+    Route::get('hr/employee/certificate/{id}','hr\employeeController@certificate');
+    Route::get('hr/employee/family/{id}','hr\employeeController@family');
+    Route::get('hr/employee/experience/{id}','hr\employeeController@experience');
+    Route::get('hr/employee/reference/{id}','hr\employeeController@reference');
+
+    Route::get('hr/employee/datatable_employee','hr\employeeController@datatable_employee');
+    
+
+    Route::get('hr/employee/appointment_letter_view','hr\employeeController@viewAppointmentLetter'); //for apmntletter empcode enterpage
+    Route::post('hr/employee/createAppointment','hr\employeeController@createAppointment');
+    Route::get('hr/employee/appointment/pdf/{id}','hr\employeeController@appointment_letter');
+
+    Route::get('hr/leave/view_cancelled_leave_details/{id}','hr\leaveController@viewcancelleddetails');
+    Route::get('hr/leave/view_cancelled_leave','hr\leaveController@cancelledleave');
+    Route::get('hr/leave/view_reject_leave_details/{id}','hr\leaveController@viewrejectdetails');
+    Route::get('hr/leave/view_rejected_leave','hr\leaveController@rejectedleave');
+    Route::get('hr/leave/view_approve_leave_details/{id}','hr\leaveController@viewapprovedetails');
+    Route::get('hr/leave/view_approved_leave','hr\leaveController@approvedleave');
+    Route::get('hr/leave/cancel/{id}','hr\leaveController@cancel');
+    Route::get('hr/leave/reject/{id}','hr\leaveController@reject');
+    Route::get('hr/leave/approve/{id}','hr\leaveController@approve');
+    Route::get('hr/leave/view_leave_details/{id}','hr\leaveController@viewdetails');
+    Route::get('hr/leave/view_leave','hr\leaveController@show');
+    Route::resource('hr/leave/apply_leave', 'hr\leaveController');  
+    
+
+    Route::resource('hr/master/holidaymaster','hr\holidayController');
+
+
+    Route::resource('hr/master/religionmaster','hr\religionController');
+
+
+    //////////////                 
+    include'surezadmin.php';
+    //////////////
+
+    ////////////// 
+    include'priya.php';
+    //////////////
+
+
+    //////////////
+    include'maneesha.php';
+    ////////////// 
+
+    include 'benefit.php'; # Benfit and Partial Benefit Routes
+    include 'attendance.php'; # Benfit and Partial Benefit Routes
+}); 

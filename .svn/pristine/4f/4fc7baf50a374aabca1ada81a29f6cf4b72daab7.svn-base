@@ -1,0 +1,322 @@
+<?php
+namespace App\Http\Controllers\hr;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Session;
+use App\hr_leave;
+use App\hr_applied_leave;
+use DB;
+use Auth;
+class leaveController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+       $user=Auth::guard('admin')->user()->username;
+       $userid=Auth::guard('admin')->user()->id;
+       $leave=\DB::table('hr_leaves')->where('hr_leaves.user_id','=',$userid)->orderBy('hr_leaves.id', 'desc')
+       ->join('hr_applied_leaves','hr_leaves.id','=','hr_applied_leaves.leave_id')->groupBy('hr_applied_leaves.leave_id')
+       ->selectRaw('sum(hr_applied_leaves.leave_value) as leave_count')
+       ->selectRaw('hr_leaves.applied_date')
+       ->selectRaw('hr_leaves.reason')
+       ->selectRaw('hr_leaves.status')
+       ->get();
+
+
+        $availableleave=\DB::table('hr_leaves')->where('hr_leaves.status','=','approved')->where('hr_leaves.user_id','=',$userid)
+      ->join('hr_applied_leaves','hr_leaves.id','=','hr_applied_leaves.leave_id')
+      ->selectRaw('sum(hr_applied_leaves.leave_value) as approve_leave_count')
+      ->selectRaw('hr_leaves.user_id')
+      ->get();
+        foreach($availableleave as $datas)
+        $approveleave=$datas->approve_leave_count;
+     
+       
+       $balanceleave=\DB::table('hr_available_leaves')->where('user_id','=',$userid)
+      ->selectRaw('sum(leave_count) as available_leave_count')
+      ->get();
+        foreach($balanceleave as $views)
+        $availableleave=$views->available_leave_count; 
+        $balance=$availableleave-$approveleave;
+        if($balance<0){
+        $balance='0';
+        }
+
+       $count=count($leave);
+       return view('hr.leave.apply_leave',compact('leave','count','user','balance'));
+
+    }
+   
+
+    
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+
+
+
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    
+    public function store(Request $request)
+    { 
+
+        $user=\DB::table('logins')->where('username','=',$request->from)->get();
+        foreach($user as $users)
+        $userid=$users->id;
+
+        $leave = new hr_leave();
+        $leave->user_id =$userid;
+        $leave->applied_date= date('Y-m-d');
+        $leave->reason = $request->reason;
+        $leave->type = $request->type;
+        $leave->status ='Pending';
+        $leave->save();
+        
+        $fullday=$request->fullday;
+        $halfday=$request->halfday;
+        $fulldate=explode(",",$fullday);
+        $halfdate=explode(",",$halfday);
+        foreach ($fulldate as $key => $value) {
+        if($value!=""){
+        $applyleave = new hr_applied_leave();
+        $applyleave->leave_id=$leave->id;
+        $applyleave->user_id =$userid;
+        $applyleave->date  = date("Y-m-d",strtotime($value));
+        $applyleave->leave_type='FD';
+        $applyleave->leave_value=1;
+        $applyleave->save();  
+        } 
+        }
+        foreach ($halfdate as $key => $value) {
+        if($value!=""){
+        $applyleave = new hr_applied_leave();
+        $applyleave->leave_id=$leave->id;
+        $applyleave->user_id =$userid;
+        $applyleave->date  = date("Y-m-d",strtotime($value));
+        $applyleave->leave_type='HD';
+        $applyleave->leave_value=0.5;
+        $applyleave->save();   
+        }
+        }
+        Session::flash('message', 'Leave Applied Successfully!'); 
+        return redirect('/hr/leave/apply_leave');
+    }
+   
+   
+    public function show()
+    {       
+ 
+      $leave=\DB::table('hr_leaves')->where('hr_leaves.status','=','pending')
+      ->join('logins','logins.id','=','hr_leaves.user_id')
+      ->join('hr_emp_personal_details','logins.id','=','hr_emp_personal_details.user_id')
+      ->join('hr_applied_leaves','hr_leaves.id','=','hr_applied_leaves.leave_id')->groupBy('hr_applied_leaves.leave_id')
+      ->selectRaw('sum(hr_applied_leaves.leave_value) as leave_count')
+      ->selectRaw('logins.username')
+      ->selectRaw('hr_leaves.reason')
+      ->selectRaw('hr_leaves.applied_date')
+      ->selectRaw('hr_leaves.id')
+      ->selectRaw('hr_leaves.user_id')
+      ->selectRaw('hr_leaves.type')
+      ->selectRaw('hr_emp_personal_details.name')
+      ->get();
+        
+        foreach($leave as $results)
+        $id=$results->user_id;
+
+        $availableleave=\DB::table('hr_leaves')->where('hr_leaves.status','=','approved')
+      ->join('hr_applied_leaves','hr_leaves.id','=','hr_applied_leaves.leave_id')
+      ->selectRaw('sum(hr_applied_leaves.leave_value) as approve_leave_count')
+      ->selectRaw('hr_leaves.user_id')
+      ->get();
+        foreach($availableleave as $datas)
+        $approveleave=$datas->approve_leave_count;
+     
+       
+       $balanceleave=\DB::table('hr_available_leaves')->where('user_id','=',$id)
+      ->selectRaw('sum(leave_count) as available_leave_count')
+      ->get();
+        foreach($balanceleave as $views)
+        $availableleave=$views->available_leave_count; 
+        $balance=$availableleave-$approveleave;
+        if($balance<0){
+        $balance='0';
+        }
+        return view('hr.leave.view_leave',compact('leave','balance'));
+          
+    }
+
+    public function approvedleave()
+    {       
+
+      $leave=\DB::table('hr_leaves')->where('hr_leaves.status','=','approved')
+      ->join('logins','logins.id','=','hr_leaves.user_id')
+      ->join('hr_emp_personal_details','logins.id','=','hr_emp_personal_details.user_id')
+      ->join('hr_applied_leaves','hr_leaves.id','=','hr_applied_leaves.leave_id')->groupBy('hr_applied_leaves.leave_id')
+      ->selectRaw('sum(hr_applied_leaves.leave_value) as leave_count')
+      ->selectRaw('logins.username')
+      ->selectRaw('hr_leaves.reason')
+      ->selectRaw('hr_leaves.applied_date')
+      ->selectRaw('hr_leaves.id')
+      ->selectRaw('hr_leaves.user_id')
+      ->selectRaw('hr_emp_personal_details.name')
+      ->get();
+
+       
+     return view('hr.leave.view_approved_leave',compact('leave'));
+          
+    }
+    public function viewdetails($id)
+    {   
+    
+      $leave=\DB::table('hr_leaves')->where('hr_leaves.id','=',$id)
+      ->join('logins','logins.id','=','hr_leaves.user_id')
+      ->join('hr_emp_personal_details','logins.id','=','hr_emp_personal_details.user_id')
+      ->join('hr_branch','hr_emp_personal_details.branch_id','=','hr_branch.id')
+      ->join('hr_departments','hr_emp_personal_details.department_id','=','hr_departments.id')
+      ->join('hr_designation','hr_emp_personal_details.designation_id','=','hr_designation.id')
+      ->join('hr_applied_leaves','hr_leaves.id','=','hr_applied_leaves.leave_id')
+      ->select('hr_leaves.user_id','hr_emp_personal_details.name','hr_branch.branch_name','hr_departments.department_name','hr_designation.designation_name','hr_applied_leaves.date','hr_leaves.reason','hr_leaves.id','hr_emp_personal_details.photo','hr_leaves.applied_date')
+      ->groupBy('hr_leaves.id')->get();
+      foreach ($leave as $leaves) 
+
+      return view("hr.leave.view_leave_details",compact('leaves'));
+
+      }
+
+    public function approve($id)
+    {   
+     
+        $leave = hr_leave::find($id);
+        $leave->status='approved';
+        $leave->status_date= date('Y-m-d');
+        $leave->save();
+        Session::flash('message', 'Leave Request Approved Successfully!'); 
+        return redirect('/hr/leave/view_leave');
+    }
+    public function reject($id)
+    {   
+
+        $leave = hr_leave::find($id);
+        $leave->status='rejected';
+        $leave->status_date= date('Y-m-d');
+        $leave->save();
+        Session::flash('message', 'Leave Request Rejected Successfully!'); 
+        return redirect('/hr/leave/view_leave');
+    }
+    public function cancel( $id){
+        $leave = hr_leave::find($id);
+        $leave->status='cancelled';
+        $leave->status_date= date('Y-m-d');
+        $leave->save();
+        Session::flash('message', 'Leave Request Cancelled Successfully!'); 
+        return redirect('/hr/leave/view_leave');
+
+    }
+   public function viewapprovedetails($id)
+    {   
+      
+       $leave=\DB::table('hr_leaves')->where('hr_leaves.id','=',$id)
+      ->join('logins','logins.id','=','hr_leaves.user_id')
+      ->join('hr_emp_personal_details','logins.id','=','hr_emp_personal_details.user_id')
+      ->join('hr_branch','hr_emp_personal_details.branch_id','=','hr_branch.id')
+      ->join('hr_departments','hr_emp_personal_details.department_id','=','hr_departments.id')
+      ->join('hr_designation','hr_emp_personal_details.designation_id','=','hr_designation.id')
+      ->join('hr_applied_leaves','hr_leaves.id','=','hr_applied_leaves.leave_id')
+      ->select('hr_leaves.user_id','hr_emp_personal_details.name','hr_branch.branch_name','hr_departments.department_name','hr_designation.designation_name','hr_applied_leaves.date','hr_leaves.reason','hr_leaves.id','hr_emp_personal_details.photo','hr_leaves.applied_date')
+      ->groupBy('hr_leaves.id')->get();
+      foreach ($leave as $leaves) 
+       return view("hr.leave.view_approve_leave_details",compact('leaves'));
+
+      }
+
+       public function rejectedleave()
+    {       
+
+      $leave=\DB::table('hr_leaves')->where('hr_leaves.status','=','rejected')
+      ->join('logins','logins.id','=','hr_leaves.user_id')
+      ->join('hr_emp_personal_details','logins.id','=','hr_emp_personal_details.user_id')
+      ->join('hr_applied_leaves','hr_leaves.id','=','hr_applied_leaves.leave_id')->groupBy('hr_applied_leaves.leave_id')
+      ->selectRaw('sum(hr_applied_leaves.leave_value) as leave_count')
+      ->selectRaw('logins.username')
+      ->selectRaw('hr_leaves.reason')
+      ->selectRaw('hr_leaves.applied_date')
+      ->selectRaw('hr_leaves.id')
+      ->selectRaw('hr_emp_personal_details.name')
+      ->get();
+     return view('hr.leave.view_rejected_leave',compact('leave'));
+          
+    }
+    public function viewrejectdetails($id)
+    {   
+      
+       $leave=\DB::table('hr_leaves')->where('hr_leaves.id','=',$id)
+      ->join('logins','logins.id','=','hr_leaves.user_id')
+      ->join('hr_emp_personal_details','logins.id','=','hr_emp_personal_details.user_id')
+      ->join('hr_branch','hr_emp_personal_details.branch_id','=','hr_branch.id')
+      ->join('hr_departments','hr_emp_personal_details.department_id','=','hr_departments.id')
+      ->join('hr_designation','hr_emp_personal_details.designation_id','=','hr_designation.id')
+      ->join('hr_applied_leaves','hr_leaves.id','=','hr_applied_leaves.leave_id')
+      ->select('hr_leaves.user_id','hr_emp_personal_details.name','hr_branch.branch_name','hr_departments.department_name','hr_designation.designation_name','hr_applied_leaves.date','hr_leaves.reason','hr_leaves.id','hr_emp_personal_details.photo','hr_leaves.applied_date')
+      ->groupBy('hr_leaves.id')->get();
+      foreach ($leave as $leaves) 
+       return view("hr.leave.view_reject_leave_details",compact('leaves'));
+
+      }
+
+     public function cancelledleave()
+    {       
+
+      $leave=\DB::table('hr_leaves')->where('hr_leaves.status','=','cancelled')
+      ->join('logins','logins.id','=','hr_leaves.user_id')
+      ->join('hr_emp_personal_details','logins.id','=','hr_emp_personal_details.user_id')
+      ->join('hr_applied_leaves','hr_leaves.id','=','hr_applied_leaves.leave_id')->groupBy('hr_applied_leaves.leave_id')
+      ->selectRaw('sum(hr_applied_leaves.leave_value) as leave_count')
+      ->selectRaw('logins.username')
+      ->selectRaw('hr_leaves.reason')
+      ->selectRaw('hr_leaves.applied_date')
+      ->selectRaw('hr_leaves.id')
+      ->selectRaw('hr_emp_personal_details.name')
+      ->get();
+     return view('hr.leave.view_cancelled_leave',compact('leave'));
+          
+    }
+    public function viewcancelleddetails($id)
+    {   
+      
+       $leave=\DB::table('hr_leaves')->where('hr_leaves.id','=',$id)
+      ->join('logins','logins.id','=','hr_leaves.user_id')
+      ->join('hr_emp_personal_details','logins.id','=','hr_emp_personal_details.user_id')
+      ->join('hr_branch','hr_emp_personal_details.branch_id','=','hr_branch.id')
+      ->join('hr_departments','hr_emp_personal_details.department_id','=','hr_departments.id')
+      ->join('hr_designation','hr_emp_personal_details.designation_id','=','hr_designation.id')
+      ->join('hr_applied_leaves','hr_leaves.id','=','hr_applied_leaves.leave_id')
+      ->select('hr_leaves.user_id','hr_emp_personal_details.name','hr_branch.branch_name','hr_departments.department_name','hr_designation.designation_name','hr_applied_leaves.date','hr_leaves.reason','hr_leaves.id','hr_emp_personal_details.photo','hr_leaves.applied_date')
+      ->groupBy('hr_leaves.id')->get();
+      foreach ($leave as $leaves) 
+      return view("hr.leave.view_cancelled_leave_details",compact('leaves'));
+
+      }
+
+   
+
+
+
+    
+
+}

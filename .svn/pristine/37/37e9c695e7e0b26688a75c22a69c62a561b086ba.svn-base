@@ -1,0 +1,29 @@
+<div class="col-sm-12 row">
+           
+           <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Course:</label>
+              <input type="text" class="form-control" id="course_cer" name="course_cer[]">
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Certifying Authority:</label>
+              <input type="text" class="form-control" id="authority" name="authority[]">
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Name Of Institution:</label>
+              <input type="text" class="form-control" id="institution" name="institution[]">
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+              <label for="name">Year:</label>
+              <input type="text" class="form-control" id="year_cer" name="year_cer[]">
+              </div>
+            </div>
+            
+            <button type="button" class="delete btn btn-danger btn-sm">Delete</button>
+         </div>

@@ -1,0 +1,194 @@
+@extends('admin.layout.erp1')
+@section('banner')
+<div class="col-lg-12" align="center" style="background-color:#ffcf29">
+<img src="{{ URL::to('/') }}/new_heading.png" class="img-responsive">
+</div>
+@endsection
+
+@section('sidebar')
+@include('admin.partial.header')
+@include('admin.partial.aside')
+@endsection
+
+@section('body')
+
+<div class="bg-light lter b-b wrapper-md">
+<h1 class="m-n font-normal h3">Salary Master</h1>
+</div>
+
+<div class="wrapper-md" id="wrapper-md" ng-controller="FormDemoCtrl">
+
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="row" id="searchDiv">
+				<div class="form-group col-sm-2">
+					<label> Company Name{{ $passwords }}</label><br>
+					<select id="company" name="company" class="chosen-select" onchange="getBranches()">
+						<option value=" ">--Select--</option>
+						{{-- <option value="All">All</option> --}}
+
+						@foreach($company as $company)
+						<option value="{{ $company->id }}" @if($company->id==$id){{'selected' }}@endif>{{ $company->company_name }}</option>
+						@endforeach
+					</select>
+					<span class="text-danger company" style="display: none" >Select Company Name</span>
+
+				</div>
+
+				<div class="form-group col-sm-2">
+					<label> Branch Name</label>
+					<select id="branch" name="branch" class="chosen-select">
+
+
+					</select>
+					<span class="text-danger branch" style="display: none"  >Select Branch Name</span>
+
+				</div>	
+
+				<div class="form-group col-sm-2">
+					<label>Month </label>
+					<select id="month" name="month" class="chosen-select">
+						<option value=" ">--Select--</option>
+						{{-- <option value="All">All</option> --}}
+						<option value="1">January</option>
+						<option value="2">February</option>
+						<option value="3">March</option>
+						<option value="4">April</option>
+						<option value="5">May</option>
+						<option value="6">June</option>
+						<option value="7">July</option>
+						<option value="8">August</option>
+						<option value="9">September</option>
+						<option value="10">October</option>
+						<option value="11">November</option>
+						<option value="12">December</option>
+					</select>
+					<span class="text-danger month" style="display: none"  >Select Month </span>
+
+				</div>
+				<div class="form-group col-sm-2">
+					<label>Year</label>
+						@php
+						$a =DB::table('logins')->select(DB::raw('YEAR(updated_at) as year'))->groupBy('year')->get();   
+						$b =DB::table('logins')->select(DB::raw('YEAR(created_at) as year'))->groupBy('year')->get();   
+						$year = $a->merge($b);
+						$year=$year->unique();
+						@endphp
+
+						<select id="year" name="year" class="form-control chosen-select">
+							<option value=" ">--select--</option>
+							{{-- <option value="All">All</option> --}}
+							@foreach($year as $year)
+							<option @if(date('Y')==$year->year){{ 'selected' }}@endif value="{{ $year->year }}">{{ $year->year }}</option>
+							@endforeach
+
+						</select>
+					<span class="text-danger year" style="display: none"  >Select Year</span>
+				</div>
+
+			<div class="form-group col-sm-2">
+			<label>&nbsp;</label><br>
+				<button onclick="getSalaryDetails()" class="btn btn-sm btn-primary font-bold">Submit</button>
+			</div>
+
+
+			</div>
+
+			</div>
+	</div> 
+
+
+	<div class="panel panel-default" id="getAllowances_panel">
+		<div class="panel-heading font-bold">Salary Details</div>
+		<div class="panel-body">
+			<div class="col-sm-7" id="getSalaryDetails">  </div> 
+		</div>
+	</div> 
+
+
+</div>
+
+@endsection
+@section('jquery')
+<script type="text/javascript">
+$(".chosen-select").chosen({width:'100%'});
+getBranches();
+function getBranches()
+{
+var company = $('#company').val();
+
+
+
+$.ajax({
+type: "get",
+url: "{{URL::to('/') }}/hr/salaryMaster/create",
+data:{process:'getBranches',company:company},
+	success: function (data) 
+	{
+	    $('#branch').html('').trigger("chosen:updated");  
+
+
+		$('#branch').append('<option value=" ">--Select--</option>').trigger("chosen:updated");
+		if(data.length>1)
+		$('#branch').append('<option value="All">All</option>').trigger("chosen:updated");
+
+		for (var i=0;i<data.length;i++)
+		{
+		$('#branch').append('<option value="'+data[i].id+'">'+data[i].branch_name+'</option>').trigger("chosen:updated");    	
+		}
+	}
+});
+
+}	
+
+
+function getSalaryDetails()
+{
+ var details='';
+ var status=true;
+
+			$("#searchDiv select").each(function()
+			{
+			 var value=this.value; var name=this.name;
+
+			 if(value==' ' || value==null) {  $('.'+name).show(); status=false;}
+
+			 else $('.'+name).hide();
+
+			   });
+
+
+
+if(status==false) return;
+
+var company=$('#compnay').val();
+
+var branch=$('#branch').val();
+
+var year=$('#year').val();
+
+var month=$('#month').val();
+
+$.ajax({
+
+type: "get",
+
+url: "{{URL::to('/') }}/hr/salaryMaster/create",
+
+data:{process:'getSalaryDetails',company:company,branch:branch,year:year,month:month},
+
+	success: function (data) 
+
+	{
+
+$('#getSalaryDetails').html(data);
+
+	}
+
+	});
+
+}
+</script>
+
+
+@endsection

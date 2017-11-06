@@ -1,0 +1,394 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Application Form - {{$dsa->name}}</title>
+<link href = "https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+<style type="text/css" media="screen">
+html,body{
+margin:0px;
+padding: 10px;
+}
+.header-bar{
+background: #bbb;
+}
+.header-bar h3{
+font-size: 16px;
+padding:6px;
+}
+.table-data{
+width: 100%;
+}
+.table-data tr th,.table-data tr td{
+font-size: 14px;
+padding:2px;
+}
+.table-data tr th{
+position: relative;
+padding-left:8px;
+}
+.table-data tr td{
+padding-right:8px;
+}
+.table-data tr th:before{
+position: absolute;
+top:5px;
+left:0px;
+font-size: 14px;
+font-weight: bold;
+
+}
+.table-data tr td:nth-child(3){
+padding-left:20px;
+}
+.pull-left{
+float: left;
+}
+.pull-right{
+float: right;
+}
+.clear-fix{
+clear:both;
+}
+.clear-fix:before{
+clear:both;
+}
+.clear-fix:after{
+clear:both;
+}
+.sub-content{
+font-size: 14px;
+font-weight: 400px !important;
+}
+</style>
+<style>
+.personal_details{
+border:1px solid #bbb;
+font-size:12px;
+width:100% !important;
+}
+.personal_details tr td,
+.personal_details tr th,
+{
+border:1px solid #bbb;
+}
+.page-break {
+page-break-after: always;
+}
+</style>
+</head>
+<body>
+  <header id="header" class="">
+    <img src="{{URL::to('/') }}/img/tcnmaster/headerDSA.png" alt="">
+  </header>
+  <div style="border: 1px solid #BAD2EF;margin-top:5px">
+    <div class="section" style="float:right; margin:5px 10px 0 0">
+      <table style="border:1px solid">
+        <tbody>
+          <tr>
+            <td><img class="profile-img" src="{{URL::to('/') }}/storage/img/dsa_img/{{$dsa->photo}}" alt="" width="120" height="150" ></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="section" style="float:left; margin:100px 0 0 10px">
+      <table>
+        <tbody>
+          <tr>
+            <th>APPLICATION NUMBER</th><th>: {{ $dsa->username }} </th>
+          </tr>
+          <tr><td></td></tr>
+          <tr>
+            <th>NAME</th><th>: {{ $dsa->name }} </th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <br><br><br><br><br><br><br><br>
+
+    <div class="section">
+      <div class="header-bar">
+        <h3 class="heading-1" style="background-color:#BAD2EF">Personal Details</h3>
+      </div>
+      <table class="table-data personal-details">
+        <tbody>
+          <tr>
+            <td>DATE OF BIRTH</td><th>: {{ $dsa->dob }}</th>
+            <td>GENDER</td><th>: {{ $dsa->gender }}</th>
+          </tr>
+          <tr><td></td></tr>
+          <tr>
+            <td>RELIGION</td><th>: {{ $dsa->religion }}</th>
+            <td>NATIONALITY</td><th>: {{ $countryname->countryNames }}</th>
+          </tr>
+          <tr><td></td></tr>
+          <tr>
+            <td>MOBILE</td><th>:({{ $dsa->mobileId }}) {{ $dsa->mobileNumber }}</th>
+            <td>EMAIL</td><th>: {{ $dsa->email }}</th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="header-bar">
+        <h3 class="heading-1" style="background-color:#BAD2EF">Permanent Address</h3>
+      </div>
+      <table class="table-data personal-details">
+        <tbody>
+          @foreach($address as $addresses)
+          @if($addresses->typeOfAddress == 'permanent')
+          <tr>
+            <td>ADDRESS</td><th>: {{ $addresses->address }}</th>
+            <td>CITY</td><th>: {{ $addresses->city }}</th>
+          </tr>
+          <tr><td></td></tr>
+          <tr>
+            <td>STATE</td><th>: {{ $addresses->state }}</th>
+            <td>PIN CODE</td><th>: {{ $addresses->pin }}</th>
+          </tr>
+          @endif
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+    <div class="section">
+      <div class="header-bar">
+        <h3 class="heading-1" style="background-color:#BAD2EF">Correspondance Address</h3>
+      </div>
+      <table class="table-data personal-details">
+        <tbody>
+          @foreach($address as $addresses)
+          @if($addresses->typeOfAddress == 'correspondance')
+          <tr>
+            <td>ADDRESS</td><th>: {{ $addresses->address }}</th>
+            <td>CITY</td><th>: {{ $addresses->city }}</th>
+          </tr>
+          <tr><td></td></tr>
+          <tr>
+            <td>STATE</td><th>: {{ $addresses->state }}</th>
+            <td>PIN CODE</td><th>: {{ $addresses->pin }}</th>
+          </tr>
+          @endif
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+    <div class="section">
+      <div class="header-bar">
+        <h3 class="heading-1" style="background-color:#BAD2EF">Official Address</h3>
+      </div>
+      <table class="table-data personal-details">
+        <tbody>
+          @foreach($address as $addresses)
+          @if($addresses->typeOfAddress == 'official')
+          <tr>
+            <td>ADDRESS</td><th>: {{ $addresses->address }}</th>
+            <td>CITY</td><th>: {{ $addresses->city }}</th>
+          </tr>
+          <tr><td></td></tr>
+          <tr>
+            <td>STATE</td><th>: {{ $addresses->state }}</th>
+            <td>PIN CODE</td><th>: {{ $addresses->pin }}</th>
+          </tr>
+          @endif
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="header-bar">
+        <h3 class="heading-1" style="background-color:#BAD2EF">Incentive Remittance</h3>
+      </div>
+      <table class="table-data personal-details">
+        <tbody>
+          <tr>
+            <td>ACCOUNT NUMBER</td><th>: {{ $dsabank->accountNumber }}</th>
+            <td>BANK NAME</td><th>: {{ $dsabank->bankName }}</th>
+          </tr>
+          <tr><td></td></tr>
+          <tr>
+            <td>BRANCH</td><th>: {{ $dsabank->branchName }}</th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <br><br><br>
+
+    <div class="section">
+      <div class="header-bar">
+        <h3 class="heading-1" style="background-color:#BAD2EF">Heera Payment Details</h3>
+      </div>
+      <table class="table-data personal-details">
+        <tbody>
+          <tr>
+            <td>PAY MODE</td><th>: {{ $dsapaymentdetails->payment_mode }}</th>
+            <td>{{ $dsapaymentdetails->payment_mode }} NO</td><th>: {{ $dsapaymentdetails->transactionNumber }}</th>
+          </tr>
+          <tr><td></td></tr>
+          <tr>
+            <td>HEERA'S ACCOUNT NO</td><th>: {{ $dsapaymentdetails->accountNumber }}</th>
+            <td>BANK NAME</td><th>: {{ $dsapaymentdetails->bank }}</th>
+          </tr>
+          <tr><td></td></tr>
+          <tr>
+            <td>BRANCH</td><th>: {{ $dsapaymentdetails->branch }}</th>
+            <td>DEPOSIT DATE</td><th>: {{ $dsapaymentdetails->paymentDate }}</th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="header-bar">
+        <h3 class="heading-1" style="background-color:#BAD2EF">Reference Details</h3>
+      </div>
+      <table class="table-data personal-details">
+        <tbody>
+          <tr>
+            <td>REFEREES NAME</td><th>: {{ $dsareference->name }}</th>
+            @foreach($address as $addresses)
+            @if($addresses->typeOfAddress=='referance')
+            <td>ADDRESS</td><th>: {{ $addresses->address }}</th>
+          </tr>
+          <tr><td></td></tr>
+          <tr>
+            <td>STATE</td><th>: {{ $addresses->state }}</th>
+            @endif
+            @endforeach
+            <td>MOBILE NO</td><th>: {{ $dsareference->referenceMobileNumber }}</th>
+          </tr>
+          <tr><td></td></tr>
+          <tr>
+            <td>EMAIL</td><th>: {{ $dsareference->referenceEmail }}</th>
+            <td>RELATIONSHIP</td><th>: {{ $dsareference->referenceRelation }}</th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="header-bar">
+        <h3 class="heading-1" style="background-color:#BAD2EF">Proof Details</h3>
+      </div>
+      <table class="table-data personal-details">
+        <tbody>
+          <tr>
+            <td><b>ID PROOF</b><br><br><img class="profile-img" src="{{ URL::asset('storage/img/proof/'.$dsaProof->file)}}" alt="" width="150" height="150"></td>
+            <td><b>PAYMENT PROOF</b><br><br><img class="profile-img" src="{{ URL::asset('storage/img/payProof/'.$dsapaymentdetails->file)}}" alt="" width="150" height="150"></td>
+            <td><b>ACCOUNT PROOF</b><br><br><img class="profile-img" src="{{ URL::asset('storage/img/Accproof/'.$dsabank->Accproof)}}" alt="" width="150" height="150"></td>
+          </tr> 
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="header-bar">
+        <h3 class="heading-1" style="background-color:#BAD2EF">DSA Agreement Terms and Conditions</h3>
+      </div>
+      <div class="section" style="margin:0 25px">
+        <p style="text-align:justify">
+          I acknowledge that I have carefully read all of the Terms and Conditions. I understand the terms and Conditions contained herewith along with the DSA Policy, which by reference are fully incorporated in this document, and agree to be bound by them. I understand that it is my responsibility to ensure that unit sales, as well as payment for such sales, are processed prior to the end of a commission period to be eligible for a commission. 
+        </p>
+        <p style="text-align:justify">
+          1.  First and foremost, Heera Group is built on a foundation of Islamic belief, integrity, edification and trust. Whether dealing with my customers, fellow DSA or Company, I will build my business on this foundation. If anything comes to my attention that detracts from this, I will deal with it immediately, through the Company. I will not allow any attempt to destroy the foundation; disparagement toward my fellow DSA or the Company in any form will not be tolerated.
+        </p>
+        <p style="text-align:justify">
+          2.  I certify that I am ………years of age and understand that the Agreement is not binding until received and accepted by Heera Group.
+        </p>
+        <p style="text-align:justify">
+          3.  I agree to operate my business in accordance with all the rules, regulations, policies and procedures as set forth by Heera Group in its Policy.
+        </p>
+        <p style="text-align:justify">
+          4.  I will become a DSA upon acceptance of this application by Heera Group. As a DSA, I shall have the right to sell the Units in accordance with Heera Group Policy.
+        </p>
+        <p style="text-align:justify">
+          5.  I understand that I will be responsible for obtaining all necessary licenses and permits as required by law.
+        </p>
+        <p style="text-align:justify">
+          6.  I am not an employee of Heera Group and shall not be entitled to receive from Heera Group any benefits whatsoever and Heera Group shall not be required to make contributions to DSA.
+        </p>
+        <p style="text-align:justify">
+          7.  I acknowledge that as a wholly independent contractor, I am not purchasing a franchise or exclusive distributorship. 
+        </p>
+        <p style="text-align:justify">
+            8.  I deposit the enrolment/membership fee of Rs.5000/-(Five Thousand ).
+            <br />**I deposit the enrolment/membership fee of INR.5000/-(Five Thousand Rupee), or AED.500/-(Five Hundred Dirham).
+        </p>
+        <p style="text-align:justify">
+          9.  I acknowledge that this Agreement may not be assigned or transferred without written consent from Heera Group.
+        </p>
+        <p style="text-align:justify">
+          10. As an independent DSA, I will abide by all rules and regulations pertaining to this Agreement and/or the receipt, holding, selling, distributing, or, or advertising of Company units.
+        </p>
+        <p style="text-align:justify">
+          11. As an independent DSA, I will, at my own expense make, execute or file all reports required by law with respect to this Agreement.
+        </p>
+        <p style="text-align:justify">
+          12. I understand that this Agreement can be renewed annually with the consent of both parties. 
+        </p>
+        <p style="text-align:justify">
+          13. All rights to bonus, rebates and commissions, my Heera Group business, and the opportunity to purchase Units from Heera Group shall be subject to termination.
+        </p>
+        <p style="text-align:justify">
+          14. I understand that I am entitled to cancel participation in any marketing program upon written notice to Heera Group. Following cancellation or termination, the Company will repurchase the Units in accordance with the policies. (Which Unit?)
+          ** I understand that I am entitled to cancel the DSA agreement upon written notice to Heera Group, which will be subject to approval of CEO. However I have to continue as an acting DSA till the cancellation or termination, by the CEO .
+        </p>
+        <p style="text-align:justify">
+          15. I certify that Heera Group had never made any claims of guaranteed earnings or representations of anticipated earnings that might result from my efforts. I understand that I may not make any verbal or written statements regarding claims of income or potential earning that might result from my effort or efforts of others. However I will be eligible for the incentive as per DSAs policy.
+        </p>
+        <p style="text-align:justify">
+          16. I agree to indemnify and to hold Heera Group blameless from any and all claims, damages, and expenses, including reasonable attorney fees, arising out of my actions and conduct in violation of this Agreement.
+        </p>
+        <p style="text-align:justify">
+          17. I agree to fulfill the obligations of performing a supervisory function in the sales and distribution of Company bonds to the ultimate customer. I will maintain ongoing contract, communication and management supervision in my sales organization. I will provide monthly evidence of my ongoing fulfillment of these responsibilities, to the company.
+        </p>
+        <p style="text-align:justify">
+          18. I understand that the Heera DSA policy prohibits the purchase of Heera units, solely for the purpose of qualifying for bonuses or advancements.
+        </p>
+        <p style="text-align:justify">
+          19. On periodic basis, Heera may supply confidential information in the form of reports or other materials, which will provide information to me as a DSA concerning my orgaisation. I agree upon of said information that such information is proprietary and confidential and will not disclose such information to any third party directly or indirectly nor use the information to compete with Heera either directly or indirectly.
+        </p>
+        <p style="text-align:justify">
+          20. I agree that I may not sell Company units in any other name. (If done will be?)<br />
+          **I agree that I may not sell Company units in any other name, if done so will be termed as breach of contract, leading to necessary action by the CEO. The necessary action may lead to legal proceeding up to the severity of the act.
+        </p>
+        <p style="text-align:justify">
+          21. Any dispute which arises in the course or following the performance of any contract will be settled as per the DSA policy.
+        </p>
+        <p style="text-align:justify">
+          22. I certify the accuracy of all information provided by me in this Agreement and agree that providing false information authorizes the Company, at its election, to declare this Agreement void.
+        </p>
+        <p style="text-align:justify">
+          23. I will make no claims to Heera Group properties. (If done will be?)<br />
+          **I will make no claims to Heera Group properties, if done so will be termed as breach of contract, leading to necessary action by the CEO. The necessary action may lead to legal proceeding up to the severity of the act .<br />
+          I may not make any false, unreasonable, misleading, or intentionally misrepresenting representations to customers.
+        </p>
+        <p style="text-align:justify">
+          24. I agree to fulfill the target of selling 20 units per month, of Heera Group's (Scheme `A'), however I will sell the units of another Schemes also, and will be eligible for incentives, but will not be included in target as per Heera Group Policy.
+        </p>
+        <p style="text-align:justify">
+          25. I agree that incentives of Marketing Executives under whom DSAs operates is not more than 1% of the amount of units sold. I am also aware that the incentive of Heera Group's DSA is not more than 1.50%.<br />
+          **I agree that incentives of DSAs, operating under Marketing Executives is not more than 1% of the amount of units sold. I am also aware that the incentive of Heera Group's DSA is not more than 1.50 %.
+        </p>
+        <p style="text-align:justify">
+          26. On target analysis, Heera Group may provide bonus for selling more than 200 units. I agree that after accomplishing the target of selling 200 units, Heera Group CEO, may allot the Marketing Executive Designation to me, in that case my incentive will be shifted to Marketing Executive slab. If the decision of CEO, will rest with acting as DSA for me, then I will be following same incentive pattern. However I will be eligible for 0.5% Bonus on accomplishing the said target.</p>
+        <p style="text-align:justify">
+          27. I am aware that DSAs are eligible for the incentive of self investment also.<br />
+          **I am aware that DSAs are eligible for the incentive of self unit purchase also, but it will not be included in target.
+        </p>
+        <p style="text-align:justify">
+          28. In case of failure to meet target for three (3) consecutive months the Company reserves its rights to implement necessary disciplinary procedures against you for your failure to achieve your targets.
+        </p>
+        <p style="text-align:justify">
+          The Company reserves the right to accept or reject any application and is under no obligation to offer any reason for rejection. Incomplete application will not be accepted. Company is under no obligation to inform applicant of incomplete or rejected application.
+        </p>
+        <p style="text-align:justify">
+          I acknowledge that I have carefully read all of the terms and conditions. I understand the Terms and Conditions contained herewith along with DSA policy, and agree to be bound by them. I also understand that I can terminate my DSA status only with 2 months written notice to Heera Group. I understand that it is my responsibility to ensure that unit sales, as well as payment for such sales, are processed prior to the end of a commission period to be eligible for commission</p>
+        <p style="text-align:right"><img class="profile-img" src="{{URL::to('/') }}/storage/img/dsa_img/{{$dsa->signature}}" alt="" width="120" height="60"></p>
+        <p style="text-align:right">Signature</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

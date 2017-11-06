@@ -1,0 +1,15 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Developer1
+ * Date: 09-10-2017
+ * Time: 12:43
+ */
+?>
+@extends('hr.shift.index')
+
+@section('shift_name',$edit_hr_shift->shift_name)
+
+@section('edit')
+    {{ method_field('PUT') }}
+@endsection

@@ -1,0 +1,106 @@
+<link rel="stylesheet" href="/resources/demos/style.css">
+<link href="{{ URL::asset('css/sweetalert.css') }}"></link>
+@extends('admin.layout.erp1')
+@section('banner')
+<div class="col-lg-12" align="center" style="background-color:#ffcf29">
+<img src="{{ URL::asset('new_heading.png') }}" class="img-responsive">
+</div>
+@endsection
+@section('sidebar')
+@include('admin.partial.header')
+@include('admin.partial.aside')
+@endsection
+@section('body')
+<link rel="stylesheet" href="{{ URL::asset('js/multiselect_datepicker/datepicker.min.css') }}" type="text/css" />
+
+<style>
+	.datepicker > div {
+		display: block;
+	}
+</style>
+<div class="bg-light lter b-b wrapper-md">
+	<h1 class="m-n font-thin h3">Apply Leave</h1>
+</div><br>
+	<form   method="post"   action="{{ URL::to('/') }}/hr/leave/apply_leave"  data-parsley-validate >
+	{{csrf_field()}}
+		@if (Session()->has('message'))
+	        <div class="alert alert-info fade in alert-dismissable">
+	          <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+	          <strong>Info!</strong> {{Session()->get('message')}}
+	        </div>
+	    @endif
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="blog-post">                   
+					<div class="col-sm-12">
+						<div class="panel panel-default">
+							<div class="panel-heading ">                  
+							APPLY LEAVE 
+							</div>
+							<div class="panel-body">
+							<div class="col-sm-6">
+								<label>Reporting To:</label>
+								<input type="text" id="reporting_to" value="{{'CEO OFFICE'}}"  name="reporting_to" class="form-control" readonly required />
+							</div>
+							<div class="col-sm-6">
+								<label>From:</label>
+								<input type="text" id="from" required name="from" id="from"  value="{{$user}}"   class="form-control" readonly />
+							</div>
+							
+							<div class="col-sm-6">
+								<label>Reason:</label>
+								<input type="text" id="reason"  required name="reason" id="reason"    class="form-control" />
+							</div>
+				
+							<div class="col-sm-6">
+								<label>Full Day Leave Dates:</label>
+								 <input type="text" class="form-control datepicker-here" name='fullday' data-language='en' data-multiple-dates="30" data-multiple-dates-separator=", " data-position='top left'/>
+							</div>
+		
+							<div class="col-sm-6">
+								<label>Half Day Leave Dates:</label>
+								<input type="text" class="form-control datepicker-here" name='halfday' data-language='en' data-multiple-dates="30" data-multiple-dates-separator=", " data-position='top left'/>
+							</div>
+							
+
+							<div class="col-sm-6"><br>
+							<label></label><br>
+								<input type="submit"  name="submit" id="submit"  value="apply"  class="btn btn-sm btn-success" >
+							</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+			
+	</form> 
+            
+
+@endsection
+@section('jquery')
+<script src="{{ URL::asset('js/sweetalert.min.js') }}"></script>
+{{-- <script src="{{ URL::asset('js/bootstrap-datepicker.js') }}"></script> --}}
+
+
+{{-- <script type="text/javascript">
+  $(function()
+  {
+  $('#fullday').datepicker({
+  orientation:'bottom auto',
+  autoclose:true
+  });
+  });
+$(function()
+  {
+  $('#halfday').datepicker({
+  orientation:'bottom auto',
+  autoclose:true
+  });
+  });
+</script> --}}
+
+<script src="{{ URL::asset('js/multiselect_datepicker/datepicker.min.js') }}"></script>
+<script src="{{ URL::asset('js/i18n/datepicker.en.js') }}"></script>
+
+@endsection

@@ -1,0 +1,532 @@
+		<div class="panel-heading font-bold">TCN REQUEST DETAILS</div>
+		<h4  class="font-bold text-center" >TCN TYPE : {{$tcnrequests->tcn->tcnType}}</h4>
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-sm-12">
+
+
+					<div class="col-sm-12 panel panel-success">PERSONAL DETAILS</div>
+					<div class="row">
+						<div class="col-sm-10">
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="col-sm-6" style="float:left;">
+										<label class=" font-bold">Member Code</label>
+									</div>
+									<div class="col-sm-6" style="float:left;">
+										<label>{{$memberregistrations->code}}</label>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="col-sm-6" style="float:left;">
+										<label class=" font-bold">Occupation</label>
+									</div>
+									<div class="col-sm-6"  style="float:left;">
+										<label>{{$memberregistrations->occupation}}</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="col-sm-6" style="float:left;">
+										<label class=" font-bold">Name</label>
+									</div>
+									<div class="col-sm-6" style="float:left;">
+										<label>{{$memberregistrations->name}}</label>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="col-sm-6" style="float:left;">
+										<label class=" font-bold">Marital Status </label>
+									</div>
+									<div class="col-sm-6"  style="float:left;">
+										<label>{{$memberregistrations->maritalStatus}}</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="col-sm-6" style="float:left;">
+										<label class=" font-bold">Guardian</label>
+									</div>
+									<div class="col-sm-6" style="float:left;">
+										<label>{{$memberregistrations->guardian}}</label>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="col-sm-6" style="float:left;">
+										<label class=" font-bold">Address ({{$address1->typeOfAddress}})</label>
+									</div>
+									<div class="col-sm-6"  style="float:left;">
+										<label>{{$address1->address}}</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="col-sm-6" style="float:left;">
+										<label class=" font-bold">Gender</label>
+									</div>
+									<div class="col-sm-6" style="float:left;">
+										<label>{{$memberregistrations->gender}}</label>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="col-sm-6" style="float:left;">
+										<label class=" font-bold">City</label>
+									</div>
+									<div class="col-sm-6"  style="float:left;">
+										<label>{{$address1->city}}</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="col-sm-6" style="float:left;">
+										<label class=" font-bold">D:O:B</label>
+									</div>
+									<div class="col-sm-6" style="float:left;">
+										<label>{{$memberregistrations->dob}}</label>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="col-sm-6" style="float:left;">
+										<label class=" font-bold">State</label>
+									</div>
+									<div class="col-sm-6" style="float:left;" >
+										<label>{{$address1->state}}</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="col-sm-6" style="float:left;">
+										<label class=" font-bold">Education</label>
+									</div>
+									<div class="col-sm-6" style="float:left;">
+										<label>{{$memberregistrations->education}}</label>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="col-sm-6" style="float:left;">
+										<label class=" font-bold">Mobile No</label>
+									</div>
+									<div class="col-sm-6"  style="float:left;">
+										<label>{{$memberregistrations->mobileNo}}</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="col-sm-6" style="float:left;">
+										<label class=" font-bold">Nationality</label>
+									</div>
+									<div class="col-sm-6" style="float:left;">
+										<label>{{$countrys->countryName}}</label>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="col-sm-6" style="float:left;">
+										<label class=" font-bold">PIN</label>
+									</div>
+									<div class="col-sm-6"  style="float:left;">
+										<label>{{$address1->pin}}</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="col-sm-6" style="float:left;">
+										<label class=" font-bold">Religion</label>
+									</div>
+									<div class="col-sm-6" style="float:left;">
+										<label>{{$memberregistrations->religion}}</label>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="col-sm-6" style="float:left;">
+										<label class=" font-bold">Email</label>
+									</div>
+									<div class="col-sm-6"  style="float:left;">
+										<label>{{$memberregistrations->email}}</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="col-sm-6" style="float:left;">
+										<label class=" font-bold">Caste</label>
+									</div>
+									<div class="col-sm-6" style="float:left;">
+										<label>{{$memberregistrations->caste}}</label>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="col-sm-6" style="float:left;">
+										<label class=" font-bold">Total Income</label>
+									</div>
+									<div class="col-sm-6"  style="float:left;">
+										<label>{{$memberregistrations->incomeAmount}}</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-2">	
+								<img src="{{URL::to('/') }}/storage/img/member_img/{{$memberregistrations->photo}}" style="height:100px;width:100px;" onclick="window.open('{{URL::to('/') }}/storage/img/member_img/{{$memberregistrations->photo}}')">
+								<br>
+								<img src="{{URL::to('/') }}/storage/img/member_img/{{$memberregistrations->singnature}}" style="height:100px;width:100px;"  onclick="window.open('{{URL::to('/') }}/storage/img/member_img/{{$memberregistrations->singnature}}')">
+						</div>	
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="col-sm-12 panel panel-success">PAYMENT DETAILS</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="col-sm-6" style="float:left;">
+							<label class=" font-bold">Currency Type</label>
+							</div>
+							<div class="col-sm-6" style="float:left;">
+							<label>{{$tcnrequests->currencyType}}</label>
+							</div>
+						</div>
+
+						<div class="col-sm-4">
+							<div class="col-sm-6" style="float:left;">
+							<label class=" font-bold">Payment Mode</label>
+							</div>
+							<div class="col-sm-6" style="float:left;">
+							<label>{{$tcnrequests->paymentMode}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="col-sm-6" style="float:left;">
+							<label class=" font-bold">Unit</label>
+							</div>
+							<div class="col-sm-6" style="float:left;">
+							<label>{{$tcnrequests->unit}}</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="col-sm-6" style="float:left;">
+							<label class=" font-bold">Applying From</label>
+							</div>
+							<div class="col-sm-6" style="float:left;">
+							<label>{{$countrys->countryName}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4" style="float:left;">
+							<div class="col-sm-6">
+							<label class=" font-bold">Amount</label>
+							</div>
+							<div class="col-sm-6" style="float:left;">
+							<label>{{$tcnrequests->amount}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="col-sm-6" style="float:left;">
+							<label class=" font-bold">Transaction No</label>
+							</div>
+							<div class="col-sm-6" style="float:left;">
+							<label>{{$tcnrequests->transactionNumber}}</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="col-sm-6" style="float:left;">
+							<label class=" font-bold">Debosite Date</label>
+							</div>
+							<div class="col-sm-6" style="float:left;">
+							<label>{{$tcnrequests->depositeDate }}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="col-sm-6" style="float:left;">
+							<label class=" font-bold">Heera Account No</label>
+							</div>
+							<div class="col-sm-6" style="float:left;">
+							<label>{{$tcnrequests->heeraaccount->accountNumber}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="col-sm-12 panel panel-success">BENEFIT REMITTANCE</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">Account Number</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$banks->accountNumber}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">Bank Name</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$banks->bankName}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">IFSC Code</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$banks->ifsc}}</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">Branch Name</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$banks->branchName}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">Account Holder Name</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$banks->accountHolderName}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="col-sm-12 panel panel-success">NOMINEE DETAILS</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">Nominee Name</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$nominees->name}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">Email ID</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$nominees->email}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold"> Proof Type</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$proofs->typeOfProof}}</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">Relation With Applicant</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$nominees->relationWithApplicant}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">Address ({{$address2->typeOfAddress}})</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$address2->address}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">Proof Number</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$proofs->proofNumber}}</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">Gender</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$nominees->gender}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">City</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$address2->city}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">Place Of Issue</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$proofs->placeOfIssue}}</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">Mobile No</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$nominees->mobile}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">State</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$address2->state}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">Date Of Issue</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$proofs->dateOfIssue}}</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">D:O:B</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$nominees->dob}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">PIN</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$address2->pin}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+							<label class=" font-bold">Date Of Expiry</label>
+							</div>
+							<div class="col-sm-6">
+							<label>{{$proofs->dateOfExpiry}}</label>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="col-sm-12 panel panel-success">NOMINEE PROOFS</div>
+			<div class="row">
+				<div class="col-sm-4 text-center">
+					<img src="{{URL::to('/') }}/storage/img/nominee/{{$nominees->uploadPhoto}}" style="height:200px;width:200px;"  onclick="window.open('{{URL::to('/') }}/storage/img/nominee/{{$nominees->uploadPhoto}}')"><br>
+					<label>Photo</label>
+				</div>
+
+				<div class="col-sm-4 text-center">
+					<img src="{{URL::to('/') }}/storage/img/nominee/{{$nominees->signature}}" style="height:200px;width:200px;"  onclick="window.open('{{URL::to('/') }}/storage/img/nominee/{{$nominees->signature}}')"><br>
+					<label>Signature</label>
+				</div>
+				<div class="col-sm-4 text-center">
+					<img src="{{URL::to('/') }}/storage/img/proof/{{$proofs->file}}" style="height:200px;width:200px;"  onclick="window.open('{{URL::to('/') }}/storage/img/proof/{{$proofs->file}}')"><br>
+					<label>Proof</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="panel-body">
+			<div class="col-sm-12 panel panel-success">SUPPORTING DOCUMENTS</div>
+			<div class="row">
+				<div class="col-sm-4 text-center">{{$tcnrequests->doc1}}
+					<img src="{{URL::to('/') }}/storage/img/tcndocs/{{$tcnrequests->doc1}}" style="height:200px;width:200px;"  onclick="window.open('{{URL::to('/') }}/storage/img/tcndocs/{{$tcnrequests->doc1}}')"><br>
+					<label>Document 1</label>
+				</div>
+
+				<div class="col-sm-4 text-center">
+					<img src="{{URL::to('/') }}/storage/img/tcndocs/{{$tcnrequests->doc2}}" style="height:200px;width:200px;" onclick="window.open('{{URL::to('/') }}/storage/img/tcndocs/{{$tcnrequests->doc2}}')"><br>
+					<label>Document 2</label>
+				</div>
+				<div class="col-sm-4 text-center">
+					<img src="{{URL::to('/') }}/storage/img/tcndocs/{{$tcnrequests->doc3}}" style="height:200px;width:200px;"  onclick="window.open('{{URL::to('/') }}/storage/img/tcndocs/{{$tcnrequests->doc3}}')"><br>
+					<label>Document 3</label>
+				</div>
+			</div>
+					<div class="col-sm-12" ><br></div><div class="col-sm-12" ><br></div>
+			
+				<div class="row">	
+					<div class="col-sm-4 text-left">Document Verified By &nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp; 
+						 @php
+						$sql=DB::table('logins')->where('id',$tcnrequests->docVerifiedId)->get();	
+						foreach($sql as $sqls)
+						@endphp
+							<span class="font-bold">{{$sqls->username}}</span>				
+					</div>
+					<div class="col-sm-3">DATE&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;<span class="font-bold">{{date('d-m-Y H:i ',strtotime($tcnrequests->docVerifiedDate))}}</span></div>
+				</div>	
+
+				<div class="row">	
+				<div class="col-sm-3 text-left">Payment Received By</div>
+				<div class="col-sm-3"> :
+					@php	 
+					$sql=DB::table('logins')->where('id',$tcnrequests->docVerifiedId)->get();	
+					foreach($sql as $sqls)
+					@endphp
+						{{$sqls->username}}				
+				</div>
+				<div class="col-sm-3">DATE&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;<span class="font-bold">{{date('d-m-Y H:i ',strtotime($tcnrequests->paymentReceivedDate))}}</span>
+				</div>
+				</div>
+				<div class="col-sm-12" ><br></div>
+		</div>

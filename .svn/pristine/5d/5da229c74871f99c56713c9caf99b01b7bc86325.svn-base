@@ -1,0 +1,126 @@
+<?php
+namespace App\Http\Controllers\hr;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Session;
+use App\hr_leave;
+use App\hr_applied_leave;
+use DB;
+use Auth;
+class leaveController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+       $user=Auth::guard('admin')->user()->username;
+       return view('hr.leave.apply_leave',compact('user'));
+
+    }
+   
+
+    
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+
+
+
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    
+    public function store(Request $request)
+    { 
+
+        $user=\DB::table('logins')->where('username','=',$request->from)->get();
+        foreach($user as $users)
+        $userid=$users->id;
+
+        $leave = new hr_leave();
+        $leave->user_id =$userid;
+        $leave->applied_date= date('Y-m-d');
+        $leave->reason = $request->reason;
+        $leave->status ='Pending';
+        $leave->save();
+        
+        $fullday=$request->fullday;
+        $halfday=$request->halfday;
+        $fulldate=explode(",",$fullday);
+        $halfdate=explode(",",$halfday);
+        foreach ($fulldate as $key => $value) {
+        $applyleave = new hr_applied_leave();
+        $applyleave->leave_id=$leave->id;
+        $applyleave->user_id =$userid;
+        $applyleave->date  = date("Y-m-d",strtotime($value));
+        $applyleave->leave_type='full';
+        $applyleave->leave_value=1;
+        $applyleave->save();   
+        }
+        foreach ($halfdate as $key => $value) {
+        $applyleave = new hr_applied_leave();
+        $applyleave->leave_id=$leave->id;
+        $applyleave->user_id =$userid;
+        $applyleave->date  = date("Y-m-d",strtotime($value));
+        $applyleave->leave_value=0.5;
+        $applyleave->save();   
+           
+        }
+
+        Session::flash('message', 'Leave Applied Successfully!'); 
+        return redirect('/hr/leave/apply_leave');
+
+
+    }
+   
+   
+    public function show()
+    {       
+
+    $leave=\DB::table('hr_leaves')
+      ->join('logins','logins.id','=','hr_leaves.user_id')
+      ->join('hr_applied_leaves','hr_leaves.id','=','hr_applied_leaves.leave_id')->groupBy('hr_applied_leaves.leave_id')
+      ->selectRaw('sum(hr_applied_leaves.leave_value) as leave_count')
+      ->selectRaw('logins.username')
+      ->selectRaw('hr_leaves.reason')
+      ->selectRaw('hr_leaves.applied_date')
+      ->selectRaw('hr_leaves.id')
+      ->get();
+     
+          
+      return view('hr.leave.view_leave',compact('leave'));
+
+
+              
+    }
+
+    public function viewdetails($id)
+    {   
+      
+        $leave=\DB::table('hr_leaves')->where('hr_leaves.id','=',$id)
+      ->join('logins','logins.id','=','hr_leaves.user_id')
+      ->join('hr_applied_leaves','hr_leaves.id','=','hr_applied_leaves.leave_id')->get();
+       return view("hr.leave.view_leave_details");
+    }
+
+    public function validation(Request $request){
+
+    }
+   
+      
+   
+
+}

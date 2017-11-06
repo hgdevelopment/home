@@ -1,0 +1,74 @@
+@extends('admin.layout.erp1')
+@section('banner')
+<div class="col-lg-12" align="center" style="background-color:#ffcf29">
+           <img src="{{ URL::asset('new_heading.png') }}" class="img-responsive">
+         </div>
+@endsection
+@section('sidebar')
+@include('admin.partial.header')
+@include('admin.partial.aside')
+@endsection
+@section('body')
+		<div class="bg-light lter b-b wrapper-md">
+            <h1 class="m-n font-thin h3">View Applied Leave</h1>
+        </div>
+        @if (Session()->has('message'))
+        <div class="alert alert-info fade in alert-dismissable">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+          <strong>Info!</strong> {{Session()->get('message')}}
+        </div>
+    	@endif
+          <div class="wrapper-md">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="blog-post">                   
+                  <div class="col-md-6 col-md-offset-3">
+                    <div class="panel panel-info">
+    				<div class="panel-heading font-bold">VIEW APPLIED LEAVES</div>
+						<div class="panel-body">
+							<div class="row">
+							
+							<div class="text-center">
+						    <a href="#" class="thumb-lg m-r pop1" id="click_img_container">
+                           <img  class="img-circle " draggable="true"  src="{{ URL::asset('img/a1.jpg')}}"   style="width:96px;height: 96px;"></a>
+                             </div>
+
+                             <div class=" col-sm-12 divTableCell" ><strong >Code</strong><b class="data-lab  lab-2" ><span style="padding-right: 30px;">:</span>123456</b></div>
+                             <div class=" col-sm-12 divTableCell"><strong >Name</strong><b class="data-lab lab-2" ><span style="padding-right: 30px;">:</span>Dream World</b></div>
+                             <div class=" col-sm-12 divTableCell"><strong >Branch</strong><b class="data-lab lab-2"><span style="padding-right: 30px;">:</span>123456</b></div>
+                             <div class=" col-sm-12 divTableCell"><strong >Department</strong><b class="data-lab lab-2"><span style="padding-right: 30px;">:</span>Dream World</b></div>
+                              <div class=" col-sm-12 divTableCell"><strong>Company</strong><b class="data-lab lab-2"><span style="padding-right: 30px;">:</span>Dream World</b></div>
+                             <div class=" col-sm-12 divTableCell"><strong>Dates</strong><span style="padding-left: 30px;">:</span><b class="data-lab  text-center" style="text-align: justify;margin-left: 55px; ">01/02/2017,01/02/2017,01/02/2017,01/02/2017,01/02/2017,01/02/2017,01/02/2017,01/02/2017,01/02/2017,01/02/2017,01/02/2017,01/02/2017,01/02/2017,01/02/2017,01/02/2017,01/02/2017,01/02/2017,01/02/2017</b></div>
+                             <div class=" col-sm-12 divTableCell"><strong>Reason</strong><span style="padding-left: 30px;">:</span><b class="data-lab  " style="text-align: justify;margin-left: 55px; ">If you're using Bootstrap v3.0.1 or greater, you should use this solution instead. It doesn't override Bootstrap's styles with custom CSS, but instead uses a Bootstrap feature.</b></div>
+							</div>
+							<div class="row">
+                              
+                             <div class="form-group text-center ">
+                           <div class="col-sm-12"><br></div>
+                            <div class="col-sm-12">
+					        <a href="{{ URL::to('/') }}/admin/approve_member/{{ $approvemember->userId }}/edit"  class="active">     
+					        <button type="button" class="btn btn-success"  ><i class="fa fa-check" aria-hidden="true"></i>
+Accept</button>
+					        <button name="edit" type="submit" class="btn btn-danger" id="edit"><i class="fa fa-times" aria-hidden="true"></i>
+Reject</button></a>
+					        <button type="button" class="btn btn-info" id="blacklist" ><i class="fa fa-ban" aria-hidden="true"></i>
+Cancel</button>
+					       
+					      </div>
+					    </div>
+						</div>
+		            </div>
+                  </div>
+                </div>
+                 
+              </div>  
+              </div>
+              </div>                                      
+           @endsection
+           @section('jquery')
+          <script type="text/javascript">
+				$(document).ready(function(){
+				$('#enquirysolveview').DataTable();
+				});
+			</script>
+           @endsection

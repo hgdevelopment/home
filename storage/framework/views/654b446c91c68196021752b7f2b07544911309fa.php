@@ -1,0 +1,909 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title><?php echo e($tcnrequest->tcnCode); ?></title>
+  <style type="text/css" media="screen">
+    html,body{
+      font-size: 14px;
+  padding:0px;
+  margin:0px;
+    }
+    .section{
+      margin:0 25px;
+    }
+    .header-bar{
+      background: #BDD789;
+    }
+    .header-bar h3{
+      font-size: 14px;
+      padding:6px;
+    }
+    .table-data{
+      width: 100%;
+    }
+    .table-data tr th,.table-data tr td{
+       width: 100px;
+      font-size:.7em;
+      padding:5px;
+    }
+    .table-data tr th{
+      position: relative;
+      padding-left:10px;
+    }
+    .table-data tr td{
+      position: relative;
+      padding-right:10px;
+    }
+
+    .tab1 td{
+
+      padding: 5px;
+    }
+   /* .table-data tr td:nth-child(2n):before{
+     position: absolute;
+     content: ":";
+     top:0px;
+     left:0px;
+     font-size: 14px;
+     font-weight: bold;
+
+    }
+    .table-data tr td:nth-child(3){
+      padding-left:20px;
+    }*/
+    .pull-left{
+      float: left;
+    }
+    .pull-right{
+      float: right;
+    }
+    .clear-fix{
+      clear:both;
+    }
+    .clear-fix:before{
+       clear:both;
+    }
+    .clear-fix:after{
+      clear:both;
+    }
+    .sub-content{
+      font-size: 10px;
+      font-weight: 400px !important;
+    }
+  </style>
+</head>
+ <body>
+ <header id="header" class="">
+  <img src="<?php echo e(URL::to('/')); ?>/img/tcnmaster/headerTCN.png" alt="...">
+ </header><!-- /header -->
+ <div class="section">
+ <div class="header-bar">
+  <h3 class="heading-1" >Personal Detials</h3>
+ </div>
+   <table class="table-data personal-details">
+   
+    <tbody>
+      <tr>
+          <td>MEMBER CODE</td>
+        <th><?php echo e(ucfirst($tcnrequest->member->code)); ?></th>
+        <td>TCN CODE</td>
+        <th><?php echo e(ucfirst($tcnrequest->tcnCode)); ?></th>
+        <td rowspan="7" style="width: 150px;"><img class="profile-img" src="<?php echo e(URL::to('/')); ?>/storage/img/member_img/<?php echo e($tcnrequest->member->photo); ?>" alt="" width="120" height="150"></td>
+      </tr>
+
+
+      <tr>
+          <td>NAME</td>
+        <th><?php echo e(ucfirst($tcnrequest->member->name)); ?></th>
+        <td>RELIGION</td>
+        <th><?php echo e(ucfirst($tcnrequest->member->religion)); ?></th>
+      </tr>
+      <tr>
+        <td>CASTE</td>
+        <th><?php echo e(ucfirst($tcnrequest->member->caste)); ?></th>
+          <td>GENDER</td>
+        <th><?php echo e(ucfirst($tcnrequest->member->gender)); ?></th>
+        
+      </tr>
+      <tr>
+        <td>NATIONALITY</td>
+        <th><?php echo e(ucfirst($tcnrequest->member->country->countryName)); ?></th>
+          <td>DATE OF BIRTH</td>
+        <th><?php echo e($tcnrequest->member->dob); ?></th>
+        
+      </tr>
+      <tr>
+        <td>EDUCATION</td>
+        <th><?php echo e($tcnrequest->member->education); ?></th>
+          <td>FATHER'S / HUSBAND'S NAME</td>
+        <th><?php echo e($tcnrequest->member->guardian); ?></th>
+      </tr>
+      <tr >
+        <td>OCCUPATION</td>
+        <th><?php echo e($tcnrequest->member->occupation); ?></th>
+          <td>MARITAL STATUS</td>
+        <th><?php echo e($tcnrequest->member->maritalStatus); ?></th>
+      </tr>
+      <tr  >
+       <td >MOBILE</td>
+        <th ><?php echo e($tcnrequest->member->mobileId); ?> <?php echo e($tcnrequest->member->mobileNo); ?></th>
+          <td  >EMAIL</td>
+        <th  ><?php echo e($tcnrequest->member->email); ?></th>
+      </tr>
+    </tbody>
+   </table>
+ </div>
+
+<?php $__currentLoopData = $tcnrequest->member->address; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $element): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+  
+<?php if(in_array($element->typeOfAddress,array('permanent','official','correspondance'))): ?> 
+ <div class="section">
+ <div class="header-bar">
+  <h3 class="heading-1"><?php echo e(($element->typeOfAddress=='correspondance')?'Correspondence':ucfirst($element->typeOfAddress)); ?> Address</h3>
+ </div>
+   <table class="table-data personal-details">
+   
+   <tr>
+          <td>ADDRESS</td>
+        <th><?php echo e($element->address); ?></th>
+        <td>CITY</td>
+        <th><?php echo e($element->city); ?></th>
+      </tr>
+      <tr>
+          <td>STATE</td>
+        <th><?php echo e($element->state); ?></th>
+        <td>PIN</td>
+        <th><?php echo e($element->pin); ?></th>
+      </tr>
+    <tbody>
+    </tbody>
+   </table>
+ </div>
+ <?php endif; ?>
+<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+ <div class="section">
+ <div class="header-bar">
+  <h3 class="heading-1">Benefit Remittance Details
+</h3>
+ </div>
+   <table class="table-data personal-details">
+   
+   <tr>
+          <td>ACCOUNT NUMBER</td>
+        <th><?php echo e($tcnrequest->benefit->accountNumber); ?></th>
+        <td>BANK NAME </td>
+        <th><?php echo e($tcnrequest->benefit->bankName); ?></th>
+      </tr>
+      <tr>
+          <td>BRANCH</td>
+        <th><?php echo e($tcnrequest->benefit->branchName); ?></th>
+        <td>IFSC</td>
+        <th><?php echo e($tcnrequest->benefit->ifsc); ?></th>
+      </tr>
+    <tbody>
+    </tbody>
+   </table>
+ </div>
+<div style="page-break-after: always;"></div>
+ <div class="section">
+ <div class="header-bar">
+  <h3 class="heading-1">Proof Details
+</h3>
+ </div>
+   <table class="table-data personal-details">
+   
+   <tr>
+        <td> Proof Number</td>
+        <th><?php echo e(ucfirst($tcnrequest->member->proof->typeOfProof)); ?>-<?php echo e($tcnrequest->member->proof->proofNumber); ?></th>
+      </tr>
+    <tbody>
+    </tbody>
+   </table>
+ </div>
+<br/>
+<br/>
+<br/>
+<div> &nbsp;</div>
+  <div class="section">
+ <div class="header-bar">
+  <h3 class="heading-1">Trade Payment Datails
+</h3>
+ </div>
+   <table class="table-data personal-details">
+   
+   <tr>
+          <td>CURRENCY</td> 
+        <th><?php echo e($tcnrequest->currencyType); ?></th>
+        <td>NO OF UNITS</td>
+        <th><?php echo e($tcnrequest->unit); ?></th>
+      </tr>
+      <tr>
+          <td>AMOUNT</td>
+        <th><?php echo e($tcnrequest->amount); ?></th>
+        <td>PAY MODE</td>
+        <th><?php echo e($tcnrequest->paymentMode); ?></th>
+      </tr>
+      <tr>
+          <td>DATE</td>
+        <th><?php echo e($tcnrequest->depositeDate); ?></th>
+        <td>BANK NAME</td>
+        <th><?php echo e($tcnrequest->heeraaccount->bankName); ?></th>
+      </tr>
+      <tr>
+          <td>BRANCH NAME</td>
+        <th><?php echo e($tcnrequest->heeraaccount->branchName); ?></th>
+        <td>HEERA ACCOUNT NO</td>
+        <th><?php echo e($tcnrequest->heeraaccount->accountNumber); ?></th>
+      </tr>
+    <tbody>
+    </tbody>
+   </table>
+ </div>
+<br/>
+<br/>
+<br/>
+<br/>
+
+ <div class="section">
+ <div class="pull-left">NAME: <?php echo e(ucfirst($tcnrequest->member->name)); ?></div>
+ <div class="pull-right" style="margin-right: 60px;">SIGNATURE: <br/><br/><img src="<?php echo e(URL::to('/')); ?>/storage/img/member_img/<?php echo e($tcnrequest->member->singnature); ?>" width="130" height="60" alt="" />
+ <br/>
+
+ </div>
+ </div>
+<div class="clear-fix"></div>
+ <div class="section">
+ <div class="header-bar">
+  <h3 class="heading-1">Nominee Datails(1)
+</h3>
+ </div>
+   <table class="table-data personal-details">
+   
+    <tbody>
+      <tr>
+          <td>NAME</td>
+        <th><?php echo e(ucfirst($tcnrequest->nominee_one->name)); ?></th>
+        <td>DATE OF BIRTH</td>
+        <th><?php echo e($tcnrequest->nominee_one->dob); ?></th>
+        <td rowspan="7" style="width: 130px;"><img class="profile-img" src="<?php echo e(URL::to('/')); ?>/storage/img/nominee/<?php echo e($tcnrequest->nominee_one->uploadPhoto); ?>" alt="" width="120" height="150"></td>
+      </tr>
+      <tr>
+          <td>GENDER</td>
+        <th><?php echo e(ucfirst($tcnrequest->nominee_one->gender)); ?></th>
+        <td>RELATION WITH APPLICANT</td>
+        <th><?php echo e(ucfirst($tcnrequest->nominee_one->relationWithApplicant)); ?></th>
+      </tr>
+      <tr>
+        <td>ADDRESS</td>
+        <th colspan="3"><?php echo e($tcnrequest->nominee_one->address->address); ?></th>
+      </tr>
+      <tr>
+          <td>CITY</td>
+        <th><?php echo e($tcnrequest->nominee_one->address->city); ?></th>
+        <td>PIN</td>
+        <th><?php echo e($tcnrequest->nominee_one->address->pin); ?></th>
+      </tr>
+      <tr>
+          <td>MOBILE</td>
+        <th><?php echo e($tcnrequest->nominee_one->mobile); ?></th>
+        <td>EMAIL</td>
+        <th><?php echo e($tcnrequest->nominee_one->email); ?></th>
+      </tr>
+    </tbody>
+   </table>
+ </div>
+ 
+ <br/>
+ <br/>
+  <br/>
+ <div class="section">
+ <div class="pull-left">NAME: <?php echo e(ucfirst($tcnrequest->nominee_one->name)); ?></div>
+ <div class="pull-right" style="margin-right: 60px;">SIGNATURE: <br/><br/><img src="<?php echo e(URL::to('/')); ?>/storage/img/nominee/<?php echo e($tcnrequest->nominee_one->signature); ?>" width="130" height="60" alt="" />
+ <br/>
+
+ </div>
+ </div>
+<?php if($tcnrequest->nominee2_id>0): ?>
+<div style="page-break-after: always;"></div>
+<div class="clear-fix"></div>
+ <div class="section">
+ <div class="header-bar">
+  <h3 class="heading-1">Nominee Datails(2)
+</h3>
+ </div>
+   <table class="table-data personal-details">
+   
+    <tbody>
+      <tr>
+          <td>NAME</td>
+        <th><?php echo e(ucfirst($tcnrequest->nominee_two->name)); ?></th>
+        <td>DATE OF BIRTH</td>
+        <th><?php echo e($tcnrequest->nominee_two->dob); ?></th>
+        <td rowspan="6" style="width: 155px;"><img class="profile-img" src="<?php echo e(URL::to('/')); ?>/storage/img/nominee/<?php echo e($tcnrequest->nominee_two->uploadPhoto); ?>" alt="" width="120" height="150"></td>
+      </tr>
+      <tr>
+          <td>GENDER</td>
+        <th><?php echo e(ucfirst($tcnrequest->nominee_two->gender)); ?></th>
+        <td>RELATION WITH APPLICANT</td>
+        <th><?php echo e(ucfirst($tcnrequest->nominee_two->relationWithApplicant)); ?></th>
+      </tr>
+      <tr>
+        <td>ADDRESS</td>
+        <th><?php echo e($tcnrequest->nominee_two->address->address); ?></th>
+      </tr>
+      <tr>
+          <td>CITY</td>
+        <th><?php echo e($tcnrequest->nominee_two->address->city); ?></th>
+        <td>PIN</td>
+        <th><?php echo e($tcnrequest->nominee_two->address->pin); ?></th>
+      </tr>
+      <tr>
+          <td>MOBILE</td>
+        <th><?php echo e($tcnrequest->nominee_two->mobile); ?></th>
+        <td>EMAIL</td>
+        <th><?php echo e($tcnrequest->nominee_two->email); ?></th>
+      </tr>
+    </tbody>
+   </table>
+ </div>
+ <br/>
+<br/>
+ <br/>
+ <div class="section">
+ <div class="pull-left">NAME: <?php echo e(ucfirst($tcnrequest->nominee_two->name)); ?></div>
+ <div class="pull-right" style="margin-right: 80px;" >SIGNATURE: <br/><br/><img src="<?php echo e(URL::to('/')); ?>/storage/img/nominee/<?php echo e($tcnrequest->nominee_two->signature); ?>" width="130" height="60" alt="" />
+ <br/>
+
+ </div>
+ </div>
+<?php endif; ?>
+ 
+ 
+
+ <div class="clear-fix"></div>
+ <div class="section">
+ <div class="header-bar">
+  <h3 class="heading-1">Introduction Datails
+</h3>
+ </div>
+
+
+<table class="table sub-content" >
+
+        <tbody>
+     <tr>
+        <th colspan="3">MARKETING EXECUTIVE:</th>
+      </tr>
+      <tr>
+         <th colspan="3">SUB AGENT NAME:</th>
+      </tr>
+
+      <tr>
+        <th colspan="2">I KNOW THE MEMBER FOR LAST ___ MONTHS/YEARS. I CONFIRM THE IDENTITY, OCCUPATION AND ADDRESS OF APPLICANT</th>
+      </tr>
+      <tr>
+
+        <th rowspan="3">DATE:</th>
+        <th rowspan="3">INTRODUCERS SIGNATURE </th>
+        <th rowspan="3">SIGNATURE VERIFIED BY</th>
+
+      </tr>
+        </tbody>
+  </table>
+
+
+
+  </div>
+
+<div> &nbsp;</div>
+<div class="section ">
+ <div class="header-bar">
+  <h3 class="heading-1">Declaration From an Individual
+</h3>
+ </div>
+  
+
+  <table class="table sub-content" cellspacing="0" cellpadding="6" >
+     
+
+       <tbody>
+      
+      <tr>
+        <th>PLACE:</th>
+        <td > </td>
+        <th>        </th>
+        <th> DATE:</th>
+      </tr>
+       <tr>
+        <th  colspan="4">
+        I, the undersigned, will advice you in writing of any change in detail furnished to the company and I will be liable to you for any obligation
+which may be standing on my name in your books of data of the receipt of such notice and until all such obligations have been liquidated.
+
+           </th>
+      </tr>
+       <tr>
+       <th  colspan="3" style="text-align: right;margin-right: 30px;font-size: 13px;">
+        Yours faithfully
+           </th>
+      </tr>
+        </tbody>
+  </table>
+  
+<table class="table"  cellspacing="0" cellpadding="0" style=" font-size: 12px; width: 100%;border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: 20px;">
+           <tr>
+        <td style="text-align: center;" >NAME</td>
+        <td style="text-align: center;" >SIGNATURE:</td>
+      </tr>
+        </tbody>
+  </table>
+<br/><br/>
+<div style="page-break-after: always;"></div>
+ </div>
+ <div class="section">
+ <div class="header-bar">
+  <h3 class="heading-1">Declaration From Proprietorship Firm
+</h3>
+ </div>
+   
+
+
+<table class="table sub-content" cellspacing="0" cellpadding="6" >
+       <tbody>
+      
+      <tr>
+        <th>PLACE:</th>
+        <td > </td>
+        <th>        </th>
+        <th> DATE:</th>
+      </tr>
+       <tr>
+        <th  colspan="4">
+        I, the undersigned, am the sole proprietor of the concern and is solely responsible for liabilities thereof, I will advice you in writing of any
+change in detail furnished to the company and I will be liable to you for any obligation which may be standing on my name in your books of
+data of the receipt of such notice and until all such obligations have been liquidated.
+
+
+           </th>
+      </tr>
+       <tr>
+        <th  colspan="3" style="text-align: right;margin-right: 30px;font-size: 13px;">
+        Yours faithfully
+           </th>
+      </tr>
+        </tbody>
+  </table>
+  
+  
+<table class="table"  cellspacing="0" cellpadding="0" style=" font-size: 12px; width: 100%;border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: 20px;">
+           <tr>
+        <td style="text-align: center;" >NAME</td>
+        <td style="text-align: center;" >SIGNATURE:</td>
+      </tr>
+        </tbody>
+  </table>
+ </div>
+
+<div class="section ">
+ <div class="header-bar">
+  <h3 class="heading-1">Declaration From  Partnership Firm
+</h3> 
+ </div>
+
+ <table class="table sub-content" cellspacing="0" cellpadding="6" >
+       <tbody>
+      
+      <tr>
+        <th>PLACE:</th>
+        <td > </td>
+        <th>        </th>
+        <th> DATE:</th>
+      </tr>
+       <tr>
+        <th  colspan="4">
+       We, the undersigned, are the only partners in the firm and are jointly and severally responsible for liabilities thereof, We will advice you in
+writing of any change in detail furnished to the company and We will be liable to you for any obligation which may be standing on my name in
+your books of data of the receipt of such notice and until all such obligations have been liquidated.
+
+
+           </th>
+      </tr>
+       <tr>
+       <th  colspan="3" style="text-align: right;margin-right: 30px;font-size: 13px;">
+        Yours faithfully
+           </th>
+      </tr>
+        </tbody>
+  </table>
+  
+  
+<table class="table"  cellspacing="0" cellpadding="0" style=" font-size: 12px; width: 100%;border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: 20px;">
+           <tr>
+        <td style="text-align: center;" >NAME</td>
+        <td style="text-align: center;" >SIGNATURE:</td>
+      </tr>
+        </tbody>
+  </table>
+ </div>
+<br/>
+<br/>
+<div>&nbsp;</div>
+ <div class="section ">
+ <div class="header-bar">
+  <h3 class="heading-1">Vernacular Declaration 
+</h3>
+ </div>
+
+
+<table class="table tab1 " border="0" cellspacing="0" cellpadding="0" style=" font-size: 12px; width: 100%;border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: 20px;" >
+             <tbody>
+      
+      <tr>
+        <td >PLACE:</td>
+         <td > </td>
+          <td > </td>
+        <td > DATE:</td>
+      </tr>
+
+      <tr>
+        <td>I, Mr./Mrs./Ms. </td>
+        <td style="color:#ddd;"> Executive/Agent:</td>
+        <td> (Interpreter)</td>
+        <th></th>
+      </tr>
+      <tr>
+        <td colspan="2">have explained the contents of this document in</td>
+        <td colspan="2">(Language) to following HGEL TCN `A` Member/s:</td>
+      </tr>
+      <tr>
+        <td colspan="2">1.</td>
+        <td colspan="2">2.</td>
+      </tr>
+       <tr>
+        <td  colspan="4">
+        each of whom have confirmed to me that he/she fully understands the contents of this document and has/have duly put his/her signature(s) to
+this declaration.
+           </td>
+      </tr>
+       <tr>
+        <td>MEMBER NAME: </td>
+        <td > </td>
+        <td>        </td>
+        <td> SIGNATURE</td>
+      </tr>
+      <tr>
+        <td  colspan="4">
+                   </td>
+      </tr>
+      <tr>
+        <td>INTERPRETER NAME:</td>
+        <td > </td>
+        <td>        </td>
+        <td> SIGNATURE</td>
+      </tr>
+      <tr>
+        <td  colspan="4">
+                   </td>
+      </tr>
+      <tr>
+        <td colspan="2">WITNESS (1) on behalf of Member(s): </td>
+        <td>        </td>
+        <td> SIGNATURE</td>
+      </tr>
+      <tr>
+        <td  colspan="4">
+                   </td>
+      </tr>
+      <tr>
+        <td colspan="2">WITNESS (2) on behalf of HGEL:</td>
+        <td>        </td>
+        <td> SIGNATURE</td>
+      </tr>
+
+        </tbody>
+  </table>
+ </div>
+
+<div style="page-break-after: always;"></div>
+ <div class="section ">
+  <p style="text-align:center; font-size:9px;">Note: Your Membership Request Form should be submitted and approved before you fill in your Application Form</p>
+ <div class="header-bar">
+  <h3 class="heading-1">`HG` Terms & Conditions
+</h3>
+ </div>
+<table class="table  sub-content" cellspacing="0" cellpadding="6" >
+       <tbody>
+       <tr>
+        <th  colspan="4">
+1. HG TCN member must be above 18 years of age, can be a Resident Indian, NRI or a foreigner.<br/><br/>
+2. HG TCN member must be a Muslim.<br/><br/>
+3. Nomination facility is available; up to two nominees are permissible to every member. However can extend if needed.<br/><br/>
+4. All supportive documents should be relevant to member/s.<br/><br/>
+5. Copy of Residence proof and Photo ID of the member/s and the nominee/s is required. Original of the same can also be demanded for verification.<br/><br/>
+6. HG will not bear any responsibility for any loss due to mistake in filling of the name and/or any detail in, any of the HG form.<br/><br/>
+7. All eligible profits and gifts will be issued on the applicant name, which is filled in the enrolment form only.<br/><br/>
+8. HG reserves the right to terminate the enrolment if any of the document or the information submitted by the applicant is found to be unauthentic or in any other related case.<br/><br/>
+9. Member/s willing to change any details provided in enrolment form must fill the update form and consult HG for the same. Changes will be effected post two weeks from
+receiving the details.<br/><br/>
+10. Membership applications will be accepted on or before last working day of every month. Application will not be accepted after the specified date in any case.<br/><br/>
+  11. One time registration fees will be charged on every membership of HG TCN @ 0.2% on membership amount (for eg. : 200/- INR for every 1,00,000/- INR and respectively).<br/><br/>
+12. Registration fees for HG TCN are non-refundable.<br/><br/>
+13. HG strictly condemns the payment done by money earned from non-islamic/illegal source, including interest/theft/burglary/or any other related action, which is against the
+constitution of the respective country. HG reserves the right to take necessary action in the respective case, and the action may be extended up to legal proceedings as per the
+case may be.<br/><br/>
+14. Payments are accepted only through bank, cash payments will not be accepted in any case.<br/><br/>
+15. Member/s are warned, not to hand over cash to any HG office/Executive/Person/ organisation or any one, as HG restricts the acceptance of cash in any case. However,
+person willing for cash payment may deposit the amount in respective HG bank account and hand over the bank pay-in-slip with enrolment form to any HG office.<br/><br/>
+ 16. It is the accountability of HG TCN member/s to verify with their bank, whether the membership amount has been deducted from their respective bank account. HG takes no
+responsibility in case of non-remittance of money. HG reserves the right to impose penalty on the respective member up to the extent of loss.<br/><br/>
+17. No buy back proceeding will be affected within the lock-in period of respective TCN under any circumstances.<br/><br/>
+18. Buy back request shall be submitted one month prior from date of withdrawal on or before 1st of respective month, subject to completion of lock-in period.<br/><br/>
+19. All documents issued by HG (Agreement cum Receipt & Membership Card or any other) must be returned if the member wishes to discontinue or as per the demand of HG.<br/><br/>
+           </th>
+      </tr>
+        </tbody>
+  </table>
+ </div>
+ <br/><br/>
+ <br/><br/>
+<div>&nbsp;</div>
+  <div class="section ">
+
+ 
+<table class="table sub-content" cellspacing="0" cellpadding="6" >
+    
+
+       <tbody>
+       <tr>
+        <th  colspan="4">
+     
+
+20. HG TCN member/s is/are deemed to be continued unless and until buyback request is submitted or else if HG terminates the membership.<br/><br/>
+21. Withdrawal amount will be remitted to members account in the first week of every month along with the profit/loss of that particular TCN.<br/><br/>
+22. As per Almighty`s order in the Holy Quran, ``O you who believe! Whenever you enter into deals with one another involving future obligations for a certain term, write it down.`<br/><br/>
+(2:282), HG is bound to all the terms and conditions stated in the enrolment form of the respective TCN, and so is the member also eligible to terms and conditions mentioned in
+it.<br/><br/>
+23. HG, bound by the Islamic Law, will not pay any interest to any member under any circumstances.<br/><br/>
+24. HG TCN Member/s shall attend a minimum of five meetings out of twelve in a particular year to be well informed with updates.<br/><br/>
+25. HG reserves all the right to change/modify the terms and conditions without any prior notice, and the same will be effective thereafter.<br/><br/>
+26. Heera will not be responsible for any bank charges that is being deducted from the amount you transfer to us.
+Note:We were only concentrating on Business trades.
+           </th>
+      </tr>
+        </tbody>
+  </table>
+ <table class="table"  cellspacing="0" cellpadding="0" style=" font-size: 12px; width: 100%;border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 20px;">
+       <tr>
+        <td style="text-align: center;" >NAME</td>
+        <td  ></td>
+        <td  ></td>
+        <td style="text-align: center;" >SIGNATURE:</td>
+      </tr>
+        </tbody>
+  </table>
+
+ </div>
+<div style="page-break-after: always;"></div>
+  <div class="section ">
+ <div class="header-bar">
+  <h3 class="heading-1">HGEL TCN `A` Terms & Conditions
+</h3>
+ </div>
+
+ <table class="table sub-content" cellspacing="0" cellpadding="6" >
+     
+
+       <tbody>
+       <tr>
+        <th  colspan="4">1.Any quantity of membership can be bought but only in multiples 0f 25,000/-INR or 2,000/-AED or 500/-USD.<br/><br/>
+2.Gross Profit/loss will be divided: 60% to HGEL and 40% to the member/s.<br/><br/>
+3.Gross Profit/loss will be distributed every month.<br/><br/>
+4.Gross Profit/loss shall be remitted to the members account by Cheque/ATM/ECS or any other mode of payment permitted by law, in the first
+week of every month from the month of enrollment.<br/><br/>
+5.Membership purchased between the datesof 1st to 30th will only be eligible for the profit of the forthcoming month from the month of purchase
+(i.e.:1st working daytill last working day of every month, for eg.: Membership purchased between 1st Jan 2013 till 31st Jan 2013 will be eligible
+for the profit of Feb 2013, and will be remitted on 1st week of march).<br/><br/>
+6.Minimum Duration of membership is one year (lock-in-period), with effect from 1st January 2013.<br/><br/>
+7.Cheque/DD Should be favour of "HEERA GOLD EXPORTS AND IMPORTS" TO buy HGEL TCN `A` Membership.<br/><br/>
+8.HGEL is registerd under Indian Companies Act-1956(unlisted),whereby honorable Indian Constitution Permitted Muslim Community may
+follow Shariat (Law derived from the Holy Quran) as per Muslim Personal Law (Shariat) Application Act,1937.<br/><br/>
+9.HGEL is engaged in the trading of physical gold, hence every HGEL TCN `A` members is, obviously involved in purchase of physical gold, up
+to the value of his/her membership, can demand either respective currency or gold or the same value.<br/><br/>
+10.HGEL is involved in physical gold trading, so is financially dependent on economic and market conditions.However time factor has
+remarkable role in the economy, which may lead to delay in the process of profit/loss distribution or any other related dues.<br/><br/>
+
+           </th>
+      </tr>
+        </tbody>
+  </table>
+<table class="table"  cellspacing="0" cellpadding="0" style=" font-size: 12px; width: 100%;border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 20px;">
+       <tr>
+        <td style="text-align: center;" >NAME</td>
+        <td  ></td>
+        <td  ></td>
+        <td style="text-align: center;" >SIGNATURE:</td>
+      </tr>
+        </tbody>
+  </table>
+ </div>
+<div style="page-break-after: always;"></div>
+<style>
+.personal_details{
+  border:1px solid #bbb;
+  font-size:12px;
+  width:100% !important;
+}
+.personal_details tr td,
+.personal_details tr th,
+ {
+   border:1px solid #bbb;
+  }
+</style>
+  <div class="section ">
+ <div class="header-bar">
+  <h3 class="heading-1">Document To Be Attached
+</h3>
+ </div>
+
+
+<table class="table sub-content personal_details" cellspacing="0" cellpadding="6" >
+      
+       <tbody>
+        <tr>
+        <th  colspan="2" style="font-weight:bold;">APPLICANTS ID PROOF</th>
+        <th colspan="2" style="font-weight:bold;">APPLICANTS ID PROOF</th>
+           </tr>
+       <tr>
+        <th >PAN CARD </th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+        <th>ELECTRICITY BILL</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+      </tr>
+       <tr>
+        <th >VOTER IDENTITY CARD</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+        <th>TELEPHONE BILL</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+      </tr>
+       <tr>
+        <th >DRIVING LICENSE </th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+        <th>VOTER IDENTITY CARD</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+      </tr>
+       <tr>
+        <th >BANK A/C STATEMENT / PASSBOOK </th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+        <th>BANK A/C STATEMENT/PASSBOOK</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+      </tr>
+      <tr>
+        <th >PASSPORT</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+        <th>DRIVING LICENSE</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+      </tr>
+      <tr>
+        <th >ADHAAR CARD</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+        <th>PASSPORT</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+      </tr>
+      <tr>
+        <th >RATION CARD </th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+        <th>RATION CARD </th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+      </tr>
+       <tr>
+        <th ></th>
+        <td style="text-align:center; color:#bbb;"></td>
+        <th>RENT RECEIPT</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+      </tr>
+
+
+       <tr>
+        <th  colspan="2" style="font-weight:bold;">NOMINEES ID PROOF</th>
+        <th colspan="2" style="font-weight:bold;">NOMINEES ADDRESS PROOF</th>
+           </tr>
+
+       <tr>
+        <th >PAN CARD </th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+        <th>ELECTRICITY BILL</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+      </tr>
+       <tr>
+        <th >VOTER IDENTITY CARD </th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+        <th>TELEPHONE BILL</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+      </tr>
+       <tr>
+        <th >DRIVING LICENSE </th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+        <th>VOTER IDENTITY CARD</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+      </tr>
+       <tr>
+        <th >BANK A/C STATEMENT / PASSBOOK</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+        <th>BANK A/C STATEMENT/PASSBOOK
+</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+      </tr>
+      <tr>
+        <th >PASSPORT</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+        <th>DRIVING LICENSE</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+      </tr>
+      <tr>
+        <th >ADHAAR CARD</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+        <th>PASSPORT</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+      </tr>
+      <tr>
+        <th >RATION CARD </th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+        <th>RATION CARD </th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+      </tr>
+       <tr>
+        <th ></th>
+        <td style="text-align:center; color:#bbb;"></td>
+        <th>RENT RECEIPT</th>
+        <td style="text-align:center; color:#bbb;">(YES/NO)</td>
+      </tr>
+        </tbody>
+  </table> 
+<br/>
+  <table class="table sub-content " cellspacing="0" cellpadding="6" style="width:100% !important;">
+          <tbody>
+       <tr>
+        <td style="text-align:center; color:#000;">MARKETING EXECUTIVE </td><td ></td>
+        <td style="text-align:center; color:#000;">SUB AGENT</td><td ></td>
+      </tr>
+        </tbody>
+  </table>
+  <br/>
+  <h5 style="font-size:14px;">FOR OFFICE USE ONLY</h5>
+  <hr/>
+<table class="table sub-content " cellspacing="0" cellpadding="6" style="width:100% !important;">
+        <tbody>
+           <tr>
+        <th style="width:70%;">RECEIVED BY :</th>
+        <th >DATE :</th>
+      </tr>
+      <tr>
+        <th >DATA ENTRY BY :</th>
+        <th >DATE :</th>
+      </tr>
+      <tr>
+        <th >AGREEMENT PRINTED ON :</th>
+        <th >DATE :</th>
+      </tr>
+      <tr>
+        <th >VERIFIED BY :</th>
+        <th >DATE :</th>
+      </tr>
+      </tbody>
+  </table>
+ 
+ </div>
+ </body>
+</html>

@@ -1,0 +1,11 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class hr_company extends Model
+{
+	protected $table="hr_companies";
+
+}

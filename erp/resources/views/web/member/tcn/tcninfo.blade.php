@@ -1,0 +1,286 @@
+@extends('web.layout.erp')
+{{-- @section('banner')
+<div class="col-lg-12" align="center" style="background-color:#ffcf29">
+            <img src="{{ URL::asset('new_heading.png') }}" class="img-responsive">
+         </div>
+@endsection --}}
+
+@section('sidebar')
+
+@include('web.partial.header')
+@include('web.partial.aside')
+
+@endsection
+
+@section('body')
+{{-- 
+            <div class="bg-light lter b-b wrapper-md">
+               <h1 class="m-n font-thin h3">Profile</h1>
+            </div> --}}
+
+@include('web.partial.profileheader')
+    <style type="text/css" media="screen">
+      .pagination {
+    margin: 3px 0;
+      }
+    </style>
+
+    <div class="row">
+      <div class="col-sm-12">
+      <div class="panel panel-warning">
+        <div class="panel-heading">Pending TCN</div>
+        <table class="table table-striped m-b-none" style="    background: #f3f3f3;">
+          <thead>
+            <tr>
+              <th >TCN</th>
+              <th>Currency</th> 
+              <th>Amount</th> 
+              <th>Unit</th>                      
+              <th >Action</th>
+            </tr>
+          </thead>
+          <tbody>
+          @foreach ($pendinglist as $element)
+            {{-- expr --}}
+         
+            <tr>                    
+              <td>
+              {{$element->tcn->tcnType}}
+              </td>
+              <td>{{$element->currencyType}}</td>
+              <td>
+             @php
+               switch ($element->currencyType) {
+                 case 'INR':
+                  echo $element->tcn->inr*$element->unit;
+                   break;
+                 case 'AED':
+                  echo $element->tcn->aed*$element->unit;
+                   break;
+                 case 'USD':
+                  echo $element->tcn->usd*$element->unit;
+                   break;
+
+                 case 'SAR':
+                  echo $element->tcn->sar*$element->unit;
+                   break;
+
+                 case 'CAD':
+                  echo $element->tcn->cad*$element->unit;
+                   break;
+                 
+                 default:
+                   echo 0;
+                   break;
+               }
+             @endphp
+                
+              </td>
+              <td>{{$element->unit}}</td>
+              <td>
+               <a href="{{URL::to('/') }}/web/tcnapplication/{{$element->id}}" target="_blank"><i style="font-size: x-large" class="fa fa-check text-success text-active"></i><i class="fa fa-file-pdf-o text-danger text"></i></a>
+               &nbsp;  <a href="{{ url('web/tcndetails/'.$element->id) }}"><i style="font-size: x-large" class="fa fa-eye" aria-hidden="true"></i></a>
+              </td>
+            </tr>
+          @endforeach
+          </tbody>
+          
+        </table>
+        <footer class="panel-footer">
+      <div class="row">
+        <div class="col-sm-6 text-center">
+          {{-- <small class="text-muted inline m-t-sm m-b-sm">showing 20-30 of 50 items</small> --}}
+        </div>
+        <div class="col-sm-6 text-right text-center-xs">      
+        {{ $pendinglist->links() }}     
+        </div>
+      </div>
+    </footer>
+      </div>
+    </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+      <div class="panel panel-success">
+        <div class="panel-heading">Active TCN</div>
+        <table class="table table-striped m-b-none" style="    background: #f3f3f3;">
+          <thead>
+            <tr>
+              <th >TCN</th>
+              <th>Currency</th> 
+              <th>Amount</th> 
+              <th>Unit</th>                      
+              <th >Action</th>
+            </tr>
+          </thead>
+          <tbody>
+          @foreach ($activelist as $element)
+            {{-- expr --}}
+         
+            <tr>                    
+              <td>
+              {{$element->tcn->tcnType}}<br>
+             
+              @if($element->withDrawId!='0')
+                @if($element->withDrawStatus=='Applied')
+                 <span class="text-primary" >{{'WithDraw Request Sended'}}</span>
+                @elseif($element->withDrawStatus=='Approved')
+                 <span class="text-success" >{{'WithDrawaled'}}</span>
+                @elseif($element->withDrawStatus=='Denied')
+                 <span class="text-danger" >{{'WithDrawal Cancelled'}}</span>
+                @endif
+              @endif
+              </td>
+              <td>{{$element->currencyType}}</td>
+              <td>
+             @php
+               switch ($element->currencyType) {
+                 case 'INR':
+                  echo $element->tcn->inr*$element->unit;
+                   break;
+                 case 'AED':
+                  echo $element->tcn->aed*$element->unit;
+                   break;
+                 case 'USD':
+                  echo $element->tcn->usd*$element->unit;
+                   break;
+
+                 case 'SAR':
+                  echo $element->tcn->sar*$element->unit;
+                   break;
+
+                 case 'CAD':
+                  echo $element->tcn->cad*$element->unit;
+                   break;
+                 
+                 default:
+                   echo 0;
+                   break;
+               }
+             @endphp
+                
+              </td>
+              <td>{{$element->unit}}</td>
+              <td>
+              &nbsp;  
+              <a title="View TCN" href="{{ url('web/tcndetails/'.$element->id) }}"><i style="font-size: x-large" class="fa fa-eye" aria-hidden="true"></i>
+              </a>
+              @php
+              $WithDrawApplied=DB::table('withdrawalrequests')->where('tcnId',$element->id)->where('status','Applied')->get();
+              $WithDrawPaid=DB::table('withdrawalrequests')->where('tcnId',$element->id)->where('status','Paid')->sum('unit');
+
+
+              $unlockdate = strtotime(date("Y-m-d", strtotime($element->paymentReceivedDate)) . " +".$element->tcn->lockingDuration." month");
+              $unlockdate = date("Y-m-d", $unlockdate);
+              @endphp
+
+              @if($element->paymentReceived=='Received' && count($WithDrawApplied==0) && $unlockdate<=date("Y-m-d") && $element->physicalBenefit=='Yes' && ($element->unit>$WithDrawPaid))
+              <a href="{{ url('web/tcnwithDrawal/'.$element->id) }}" title="With Drawal Request"><i style="font-size: x-large" class="fa fa-money" aria-hidden="true"></i>
+              </a>
+              @endif
+              </td>
+            </tr>
+          @endforeach
+          </tbody>
+          
+        </table>
+        <footer class="panel-footer">
+      <div class="row">
+        <div class="col-sm-6 text-center">
+         {{--  <small class="text-muted inline m-t-sm m-b-sm">showing 20-30 of 50 items</small> --}}
+        </div>
+        <div class="col-sm-6 text-right text-center-xs">                
+          {{ $activelist->links() }}   
+        </div>
+      </div>
+    </footer>
+      </div>
+    </div>
+    </div>
+    
+     <div class="row">
+      <div class="col-sm-12">
+      <div class="panel panel-danger">
+        <div class="panel-heading">Denied TCN</div>
+        <table class="table table-striped m-b-none" style="    background: #f3f3f3;">
+          <thead>
+            <tr>
+              <th >TCN</th>
+              <th>Currency</th> 
+              <th>Amount</th> 
+              <th>Unit</th>                      
+              <th >Action</th>
+            </tr>
+          </thead>
+          <tbody>
+          @foreach ($deniedlist as $element)
+            <tr>                    
+              <td>
+              {{$element->tcn->tcnType}}
+              </td>
+              <td>{{$element->currencyType}}</td>
+              <td>
+             @php
+               switch ($element->currencyType) {
+                 case 'INR':
+                  echo $element->tcn->inr*$element->unit;
+                   break;
+                 case 'AED':
+                  echo $element->tcn->aed*$element->unit;
+                   break;
+                 case 'USD':
+                  echo $element->tcn->usd*$element->unit;
+                   break;
+
+                 case 'SAR':
+                  echo $element->tcn->sar*$element->unit;
+                   break;
+
+                 case 'CAD':
+                  echo $element->tcn->cad*$element->unit;
+                   break;
+                 
+                 default:
+                   echo 0;
+                   break;
+               }
+             @endphp
+                
+              </td>
+              <td>{{$element->unit}}</td>
+              <td>
+               <a href="{{ url('web/tcnapplication/'.$element->id.'/edit') }}" ><i style="font-size: x-large" class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+               &nbsp;  <a href="{{ url('web/tcndetails/'.$element->id) }}"><i style="font-size: x-large" class="fa fa-eye" aria-hidden="true"></i></a>
+              </td>
+            </tr>
+          @endforeach
+          </tbody>
+          
+        </table>
+        <footer class="panel-footer">
+      <div class="row">
+        <div class="col-sm-6 text-center">
+         {{--  <small class="text-muted inline m-t-sm m-b-sm">showing 20-30 of 50 items</small> --}}
+        </div>
+        <div class="col-sm-6 text-right text-center-xs">                
+          {{ $deniedlist->links() }}   
+        </div>
+      </div>
+    </footer>
+      </div>
+    </div>
+    </div>
+@include('web.partial.profilefooter')
+
+             
+
+
+
+
+
+@endsection
+
+@section('jquery')
+
+@endsection

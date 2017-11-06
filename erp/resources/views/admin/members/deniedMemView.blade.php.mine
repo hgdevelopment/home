@@ -1,0 +1,254 @@
+@extends('layout.erp')
+  @section('banner')
+  <div class="col-lg-12" align="center" style="background-color:#ffcf29">
+  <img src="{{ URL::asset('new_heading.png') }}" class="img-responsive">
+</div>
+  @endsection
+  @section('sidebar')
+    @include('partial.header')
+    @include('partial.aside')
+  @endsection
+@section('body')
+
+  <div >
+    <div class="wrapper-lg bg-white-opacity">
+      <div class="row m-t">
+        <form class="form-horizontal" id="upload" enctype="multipart/form-data" method="post" action="{{ route('web.changeimg') }}" autocomplete="off">
+          {{ csrf_field() }}
+          <div class="col-sm-12">
+            <a href="#" class="thumb-lg pull-left m-r" id="click_img_container">
+              <img src="{{ URL::asset('public/img/member_img/'.$member->photo)}}" class="img-circle img-circle-hover" width="96" height="96" style="width:96px;height: 96px;">
+              {{--  <input type="file" name="avatar_img" id="avatar_img" /> --}}
+              <style type="text/css" media="screen">
+                #click_img_container
+                {
+                  position:relative;
+                  }
+                  #avatar_img
+                  {
+                  opacity:0;
+                  position:absolute;
+                  top:0;
+                  left:0;
+                  width:100%;
+                  height:100%;
+                  }
+                #change_img
+                {
+                position: absolute;
+                top: 0px;
+                background: rgba(0, 0, 0, 0.4);
+                width:100%;
+                height:100%;
+                border-radius: 50%;
+                padding-top: 45%;
+                text-align: center;
+                color: #fff;
+                }     
+              </style>
+            </a>
+            <div class="clear m-b">
+              <div class="m-b m-t-sm">
+                <span class="h3 text-black">{{$member->name}}</span><br>
+                
+              </div>
+              {{-- <p class="m-b">
+              <a href="" class="btn btn-sm btn-bg btn-rounded btn-default btn-icon"><i class="fa fa-twitter"></i></a>
+              <a href="" class="btn btn-sm btn-bg btn-rounded btn-default btn-icon"><i class="fa fa-facebook"></i></a>
+              <a href="" class="btn btn-sm btn-bg btn-rounded btn-default btn-icon"><i class="fa fa-google-plus"></i></a>
+              </p>
+              <a href="" class="btn btn-sm btn-success btn-rounded">Follow</a> --}}
+           </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="padder" style="padding-top: 15px;">  
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="panel panel-warning">
+          <div class="panel-heading">Personal Details {{-- <a href="#" class="pull-right" data-toggle="modal" data-target="#profile_details"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i> Edit</a> --}}</div>
+          <table class="table table-striped m-b-none" style="background: #f3f3f3;">
+            <tbody>
+              <tr>   
+                <td>Name</td>
+                <th>{{$member->name}}</th> 
+                <td>Father's Name/ Husband's Name</td>
+                <th>{{$member->guardian}}</th>
+              </tr>
+              <tr>   
+                <td>Religion</td>
+                <th>{{$member->religion}}</th> 
+                <td>Caste</td>
+                <th>{{$member->caste}}</th>
+              </tr>
+              <tr>   
+                <td>Date of Birth</td>
+                <th>{{$member->dob}}</th> 
+                <td>Education</td>
+                <th>{{$member->education}}</th>
+              </tr>
+              <tr>   
+                <td>Marital status</td>
+                <th>{{$member->maritalStatus}}</th> 
+                <td>Occupation</td>
+                <th>{{$member->occupation}}</th>
+              </tr>
+              <tr>   
+                <td>Gender</td>
+                <th>{{$member->gender}}</th> 
+                <td>Income</td>
+                <th>{{$member->incomeAmount}}</th>
+              </tr>
+              <tr>   
+                <td>No of Children</td>
+                <th>{{$member->noOfChildren}}</th> 
+                <td>Country</td>
+                <th>{{$countryname->countryNames}}</th>
+              </tr>
+              <tr>   
+                <td>Mobile No</td>
+                <th>{{$member->mobileNo}}</th> 
+                <td>Email</td>
+                <th>{{$member->email}}</th>
+              </tr>
+              <tr>   
+                <td>Signature</td>
+                <th colspan="3">
+                  <img src="{{ URL::asset('public/img/member_img/'.$member->singnature)}}" class="img-thumbnail" alt="" style="width: 100px;" />
+                </th> 
+              </tr>                           
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="panel panel-warning">
+          <div class="panel-heading">Address
+
+          {{-- <a href="#" class="pull-right"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i> Edit</a> --}}</div>
+          <table class="table table-striped m-b-none" style="background: #f3f3f3;">
+            <tbody>
+              <tr>   
+              <td>Address</td>
+                <th>{{$mem->address}}</th> 
+                <td>City</td>
+                <th>{{$mem->city}}</th>
+              </tr>
+              <tr>   
+                <td>State</td>
+                <th>{{$mem->state}}</th> 
+                <td>Pin</td>
+                <th>{{$mem->pin}}</th> 
+              </tr>
+            </tbody>
+          </table>
+        </div>
+     </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="panel panel-warning">
+          <div class="panel-heading">Proof {{-- <a href="#" class="pull-right"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i> Edit</a> --}}</div>
+          <table class="table table-striped m-b-none" style="    background: #f3f3f3;">
+            <tbody>
+
+               <tr>   
+                <td>Type of proof</td>
+                <th>{{$memb->typeOfProof}}</th> 
+                <td>ID Number</td>
+                <th>{{$memb->proofNumber}}</th>
+              </tr>
+              <tr>   
+                <td>Issued At</td>
+                <th>{{$memb->placeOfIssue}}</th> 
+                <td>Issued Date</td>
+                <th>{{$memb->dateOfIssue}}</th>
+              </tr>
+              <tr>   
+                <td>Expiry Date</td>
+                <th>{{$memb->dateOfExpiry}}</th> 
+                <td>Proof Image</td>
+                <th>
+               <img src="{{ URL::asset('public/img/proof/'.$memb->file)}}" class="img-thumbnail" alt="" style="width: 100px;" /> 
+                </th>
+              </tr> 
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="panel panel-warning">
+          <div class="panel-heading">Membership Details {{-- <a href="#" class="pull-right"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i> Edit</a> --}}</div>
+          <table class="table table-striped m-b-none" style="background: #f3f3f3;">
+            <tbody>
+            
+              <tr> 
+                <th>  
+                  INR
+                </th>
+                <th>
+                  : {{json_decode($member->membership_details)->inr->amount}}
+                </th>
+              </tr>
+              <tr>
+                <th>  
+                  AED
+                </th>
+                <th>
+                    : {{json_decode($member->membership_details)->aed->amount}}
+                </th>
+              </tr>
+              <tr>
+                <th>  
+                  SAR
+                </th>
+                <th>
+                    : {{json_decode($member->membership_details)->sar->amount}} 
+                </th>
+              </tr>
+              <tr>
+                <th>  
+                  CAD
+                </th>
+                <th>
+                    : {{json_decode($member->membership_details)->cad->amount}} 
+                </th>
+              </tr>
+              <tr>
+                <th>  
+                  USD
+                </th>
+                <th>
+                  : {{json_decode($member->membership_details)->usd->amount}} 
+                </th>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div>
+        <div class="col-sm-12" ><br></div>
+          <div class="form-group"><div class="col-sm-9 "><br></div>
+          <div class="col-sm-3">
+          <a href="{{ URL::to('/') }}/admin/deniedMember/{{ $member->userId }}/edit"  class="active">     
+             <button name="edit" type="submit" class="btn btn-success btn-block" id="edit">Edit</button></a>       
+          </div>
+        </div>
+        <div class="col-sm-12" ><br></div>
+    </div>
+  </div>
+@endsection
+@section('jquery')
+  <script type="text/javascript">
+  </script>
+@endsection
+
+

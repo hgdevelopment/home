@@ -1,0 +1,89 @@
+@extends('admin.layout.erp1')
+@section('banner')
+<div class="col-lg-12" align="center" style="background-color:#ffcf29">
+	<img src="{{ URL::asset('new_heading.png') }}" class="img-responsive">
+</div>
+@endsection
+@section('sidebar')
+@include('admin.partial.header')
+@include('admin.partial.aside')
+@endsection
+@section('body')
+<div class="bg-light lter b-b wrapper-md">
+	<h1 class="m-n font-thin h3">View Visitors</h1>
+</div>
+@if (Session()->has('message'))
+<div class="alert alert-info fade in alert-dismissable">
+	<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+	<strong>Info!</strong> {{Session()->get('message')}}
+</div>
+@endif
+<div class="wrapper-md">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="blog-post">                   
+				<div class="col-sm-12">
+					<div class="panel panel-default">
+						<div class="panel-heading font-bold">VIEW VISITORS</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="table-responsive" style="padding: 7px;">
+									<table class="table" id="view">
+										<thead>
+											<tr>
+												<th>Sl No</th>
+												<th>Visitor Name</th>
+												<th>Date</th>
+												<th>Time</th>
+												<th>Mobile</th>
+												<th>Purpose</th>
+												<th>Whom To Visit</th>							          
+												<th>Address</th>
+												<th>Remarks</th>
+												<th>Action</th>
+											</tr>
+										@php $i = 1; @endphp
+										</thead>
+										<tbody>
+										@foreach ($visitor as $visitors)
+											<tr>
+												<td>{{ $i++ }}</td>
+												<td>{{ $visitors->visitor_salutation.$visitors->visitor_name}}</td>
+												<td>{{ date('d-m-Y',strtotime($visitors->created_at))}}</td>
+												<td>{{ date('g:i:a',strtotime($visitors->created_at))}}</td>
+												<td>{{ $visitors->visitor_mobile}}</td>							      
+												<td>{{ $visitors->visitor_purpose}}</td>
+												<td>{{ $visitors->whom_to_visit}}</td>
+												<td>{{ $visitors->visitor_address}}</td>
+												<td>{{ $visitors->remarks}}</td>
+												<td>
+												<a href="{{URL::to('/') }}/hr/visitor/edit_visitor_registration/{{$visitors->id}}"  class="active"><i  style="color: #018001;" class="fa fa-pencil text-success text-active" aria-hidden="true"></i></a>
+												<form method="post" id="delete_form"  action="{{ URL::to('/') }}/hr/visitor/visitor_registration/{{ $visitors->id }}" style="float:left; padding-right:10px;">
+												{{ method_field('DELETE') }}
+												{{ csrf_field() }}
+												<input type="hidden" name="_method" value="DELETE">
+												<button id="delete-btn" type="submit" class="active" style="border: none;">
+												<i style="color: #f05050;" class="fa fa-close text-danger text-active" aria-hidden="true"></i></button> 
+												</form> 
+												</td>						  							        	
+											</tr>
+										@endforeach
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>  
+	</div>
+</div>                                      
+@endsection
+@section('jquery')
+<script type="text/javascript">
+$(document).ready(function(){
+$('#view').DataTable();
+});
+</script>
+@endsection

@@ -1,0 +1,107 @@
+<?php return array (
+  'sans-serif' => array(
+    'normal' => $fontDir . '\Helvetica',
+    'bold' => $fontDir . '\Helvetica-Bold',
+    'italic' => $fontDir . '\Helvetica-Oblique',
+    'bold_italic' => $fontDir . '\Helvetica-BoldOblique',
+  ),
+  'times' => array(
+    'normal' => $fontDir . '\Times-Roman',
+    'bold' => $fontDir . '\Times-Bold',
+    'italic' => $fontDir . '\Times-Italic',
+    'bold_italic' => $fontDir . '\Times-BoldItalic',
+  ),
+  'times-roman' => array(
+    'normal' => $fontDir . '\Times-Roman',
+    'bold' => $fontDir . '\Times-Bold',
+    'italic' => $fontDir . '\Times-Italic',
+    'bold_italic' => $fontDir . '\Times-BoldItalic',
+  ),
+  'courier' => array(
+    'normal' => $fontDir . '/cour',
+    'bold' => $fontDir . '/courbd',
+    'italic' => $fontDir . '/couri',
+    'bold_italic' => $fontDir . '/courbi',
+  ),
+  'helvetica' => array(
+    'normal' => $fontDir . '\Helvetica',
+    'bold' => $fontDir . '\Helvetica-Bold',
+    'italic' => $fontDir . '\Helvetica-Oblique',
+    'bold_italic' => $fontDir . '\Helvetica-BoldOblique',
+  ),
+  'zapfdingbats' => array(
+    'normal' => $fontDir . '\ZapfDingbats',
+    'bold' => $fontDir . '\ZapfDingbats',
+    'italic' => $fontDir . '\ZapfDingbats',
+    'bold_italic' => $fontDir . '\ZapfDingbats',
+  ),
+  'symbol' => array(
+    'normal' => $fontDir . '\Symbol',
+    'bold' => $fontDir . '\Symbol',
+    'italic' => $fontDir . '\Symbol',
+    'bold_italic' => $fontDir . '\Symbol',
+  ),
+  'serif' => array(
+    'normal' => $fontDir . '\Times-Roman',
+    'bold' => $fontDir . '\Times-Bold',
+    'italic' => $fontDir . '\Times-Italic',
+    'bold_italic' => $fontDir . '\Times-BoldItalic',
+  ),
+  'monospace' => array(
+    'normal' => $fontDir . '\Courier',
+    'bold' => $fontDir . '\Courier-Bold',
+    'italic' => $fontDir . '\Courier-Oblique',
+    'bold_italic' => $fontDir . '\Courier-BoldOblique',
+  ),
+  'fixed' => array(
+    'normal' => $fontDir . '\Courier',
+    'bold' => $fontDir . '\Courier-Bold',
+    'italic' => $fontDir . '\Courier-Oblique',
+    'bold_italic' => $fontDir . '\Courier-BoldOblique',
+  ),
+  'dejavu sans' => array(
+    'bold' => $fontDir . '\DejaVuSans-Bold',
+    'bold_italic' => $fontDir . '\DejaVuSans-BoldOblique',
+    'italic' => $fontDir . '\DejaVuSans-Oblique',
+    'normal' => $fontDir . '\DejaVuSans',
+  ),
+  'dejavu sans mono' => array(
+    'bold' => $fontDir . '\DejaVuSansMono-Bold',
+    'bold_italic' => $fontDir . '\DejaVuSansMono-BoldOblique',
+    'italic' => $fontDir . '\DejaVuSansMono-Oblique',
+    'normal' => $fontDir . '\DejaVuSansMono',
+  ),
+  'dejavu serif' => array(
+    'bold' => $fontDir . '\DejaVuSerif-Bold',
+    'bold_italic' => $fontDir . '\DejaVuSerif-BoldItalic',
+    'italic' => $fontDir . '\DejaVuSerif-Italic',
+    'normal' => $fontDir . '\DejaVuSerif',
+  ),
+  'arial' => array(
+    'normal' => $fontDir . '/arial',
+    'bold' => $fontDir . '/arialbd',
+    'italic' => $fontDir . '/ariali',
+    'bold_italic' => $fontDir . '/arialbi',
+  ),
+  'gothic' => array(
+    'normal' => $fontDir . '/GOTHIC',
+    'bold' => $fontDir . '/GOTHICb',
+    'italic' => $fontDir . '/GOTHICi',
+    'bold_italic' => $fontDir . '/GOTHICbi',
+  ),
+  'calibri' => array(
+    'normal' => $fontDir . '/calibri',
+    'bold' => $fontDir . '/calibrib',
+    'italic' => $fontDir . '/calibrii',
+    'bold_italic' => $fontDir . '/calibri',
+  ),
+  'gosmicksans' => array(
+    'normal' => $fontDir . '/GosmickSans',
+    'bold' => $fontDir . '/GosmickSans',
+    'italic' => $fontDir . '/GosmickSans',
+    'bold_italic' => $fontDir . '/GosmickSans',
+  ),
+  'poppins' => array(
+    'normal' => $fontDir . '\e475a92394331e7cb66416e99ea77738',
+  ),
+) ?>

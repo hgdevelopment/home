@@ -1,0 +1,7 @@
+@extends('hr.master.branch')
+@section('branch_name',$editbranch->branch_name)
+@section('companyId',$editbranch->company_id)
+@section('edit_id',$editbranch->id)
+@section('edit')
+{{ method_field('PUT') }}
+@endsection

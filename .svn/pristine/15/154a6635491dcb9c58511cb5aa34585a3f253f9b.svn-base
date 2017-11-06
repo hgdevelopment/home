@@ -1,0 +1,119 @@
+@php
+namespace App\Http\Controllers\hr;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use App\generateIdcard;
+use App\country;
+use App\hr_company;
+use App\hr_branch;
+use App\hr_department;
+use App\hr_designation;
+use App\hr_emp_personal_details;
+use App\hr_emp_address;
+use PDF; 
+use URL;
+
+    $employee_details = hr_emp_personal_details::join('hr_companies','hr_companies.id','=','hr_emp_personal_details.company_id')
+    ->where('hr_emp_personal_details.code',$employee_code)
+    ->leftjoin('hr_departments','hr_departments.id','=','hr_emp_personal_details.department_id')
+    ->leftjoin('hr_emp_address','hr_emp_address.user_id','=','hr_emp_personal_details.user_id')
+    ->leftjoin('hr_branch','hr_branch.id','=','hr_emp_personal_details.branch_id')
+    ->leftjoin('hr_designation','hr_designation.id','=','hr_emp_personal_details.designation_id')
+    ->leftjoin('countries','countries.id','=','hr_emp_personal_details.nationality')
+    ->select('hr_companies.*','countries.*','hr_departments.*','hr_branch.*','hr_designation.*','hr_emp_personal_details.*','hr_emp_address.address as useraddress', 'hr_emp_address.city as usercity', 'hr_emp_address.state as userstate', 'hr_emp_address.zip_code as userzipcode');
+@endphp
+<body style="background-image: url({{URL::to('/') }}/img/id_card/new.jpg); background-repeat: no-repeat;font-family: arial, sans-serif" >
+    <div style="margin-left: 280px;">
+        <table cellspacing="0" style="margin-top:40px;font-size: 11px;" cellpadding="0" >
+            <tr>
+                <td width="100px" ><b>Address:</b></td>
+                
+            </tr>
+             <tr>
+                <td width="100px"> Aramam,Town Ward</td>
+                
+            </tr>
+             <tr>
+                <td width="100px">Muthukattukara,Nooranad PO</td>
+                
+            </tr>
+             <tr>
+                <td width="100px">Alappuzha, Kerala</td>
+                
+            </tr>
+            <tr>
+                <td width="100px"> Nooranad-690504</td>
+                
+            </tr>
+             <tr>
+                <td width="100px">Mob:9020639630 </td>
+               
+            </tr>
+            <tr>
+                <td width="100px"> Home:9020639630</td>
+               
+            </tr>
+           <tr>
+                <td width="100px"><br> </td>
+               
+            </tr>
+           
+            <tr>
+                <td width="100px"> <b>D.O.B:</b>1989-06-07</td>
+               
+            </tr>
+            <tr>
+                <td width="100px"><b>Blood Group:</b>A+</td>
+               
+            </tr>
+
+
+        </table>
+    </div>
+
+
+
+
+
+    <div style="margin-left:30px;">
+        <table cellspacing="0" style="margin-top:-75px;font-size: 11px;"  cellpadding="0" >
+            <tr>
+                <td align="center" width="100px" > <img src="{{URL::to('/') }}/img/member_img/1500041032.jpeg" width="90" height="110" ></td>
+                
+            </tr>
+             <tr>
+                <td width="100px" align="center"> 0000000691</td>
+                
+            </tr>
+             <tr>
+                <td width="100px" align="center">Mr.Sajin  Shereef</td>
+                
+            </tr>
+             <tr>
+                <td width="100px" align="center">Development Team Leader</td>
+                
+            </tr>
+           
+
+          <tr>
+                <td width="100px" align="center"> <br></td>
+                
+            </tr>
+        
+
+             <tr>
+                <td width="100px" align="center">Heera Gold Exim Limited </td>
+               
+            </tr>
+            <tr>
+                <td width="100px" align="center"> HEERA GROUP CORPORATE HOUSE</td>
+               
+            </tr>
+          
+
+        </table>
+    </div>
+</body>
+ 

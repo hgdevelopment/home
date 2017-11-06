@@ -1,0 +1,614 @@
+<?php
+namespace App\Http\Controllers\admin;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\storage;
+use App\tcnrequest;
+use App\tcnmaster;
+use App\bank;
+use App\memberregistration;
+use App\nominee;
+use App\address;
+use App\User;
+use App\proofs;
+use App\country;
+use App\paymentdetails;
+use App\tcn_allot;
+use Auth;
+use Carbon;
+use DB;
+use File;
+use Alert;
+class tcnTransferController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return View('admin.tcn.tcnTransfer.tcnTransfer');
+    }
+
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        
+
+
+
+
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+
+        $oldMember=memberregistration::find($request->oldMember);
+        $oldTcn=tcnrequest::find($request->oldTcn);
+        $remarks=$request->remarks;
+
+        if(Auth::guard('admin')->check())
+        $LogInId=Auth::guard('admin')->user()->id;
+        else
+        $LogInId=0;
+
+        $login = new User;
+        $memberregistration = new memberregistration;
+        $address = new address;
+        $address_per = new address;
+        $address_corr = new address;
+        $proofs = new proofs;
+        $bank = new bank;
+
+
+        $login->username='TRSRTCN';
+        $login->password=Hash::make('MEM');
+        $login->userType='MEM';
+        $login->status='Active';
+        $login->save();
+        $userId=$login->id; 
+
+
+        
+
+        if($request->profilepic)
+        {
+        $profilepic = 'HEERA'.time().'.'.$request->profilepic->getClientOriginalExtension();
+        $request->profilepic->move(storage_path('img/member_img'), $profilepic);
+        }
+        else
+        {
+         $profilepic=$request->profilepic1;
+         $p=explode('.',$profilepic);
+         $p1=end($p); 
+
+        // $profilepic=copy(storage_path('img/nominee/'.$profilepic), 'img/member_img/HEERA'.time().'.'.$p1); 
+
+        $oldPath = storage_path('img/nominee/'.$profilepic); // publc/images/1.jpg
+        $newPath = storage_path('img/member_img/HEERA'.time().'.'.$p1); // publc/images/2.jpg
+
+        File::copy($oldPath , $newPath);
+        $profilepic='HEERA'.time().'.'.$p1;
+  
+        }    
+
+        //siganture
+        if($request->signature)
+        {
+        $signature = 'SIGNATURE'.time().'.'.$request->signature->getClientOriginalExtension();
+        $request->signature->move(storage_path('img/member_img'), $signature);
+        }
+        else
+        {
+         $signature=$request->signature1;
+         $s=explode('.',$signature);
+         $s1=end($s);    
+         //$signature=copy(storage_path('img/nominee/'.$signature), 'img/member_img/SIGNATURE'.time().'.'.$s1);   
+        $oldPath = storage_path('img/nominee/'.$signature); // publc/images/1.jpg
+        $newPath = storage_path('img/member_img/SIGNATURE'.time().'.'.$s1); // publc/images/2.jpg
+
+        File::copy($oldPath , $newPath);
+        $signature='SIGNATURE'.time().'.'.$s1;
+        }   
+
+        //proofs
+        if($request->proof_file)
+        {
+        $proof_file = 'PROOF'.time().'.'.$request->proof_file->getClientOriginalExtension();
+        $request->proof_file->move(storage_path('img/proof'), $proof_file);
+        }
+        else
+        {
+         $proof_file=$request->proof_file1; 
+         $r=explode('.',$proof_file);
+         $r1=end($r);    
+         //$proof_file=copy(storage_path('img/proof/'.$proof_file), 'img/proof/PROOF'.time().'.'.$r1);   
+
+        $oldPath = storage_path('img/proof/'.$proof_file); // publc/images/1.jpg
+        $newPath = storage_path('img/proof/PROOF'.time().'.'.$r1); // publc/images/2.jpg
+
+        File::copy($oldPath , $newPath);
+        $proof_file='PROOF'.time().'.'.$r1;
+        }    
+
+        $memberregistration->userId=$userId;
+        $memberregistration->code='TRSRTCN';
+        $memberregistration->name=$request->fullname;
+        $memberregistration->religion=$request->religion;
+        $memberregistration->noOfChildren=$request->childrens;
+        $memberregistration->guardian=$request->guardian;
+        $memberregistration->caste=$request->caste;
+        $memberregistration->countryId=$request->country;
+        $memberregistration->dob=date("Y-m-d", strtotime($request->dateofbirth));
+        $memberregistration->education=$request->education;
+        $memberregistration->mobileNo=$request->mobileno;
+        $memberregistration->mobileId=$request->conId1;
+        $memberregistration->maritalStatus=$request->marital;
+        $memberregistration->occupation=$request->occupation;
+        $memberregistration->email=$request->email;
+        $memberregistration->aboutHeera=$request->aboutheera;
+        $memberregistration->gender=$request->gender;
+        $memberregistration->LandlineNo=$request->landlineno;
+        $memberregistration->photo=$profilepic;
+        $memberregistration->singnature=$signature;
+        $memberregistration->addedByUnder=$oldMember->addedByUnder;
+        $memberregistration->addedByDate=date("Y-m-d");
+        $memberregistration->addedId=$LogInId; 
+        $memberregistration->incomeAmount=$request->income;
+        $memberregistration->addedById=$oldMember->addedById;
+        $memberregistration->incomeCurrencytype=$request->incomeid;
+        $memberregistration->reference='';
+        $memberregistration->save();
+
+        $newMemberId=$memberregistration->id;
+
+
+
+        $newMember  =memberregistration::find($newMemberId);
+
+        $code_member=1000000+$newMemberId;
+        $newPass=='M'.substr($newMember->name,0,2).str_random(5);
+
+        $password=Hash::make($newPass);
+
+        DB::table('logins')->where('id', $userId)->update(['username' => 'MEM'.$code_member, 'password' => $password]);
+        DB::table('memberregistrations')->where('id', $newMemberId)->update(['code' => 'MEM'.$code_member]);
+
+        $address_per->userId=$userId;
+        $address_per->address=$request->permanent_addr;
+        $address_per->city=$request->permanent_city;
+        $address_per->state=$request->permanent_state;
+        $address_per->Country=$request->permanent_country;
+        $address_per->pin=$request->permanent_pin;
+        $address_per->typeOfAddress='permanent';
+        $address_per->save();
+
+        $newPerAdrsId=$address_per->id;
+
+        $address_corr->userId=$userId;
+        $address_corr->address=$request->correspondance_addr;
+        $address_corr->city=$request->correspondance_city;
+        $address_corr->state=$request->correspondance_state;
+        $address_corr->Country=$request->correspondance_country;
+        $address_corr->pin=$request->correspondance_pin;
+        $address_corr->typeOfAddress='correspondance';
+        $address_corr->save();
+
+        $newCorAdrsId=$address_per->id;
+        $newOfcAdrsId='0';
+
+        if($request->official_addr!='' && $request->official_city!='')
+        {
+        $address->userId=$userId;
+        $address->address=$request->official_addr;
+        $address->city=$request->official_city;
+        $address->state=$request->official_state;
+        $address->Country=$request->official_country;
+        $address->pin=$request->official_pin;
+        $address->typeOfAddress='official';
+        $address->save();
+
+        $newOfcAdrsId=$address_id->id;
+
+        }
+        $proofs->userId=$userId;
+        $proofs->typeOfProof=$request->type_of_proof;
+        $proofs->proofNumber=$request->proof_number;
+        $proofs->file=$proof_file;
+        $proofs->save();
+
+
+        /*************************************TCN DETAILS TRANSFER TO NEW MEMBER**********************************
+
+        *********************************************************************************************************/
+
+
+        if($request->has('doc1')){
+            $this->validate($request,[
+                 'doc1'=>'required|image:jpg,png,jpeg',
+                ]);
+        }
+        if($request->has('doc2')){
+            $this->validate($request,[
+                 'doc2'=>'required|image:jpg,png,jpeg',
+                ]);}
+        if($request->has('doc3')){
+            $this->validate($request,[
+                 'doc3'=>'required|image:jpg,png,jpeg',
+                ]);}
+        if($request->has('uploadPhoto')){
+            $this->validate($request,[
+                 'uploadPhoto'=>'required|image:jpg,png,jpeg',
+                ]);
+        }
+        if($request->has('nsignature1')){
+            $this->validate($request,[
+                 'nsignature1'=>'required|image:jpg,png,jpeg',
+                ]);}
+        if($request->has('nsignature2')){
+            $this->validate($request,[
+                 'nsignature2'=>'required|image:jpg,png,jpeg',
+                ]);}
+        if($request->has('proofCopy1')){
+            $this->validate($request,[
+                 'proofCopy1'=>'required|image:jpg,png,jpeg',
+                ]);}
+        if($request->has('proofCopy2')){
+            $this->validate($request,[
+                 'proofCopy2'=>'required|image:jpg,png,jpeg',
+                ]);}
+
+        $this->validate($request,[
+            'fullname'=>'required']);
+
+
+
+
+    $tcnrequest = new tcnrequest;
+    $tcnmaster = new tcnmaster();
+    $bank = new bank;
+    $memberregistration = new memberregistration;
+    $nominee = new nominee;
+    $address = new address;
+    $proofs = new proofs;
+    $country = new country;
+
+
+
+    // BENEFIT ACCOUNT ADD
+    $bank->userId=$userId;
+    $bank->bankName=$request->bankName;
+    $bank->branchName=$request->branchName;
+    $bank->ifsc=$request->ifsc;
+    $bank->accountHolderName=$request->accountHolderName;
+    $bank->accountNumber=$request->accountNumber;
+    $bank->typeOfAccount='TCN Benefit';
+    $bank->save();
+    $benefitId=$bank->id;
+
+
+
+    //new First nominee
+
+    $uploadPhoto1 = 'photo1'.time().'.'.$request->uploadPhoto1->getClientOriginalExtension();
+    $request->uploadPhoto1->move(storage_path('img/nominee'), $uploadPhoto1);
+    //siganture
+    $nsignature1 = 'sign1'.time().'.'.$request->nsignature1->getClientOriginalExtension();
+    $request->nsignature1->move(storage_path('img/nominee'), $nsignature1);
+    //proof
+    $nominee = new nominee;
+    $nominee->userId=$userId;
+    $nominee->name=$request->name1;
+    $nominee->dob=date('Y-m-d', strtotime($request->dob1));
+    $nominee->relationWithApplicant=$request->relationWithApplicant1;
+    $nominee->addressId='0';
+    $nominee->signature=$nsignature1;
+    $nominee->uploadPhoto=$uploadPhoto1;
+    $nominee->mobile=$request->mobile1;
+    $nominee->email=$request->email1;
+    $nominee->gender=$request->gender1;
+    $nominee->proofId='0';
+    $nominee->save();
+    $nomineeId1=$nominee->id;
+
+    $address = new address;
+    $address->userId='0';
+    $address->address=$request->naddress1;
+    $address->city=$request->city1;
+    $address->state=$request->state1;
+    $address->pin=$request->pin1;
+    $address->typeOfAddress=='Nominee';
+    $address->save();
+    $addressId1=$address->id;
+
+    $proofCopy1 = 'proof1'.time().'.'.$request->proofCopy1->getClientOriginalExtension();
+    $request->proofCopy1->move(storage_path('img/proof'), $proofCopy1);
+
+
+    $proofs = new proofs;
+    $proofs->userId='0';
+    $proofs->typeOfProof=$request->typeOfProof1;
+    $proofs->proofNumber=$request->proofNumber1;
+    // $proofs->placeOfIssue=$request->placeOfIssue;
+    // $proofs->dateOfIssue=date("Y-m-d",strtotime($request->dateOfIssue));
+    // $proofs->dateOfExpiry=date("Y-m-d",strtotime($request->dateOfExpiry));
+    $proofs->file=$proofCopy1;
+    $proofs->save();
+    $proofId1=$proofs->id;
+
+    DB::table('nominees')->where('id', $nomineeId1)->update(['addressId' => $addressId1, 'proofId' => $proofId1]);
+
+    $nomineeId2='0';
+    if($request->secondNomineeButton=='Add +')
+    {
+    //new Second nominee
+
+    $uploadPhoto2 = 'photo2'.time().'.'.$request->uploadPhoto2->getClientOriginalExtension();
+    $request->uploadPhoto2->move(storage_path('img/nominee'), $uploadPhoto2);
+    //siganture
+    $nsignature2 = 'sign2'.time().'.'.$request->nsignature2->getClientOriginalExtension();
+    $request->nsignature2->move(storage_path('img/nominee'), $nsignature2);
+    //proof
+    $nominee = new nominee;
+    $nominee->userId=$userId;
+    $nominee->name=$request->name2;
+    $nominee->dob=date('Y-m-d', strtotime($request->dob2));
+    $nominee->relationWithApplicant=$request->relationWithApplicant2;
+    $nominee->addressId='0';
+    $nominee->signature=$nsignature2;
+    $nominee->uploadPhoto=$uploadPhoto2;
+    $nominee->mobile=$request->mobile2;
+    $nominee->email=$request->email2;
+    $nominee->gender=$request->gender2;
+    $nominee->proofId='0';
+    $nominee->save();
+    $nomineeId2=$nominee->id;
+
+
+    $address = new address;
+    $address->userId='0';
+    $address->address=$request->naddress2;
+    $address->city=$request->city2;
+    $address->state=$request->state2;
+    $address->pin=$request->pin2;
+    $address->typeOfAddress=='Nominee';
+    $address->save();
+    $addressId2=$address->id;
+
+    $proofCopy2 = 'proof2'.time().'.'.$request->proofCopy2->getClientOriginalExtension();
+    $request->proofCopy2->move(storage_path('img/proof'), $proofCopy2);
+
+
+    $proofs = new proofs;
+    $proofs->userId='0';
+    $proofs->typeOfProof=$request->typeOfProof2;
+    $proofs->proofNumber=$request->proofNumber2;
+    // $proofs->placeOfIssue=$request->placeOfIssue;
+    // $proofs->dateOfIssue=date("Y-m-d",strtotime($request->dateOfIssue));
+    // $proofs->dateOfExpiry=date("Y-m-d",strtotime($request->dateOfExpiry));
+    $proofs->file=$proofCopy2;
+    $proofs->save();
+    $proofId2=$proofs->id;
+
+    DB::table('nominees')->where('id', $nomineeId2)->update(['addressId' => $addressId2, 'proofId' => $proofId2]);
+    }
+
+
+
+    //DOC1
+    $doc1 = 'doc1'.time().'.'.$request->doc1->getClientOriginalExtension();
+    $request->doc1->move(storage_path('img/tcndocs'), $doc1);
+    //DOC2
+    $doc2 = 'doc2'.time().'.'.$request->doc2->getClientOriginalExtension();
+    $request->doc2->move(storage_path('img/tcndocs'), $doc2);
+    //DOC3
+    $doc3 = 'doc3'.time().'.'.$request->doc3->getClientOriginalExtension();
+    $request->doc3->move(storage_path('img/tcndocs'), $doc3);
+
+
+    // $tasks = tcnrequest::find($request->oldTcn);
+    // $newTask = $tasks->replicate();
+    // $newTask->save();
+    $tcnPlusId=tcnrequest::max('id');
+    if($tcnPlusId<1)
+        $tcnPlusId='1';
+    else
+        $tcnPlusId=$tcnPlusId+1;
+
+        $tcnNo=$tcnPlusId+1000000;
+
+    $newTcnReq=tcnrequest::find($request->oldTcn)->replicate();
+    $newTcnReq->userId=$userId;
+    $newTcnReq->doc1=$doc1;
+    $newTcnReq->doc2=$doc2;
+    $newTcnReq->doc3=$doc3;
+    $newTcnReq->addedId=$LogInId;
+    $newTcnReq->nominee1_id=$nomineeId1;
+    $newTcnReq->nominee2_id=$nomineeId2;
+    $newTcnReq->benefitId=$benefitId;
+    $newTcnReq->status='Approved';
+    $newTcnReq->transferredReason='This TCN is Transferred from old TCN-Member Code '.$oldMember->code;
+    $newTcnReq->save();
+    $newTcnReqid=$newTcnReq->id;
+
+    DB::table('tcnrequests')
+        ->where('id', $request->oldTcn)
+        ->update([
+            'tcnNo' => $tcnNo,
+            'tcnCode' => 'TCN'.$tcnNo,            
+            'status' => 'Transferred', 
+            'transferredId' => $newTcnReqid,
+            'approvalDate'=>date('Y-m-d H:i:s'),
+            'transferredReason' =>$remarks.'.. This TCN is transferred to new TCN-Member Code '.$newMember->code]);
+
+    DB::table('memberregistrations')
+        ->where('id', $request->oldMember)
+        ->update(['blockedId' => $LogInId, 
+            'reference' => $newMemberId,
+            'blockedreason' =>'This Member IS  Not Available Now']);
+
+    DB::table('logins')
+        ->where('id',$oldMember->userId)
+        ->update(['status' => 'Block']);
+
+
+    $data = array(
+    'name' => $newMember->name,
+    'password'=>$newPass,
+    'username'=>'MEM'.$code_members
+    );
+    Mail::send('admin.mail.memberapprove', compact('data'), function ($message) use ($approvemember){
+    $message->from('heeraerptl@gmail.com', 'TCN Transfer to a New Member');
+    $message->to($newMember->email)->subject($oldMember->name.',s TCN Transfer to you.. HI! Now you are a new MEMBER ');
+    });
+    Alert::success('New Member Request Created Successfully and TCN Detailse are Transferred to this Member', 'Success');
+    return redirect('admin/tcnApplicationForm/view@@@'.$newTcnReqid);
+
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {   
+
+    $id=explode('@',$id);
+    $root=$id[0];
+    $id1= $id[1];
+    $nominee= $id[2];
+     
+        if($root=='List')
+        {
+            if(Controller::UserAccessRights('TCN TRANSFER')!='1')
+            {
+                Alert::error("You don't have Access Rights for TCN Transfer", "Sorry..");
+                return 1;
+            }
+
+            $details1 = memberregistration::join('tcnrequests','tcnrequests.userId','=','memberregistrations.userId')
+            ->join('logins','logins.id','=','memberregistrations.userId')->where('logins.status','Active')
+            ->where('tcnrequests.status','Approved')
+            ->where('memberregistrations.code', $id1)
+            ->get();
+            if(count($details1)=='0')
+            {
+                Alert::error("This member is not present in the applied TCN", "Sorry..");
+                return 1;
+            }
+
+            $details = tcnrequest::join('memberregistrations','tcnrequests.userId','=','memberregistrations.userId')->join('logins','logins.id','=','memberregistrations.userId')->select('tcnrequests.id as tcnId','tcnrequests.*','memberregistrations.*')->where('memberregistrations.code',$id1)->where('tcnrequests.status','Approved')->get();
+
+            return View('admin.tcn.tcnTransfer.tcnTransferList',compact('details'));
+        }
+        /**
+         * Received  Type IS 'Show'->It's Go To fetch the TCN TRANSFER FORM By Received MEMBER CODE base Details.
+         */        
+
+        if($root=='Show')
+        {
+
+            $tcnrequest = tcnrequest::all()->where('id',$id1);
+            foreach($tcnrequest as $tcnrequests);
+
+            $bank = bank::all()->where('id',$tcnrequests->benefitId);
+            foreach($bank as $banks);
+
+            $nominee = nominee::all()->where('id',$nominee);
+            foreach($nominee as $nominees);
+
+            $addres2 = address::all()->where('id',$nominees->addressId);
+            foreach($addres2 as $address2);
+
+            $proof = proofs::all()->where('id',$nominees->proofId);
+            foreach($proof as $proofs);
+
+
+            $memberregistration = memberregistration::all()->where('userId',$tcnrequests->userId);
+            foreach($memberregistration as $members);
+
+            $country = country::all()->where('id',$members->countryId);
+            foreach($country as $countrys);
+
+            $addres1 = address::all()->where('userId',$members->userId)->where('typeOfAddress','permanent');
+            foreach($addres1 as $address1);
+
+        $listTypes= ['country'=>country::all(),
+                     'proof_type'=>['aadhar', 'license', 'pancard', 'passport','VoterId'],
+                     'caste'=>['General','OBC','BC','OC','SC','ST'],
+                     'occupation'=>['Business','Salaried','Student','Housewife','SelfEmployed/professional'],
+                     'education'=>['NON-SSC','SSC-HSC','Graduate','Postgraduate'],
+                     'relation'=>['Father','Mother','Wife','Husband','Son','Daughter','Brother','Sister','Grand Son','Grand Daughter','Grand Mother','Grand Father','Maternal uncle','Paternal uncle','Others']
+                     ];
+
+        return view('admin.tcn.tcnTransfer.tcnTransferForm',compact('request','tcnrequests','banks','nominees','address2','address1','proofs','members','countrys','paymentdetail','listTypes'));
+
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+
+
+public function prefix_generate()
+{
+
+        $memPlusId=memberregistration::max('id');
+        if($memPlusId<1)
+        $memPlusId='1';
+        else
+        $memPlusId=$memPlusId+1;
+
+     $appl_code=str_pad($memPlusId,7,"0",STR_PAD_LEFT);
+        return 'IBG'.$appl_code;  
+}
+
+}

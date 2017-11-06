@@ -1,0 +1,325 @@
+<?php
+
+namespace App\Http\Controllers\hr;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Relations\Relation;
+
+use App\hr_salary_allowance as allowance;
+
+use App\hr_emp_personal_details as employee;
+
+use App\hr_salary_details;
+
+use App\hr_leave;
+
+use App\hr_applied_leave;
+
+use App\hr_company;
+
+use App\hr_branch;
+
+use Auth;
+use DB;
+use Alert;
+use Mail;
+
+class salaryMasterController extends Controller
+{
+
+
+
+
+
+
+
+
+
+
+    public function index()
+    {
+        if(Controller::userAccessRights('Salary&Payroll')!=1) return redirect()->back();
+           
+        $company=hr_company::where('status','1')->get();
+
+        return View('hr.salary.salaryMaster',compact('company'));
+    }
+
+
+
+
+
+
+
+
+
+    public function create(Request $request)
+    {
+        
+        $logins=Auth::guard('admin')->user();
+
+        if(Controller::userAccessRights('Generate Salary')!=1) return redirect()->back();
+
+
+
+            
+        //**************************Get Branch Names Based On Company Names***********************//
+
+        //**************************_______________________________***********************//
+
+        if($request->process=='getBranches')
+        {
+            $branch=hr_branch::where('company_id',$request->company)->where('status','1')->get();
+
+            return $branch;
+        }
+
+
+
+
+
+
+
+
+        $employees=DB::table('hr_emp_personal_details as employee')
+
+        ->join('logins','logins.id','=','employee.user_id')
+
+        ->join('hr_attendance as att','logins.id','=','att.staffId')
+
+        ->where('logins.status','Active')
+
+        ->whereYear('att.date',$request->year)                              //select employees based on filters   and
+
+        ->whereMonth('att.date',$request->month)                            //from attentance ad employee personal details
+
+        ->where('employee.company_id',$request->company)        
+
+        ->where('employee.branch_id',$request->branch)
+
+        ->orderBy('company_id','asc')
+
+        ->groupBy('att.staffId')
+
+        ->orderBy('branch_id','asc')
+
+        ->orderBy('department_id','asc')
+
+        ->orderBy('designation_id','asc')
+
+        ->get();
+
+
+
+            
+        //**************************   GENERATE SALARY DETAILS   ***********************//
+
+        //**************************_______________________________***********************//
+
+        if($request->=='generateSalary')
+        {
+
+
+            foreach($employees as $employee)
+            {
+
+
+            $employee_i=$employee->user_id;
+
+            $fixedSalary=$employee->salary;
+
+            $perHourSalary=($Fixedsalary/30)/8;
+
+            $perMinuteSalary=$perHour/60;
+
+            $att=DB::table('hr_attendance')->where('staffId',$employee->user_id)->whereYear('date',$request->year)->whereMonth('date',$request->month);
+
+
+
+            $totalday=$att->get();
+
+            $totalcount=count($att);
+
+            $halfday=$att->where('day','halfday')->get();
+
+            $halfcount=count($halfday);
+
+            $fullday=$att->where('day','fullday')->get();
+
+            $fullcount=count($fullday);
+
+
+
+            // $leave=hr_leave::join('hr_applied_leaves','hr_leaves.id','=','hr_applied_leaves.leave_id')
+
+            // ->where('hr_leaves.user_id',$employee->user_id)
+
+            // ->where('hr_leaves.status','Approved')
+
+            // ->where('hr_applied_leaves.date',$request->year)
+
+
+
+
+
+
+
+
+
+            /*  Insert hr_salary_details */
+
+            $insert=hr_salary_details::insert([
+                'employee_id' =>$employee_id,
+                'salary' =>$Fixedsalary,
+                'emp_working_days' =>$Fixedsalary,
+                'salary' =>$Fixedsalary,
+                'salary' =>$Fixedsalary,
+                'salary' =>$Fixedsalary,
+
+                ]);
+            }
+
+
+        }
+
+
+
+
+        //**************************get Salary Details Based On Filters***********************//
+
+        //**************************_______________________________***********************//
+
+
+
+
+        if($request->process=='SalaryList')
+        {
+
+
+
+
+            $employee=DB::table('hr_emp_personal_details as employee')
+
+            ->join('logins','logins.id','=','employee.user_id')
+
+            ->join('hr_attendance as att','logins.id','=','att.staffId')
+
+            ->where('logins.status','Active')
+
+            ->whereYear('att.date',$request->year)
+
+            ->whereMonth('att.date',$request->month)
+
+            ->where('employee.company_id',$request->company);
+
+            if($request->branch!='All')
+            $employee=$employee->where('employee.branch_id',$request->branch);
+
+            $employee=$employee->orderBy('company_id','asc')
+
+            ->groupBy('att.staffId')
+
+            ->orderBy('branch_id','asc')
+
+            ->orderBy('department_id','asc')
+
+            ->orderBy('designation_id','asc')
+
+            ->get();
+
+            //$branch=hr_branch::where('company_id',$request->company)->where('status','1')->get();
+
+        return View('hr.salary.salaryMasterAjax',compact('employee','request'));
+        }
+
+
+    }
+
+
+
+        //*Excel*************************Salary generate Excel ***********************//
+
+        //**************************_______________________________***********************//
+
+
+    public function Excel(Request $request)
+    {
+        
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function store(Request $request)
+    {
+        //
+    }
+
+
+
+
+
+
+
+
+
+    public function show($id)
+    {
+        //
+    }
+
+
+
+
+
+
+
+
+
+
+
+    public function edit($id)
+    {
+        //
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+
+
+
+
+
+
+
+
+    public function destroy($id)
+    {
+        //
+    }
+}

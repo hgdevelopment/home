@@ -1,0 +1,115 @@
+<?php 
+        ///members web ///
+
+    Route::get('member/countryId','web\memberController@checkCountryId'); 
+    //web member country code
+    Route::get('member/create', 'web\memberController@index');
+
+        
+        ///   hr masters  ///
+
+    Route::resource('hr/master/department','hr\departmentController');
+    //for department master
+    Route::resource('hr/master/designation','hr\designationController');
+    //for designation master
+    Route::resource('hr/master/branch','hr\BranchMasterController');
+    //for branch master
+    Route::resource('hr/employee/generateIdcard','hr\generateIdCardController');
+    //for idcard
+    Route::resource('hr/master/deduction','hr\deductionController');
+    //for deduction master
+    //Route::get('hr/deduction/employeededuction','hr\employeedeductionController@deny');
+    //for deny deduction
+    Route::resource('hr/deduction/employeededuction','hr\employeedeductionController'); 
+    //for employee deduction
+   
+
+
+    /// members admin /// 
+
+    Route::resource('admin/tcnstatus','admin\tcnstatusController');
+    //for tcn status
+    Route::resource('admin/deniedMember','admin\deniedMemberController');
+    //denied member 
+    Route::resource('admin/viewDeniedMemReq','admin\deniedMemberController');
+    // view denied member request
+    Route::post('admin/member/denyApproveMem','admin\approvedMemberController@denyApproveMem');
+    //deny member in approve
+    Route::post('admin/member/blacklistApproveMem','admin\approvedMemberController@blacklistApproveMem');
+    //blacklist member in approve
+    Route::resource('admin/approve_member','admin\approvedMemberController');
+    //approve member
+    Route::get('admin/specialmerge','admin\mergeController@merge');
+    //for specialmerge members
+    Route::resource('admin/specialmerge','admin\mergeController');
+    //for specialmerge members
+    Route::resource('admin/merge','admin\mergeController');
+    //for merge members
+    Route::get('admin/added/{id}/memberAccount','admin\memberAddedByController@memberAccount');
+    // for view memberaccountdetails
+    Route::resource('admin/added','admin\memberAddedByController');
+    //for view addedby 
+
+   
+    Route::get('admin/member/memberCreate', 'admin\memberController@memberCreate');
+    // registration form for member
+    Route::post('admin/member/memberCreate', 'admin\memberController@memberCreate');
+    //registration form for member
+    Route::get('admin/member/viewMember', 'admin\memberController@viewMember');
+    //for view request
+    Route::post('admin/member/approveMember','admin\memberController@approveMember'); 
+    // for approving member
+    Route::post('admin/member/denyMember','admin\memberController@denyMember'); 
+    //for deny member
+    Route::get('admin/membersview/{id}', 'admin\memberController@show');
+    //detailsview page of member
+    Route::get('admin/countryId','admin\memberController@checkCountryId');
+    //for country code display in memberregistration
+
+
+    Route::get('admin/member/createdMemberView/{id}','admin\memberController@createdview');
+    //add member viewpage
+    Route::get('admin/member/{id}/requestedit','admin\memberController@editcreated');
+    //add member editpage
+    Route::get('admin/memberPdfView/{id}','admin\memberController@viewcreated');
+    //for addmember confrim
+    Route::put('admin/Requestmember/{id}','admin\memberController@createdupdate');
+    //for addmember update
+
+
+    Route::put('admin/member/blacklistMember/{id}','admin\memberController@blacklistupdate');
+    // for edit submit in blacklist
+    Route::get('admin/member/blacklistMembersubmit/{id}','admin\memberController@viewblacklistsubmit');
+    // for submit in view(blacklist)
+    Route::get('admin/member/blacklistMember/{id}/edit','admin\memberController@editblacklist');
+    //for edit page in blacklist
+    Route::post('admin/member/blacklistMember/action','admin\memberController@blacklistMember');
+    //blacklist
+    Route::get('admin/member/blacklistMember','admin\memberController@viewblacklistMember');
+    //for blacklist view datatable page
+    Route::get('admin/member/{id}','admin\memberController@blacklistView');
+    // for blacklist view page
+    Route::get('admin/member/blacklistMember/delete/{id}','admin\memberController@deleteblacklist');
+    //blacklist for delete
+    Route::get('admin/member/pdfs/{id}','admin\memberController@pdfMember');
+    //pdf in created member
+    Route::get('admin/member/pdfview/{id}','admin\memberController@viewpdf'); 
+    //pdf view 
+    Route::resource('admin/member','admin\memberController');
+
+    Route::resource('admin/logs/log','admin\logController');
+    //for logs
+
+
+    // Route::get('hr/employee/appointment_letter_view','hr\employeeController@viewAppointmentLetter'); 
+        //for apmntletter empcode enterpage
+    // Route::post('hr/employee/createAppointment','hr\employeeController@createAppointment');
+        //for appointment letter
+    // Route::get('hr/employee/appointment/pdf/{id}','hr\employeeController@appointment_letter');
+        //for appointment letter
+
+    Route::post('admin/changeimg', ['as'=>'admin.changeimg','uses'=>'admin\profileController@changeProfileImg']);
+
+?>
+
+     

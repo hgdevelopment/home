@@ -1,0 +1,494 @@
+<?php
+namespace App\Http\Controllers\web;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Controller;
+use LaravelCaptcha\Facades\Captcha;
+use App\country;
+use App\memberregistration;
+use App\login;
+use App\address;
+use App\proofs;
+use App\bank;
+use Carbon\Carbon;
+use Auth;
+use PDF;
+
+
+class memberController extends Controller
+{ 
+	/**
+	 * Display a listing of the resource.
+	 * 
+	 * @return \Illuminate\Http\Response 
+	 */
+	public function index()
+	{
+		$listTypes= ['country'=>country::all(),
+					 'proof_type'=>['aadhar', 'license', 'pancard', 'passport','VoterId'],
+					 'caste'=>['General','OBC','BC','OC','SC','ST'],
+					 'occupation'=>['Business','Salaried','Student','Housewife','SelfEmployed/professional','Retired'],
+					 'education'=>['NON-SSC','SSC-HSC','Graduate','Postgraduate']];
+		$captcha = $this->captcha();
+		return view('web.member.createMember', compact('listTypes', 'captcha'));
+	}
+
+	/**
+	 * Show the form for creating a new resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function create()
+	{
+		
+		$listTypes= ['country'=>country::all(),
+					 'proof_type'=>['aadhar', 'license', 'pancard', 'passport','VoterId'],
+					 'caste'=>['General','OBC','BC','OC','SC','ST'],
+					 'occupation'=>['Business','Salaried','Student','Housewife','SelfEmployed/professional','Retired'],
+					 'education'=>['NON-SSC','SSC-HSC','Graduate','Postgraduate']];
+	   return view('web.member.createMember',compact('listTypes'));
+	}
+
+	public function createdByOther()
+	{
+		$listTypes= ['country'=>country::all(),
+					 'proof_type'=>['aadhar', 'license', 'pancard', 'passport','VoterId'],
+					 'caste'=>['General','OBC','BC','OC','SC','ST'],
+					 'occupation'=>['Business','Salaried','Student','Housewife','SelfEmployed/professional','Retired'],
+					 'education'=>['NON-SSC','SSC-HSC','Graduate','Postgraduate']];
+
+	   return view('web.member.createdMember',compact('listTypes'));
+	}
+
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function store(Request $request)
+	{
+		// print_r($_POST);
+		// exit;
+		$login = new login;
+		$memberregistration = new memberregistration;
+		$address = new address;
+		$address_per = new address;
+		$address_corr = new address;
+		$proofs = new proofs;
+		$bank = new bank;
+
+		$this->validate($request,[
+		'fullname'=>'required',
+		'guardian'=>'required',
+		'dateofbirth'=>'required',
+		'gender'=>'required',
+		'religion'=>'required',
+		'country'=>'required', 
+		'income'=>'required|numeric',
+		'incomeid'=>'required',
+		'marital'=>'required',
+		'mobileno'=>'required|numeric', 
+		'conId'=>'required',
+		'aboutheera'=>'required',
+		'email'=>'required|email',
+
+		'profilepic'=>'required|image:jpg,png,jpeg',
+		'signature'=>'required|image:jpg,png,jpeg',
+
+		'permanent_addr'=>'required',
+		'permanent_city'=>'required',
+		'permanent_state'=>'required',
+		'permanent_country'=>'required',
+		'permanent_pin'=>'required|numeric',
+
+		'correspondance_addr'=>'required',
+		'correspondance_city'=>'required',
+		'correspondance_state'=>'required',
+		'correspondance_country'=>'required',
+		'correspondance_pin'=>'required|numeric',
+
+		'type_of_proof'=>'required',
+		'proof_file'=>'required|image:jpg,png,jpeg',
+		'iagree'=>'required',
+ 
+		]);
+
+		$this->prefix_generate(); 
+		$code_member=$this->prefix_generate();
+		$login->username=$code_member;
+		$login->password=Hash::make('MEM');
+		$login->userType='MEM';
+		$login->status='Not confirm';
+		$login->save();
+		$login_id=$login->id; 
+
+		//photo upload
+		$profilepic = 'HEERA'.time().'.'.$request->profilepic->getClientOriginalExtension();
+		$request->profilepic->move(storage_path('img/member_img'), $profilepic);
+		//siganture
+		$signature = 'SIGNATURE'.time().'.'.$request->signature->getClientOriginalExtension();
+		$request->signature->move(storage_path('img/member_img'), $signature);
+		//siganture
+		$proof_file = 'PROOF'.time().'.'.$request->proof_file->getClientOriginalExtension();
+		$request->proof_file->move(storage_path('img/proof'), $proof_file);
+
+		$memberregistration->userId=$login_id;
+		$memberregistration->code=$code_member;
+		$memberregistration->name=$request->fullname;
+		$memberregistration->religion=$request->religion;
+		$memberregistration->noOfChildren=$request->childrens;
+		$memberregistration->guardian=$request->guardian;
+		$memberregistration->caste=$request->caste;
+		$memberregistration->countryId=$request->country;
+		$memberregistration->mobileId=$request->conId;
+		$memberregistration->dob=date("Y-m-d", strtotime($request->dateofbirth));
+		$memberregistration->education=$request->education;
+		$memberregistration->mobileNo=$request->mobileno;
+		$memberregistration->maritalStatus=$request->marital;
+		$memberregistration->occupation=$request->occupation;
+		$memberregistration->email=$request->email;
+		$memberregistration->gender=$request->gender;
+		$memberregistration->aboutHeera=$request->aboutheera;
+		$memberregistration->LandlineNo=$request->landlineno;
+		$memberregistration->photo=$profilepic;
+		$memberregistration->singnature=$signature;
+		$memberregistration->addedByUnder='myself';
+		$memberregistration->addedByDate=date("Y-m-d");
+		$memberregistration->addedId=$login_id;
+		$memberregistration->addedById=$login_id;
+		$memberregistration->incomeAmount=$request->income;
+		$memberregistration->incomeCurrencytype=$request->incomeid;
+		$memberregistration->reference='';
+		$memberregistration->membership_details=json_encode(['inr'=>['type'=>$request->type_amount_inr,'amount'=>$request->amount_inr],
+            'aed'=>['type'=>$request->type_amount_aed,'amount'=>$request->amount_aed],
+            'usd'=>['type'=>$request->type_amount_usd,'amount'=>$request->amount_usd],
+            'sar'=>['type'=>$request->type_amount_sar,'amount'=>$request->amount_sar],
+            'cad'=>['type'=>$request->type_amount_cad,'amount'=>$request->amount_cad]
+            ]);
+		$memberregistration->save();
+
+	   
+		$address_per->userId=$login_id;
+		$address_per->address=$request->permanent_addr;
+		$address_per->city=$request->permanent_city;
+		$address_per->state=$request->permanent_state;
+		$address_per->Country=$request->permanent_country;
+		$address_per->pin=$request->permanent_pin;
+		$address_per->typeOfAddress='permanent';
+		$address_per->save();
+
+		$address_corr->userId=$login_id;
+		$address_corr->address=$request->correspondance_addr;
+		$address_corr->city=$request->correspondance_city;
+		$address_corr->state=$request->correspondance_state;
+		$address_corr->pin=$request->correspondance_pin;
+		$address_corr->Country=$request->correspondance_country;
+		$address_corr->typeOfAddress='correspondance';
+		$address_corr->save();
+
+		$address->userId=$login_id;
+		$address->address=$request->official_addr;
+		$address->city=$request->official_city;
+		$address->state=$request->official_state;
+		$address->pin=$request->official_pin;
+		$address->Country=$request->official_country;
+		$address->typeOfAddress='official';
+		$address->save();
+		
+		$proofs->userId=$login_id;
+		$proofs->typeOfProof=$request->type_of_proof;
+		$proofs->proofNumber=$request->proof_number;
+		$proofs->file=$proof_file;
+		$proofs->save();
+		session()->flash('message','Registration Success');
+		return redirect('/member/create/'.$login_id.'');
+	}
+
+
+	public function createdSave(Request $request)
+	{
+
+	}
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function show($id)
+	{
+	   $viewmember = memberregistration::join('logins','logins.id','=','userId')
+		->select('logins.username as code','memberregistrations.*')
+		->where('memberregistrations.userId','=',$id)
+		->first();  
+	   $viewmemb = memberregistration::join('addresses','addresses.userId','=','memberregistrations.userId')
+		->where('addresses.userId', $id)
+		->orWhereNull('addresses.userId')
+		->get();  
+		$viewmem = memberregistration::join('proofs','proofs.userId','=','memberregistrations.userId')
+		->where('proofs.userId', $id)
+		->first();
+		$countrys = memberregistration::join('countries','countries.id','=','memberregistrations.countryId')
+		->select('countries.countryName as countryNames')
+		->where('userId', $id)
+		->first();
+		$countryname = address::join('countries','countries.id','=','Country')
+		->select('countries.countryName as Names','addresses.typeOfAddress as type')
+		->where('userId', $id)
+		->get();
+		$country = country::all();
+
+		return View("web.member.createMemberView",compact('viewmember','viewmemb','viewmem','country','countrys','countryname'));
+	   
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function edit($id)
+	{
+	   $memberedit = memberregistration::join('logins','logins.id','=','userId')
+		->select('logins.username as code','memberregistrations.*')
+		->where('memberregistrations.userId','=',$id)
+		->first();    
+		$memberaddress = memberregistration::join('addresses','addresses.userId','=','memberregistrations.userId')
+		->where('addresses.userId', $id)
+		->get();
+		$memberproof = memberregistration::join('proofs','proofs.userId','=','memberregistrations.userId')
+		->where('proofs.userId', $id)
+		->first();
+		$membercountry = memberregistration::join('countries','countries.id','=','memberregistrations.countryId')
+		->select('countries.countryName as countryNames')
+		->where('userId', $id)
+		->first();
+		$country = country::all();
+
+		return view("web.member.editCreateMember",compact('memberedit','memberaddress','memberproof','membercountry','country'));
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, $userId)
+	{
+
+		$membersave = memberregistration::where('userId',$userId)->first();
+		$proof = proofs::where('userId', $userId)->first();
+		$add = address::where('typeOfAddress','=','official')->where('userId',$userId)->first();
+		$address1 = address::where('typeOfAddress','=','permanent')->where('userId',$userId)->first();
+		$address2 = address::where('typeOfAddress','=','correspondance')->where('userId',$userId)->first();
+	  	
+		if (!empty($request->photo)) 
+		{
+			$profilepic = 'Heera'.time().'.'.$request->photo->getClientOriginalExtension();
+			$request->photo->move(storage_path('img/member_img'), $profilepic);
+			$membersave->photo = $profilepic;
+		}
+		else
+		{
+			$membersave->photo = $request->photo_update;
+		}
+		if (!empty($request->signature)) 
+		{
+			$signature = 'SIGNATURE'.time().'.'.$request->signature->getClientOriginalExtension();
+			$request->signature->move(storage_path('img/member_img'), $signature);
+			$membersave->singnature = $signature;
+		}
+		else
+		{
+			$membersave->singnature = $request->sign_update;
+		}
+		if (!empty($request->idproof)) 
+		{
+			$idproofs = 'PROOF'.time().'.'.$request->idproof->getClientOriginalExtension();
+			$request->idproof->move(storage_path('img/proof'), $idproofs);
+			$proof->file = $idproofs;
+		}
+		else
+		{
+			$proof->file = $request->proof_update;
+		}
+
+
+		$type = array(
+        "inr" => $request->inr,
+        "aed" => $request->aed,
+        "usd" => $request->usd,
+        "sar" => $request->sar,
+        "cad" => $request->cad
+    	);
+
+		$membersave->name = $request->fullname;
+		$membersave->guardian = $request->guardian;
+		$membersave->religion = $request->religion;
+		$membersave->caste = $request->caste;
+		$membersave->dob = date("Y-m-d", strtotime($request->dateofbirth));
+		$membersave->education = $request->education;
+		$membersave->occupation= $request->occupation;
+		$membersave->maritalStatus = $request->marital;
+		$membersave->gender = $request->gender;
+		$membersave->incomeAmount = $request->income;
+		$membersave->incomeCurrencytype=$request->incomeid;
+		$membersave->noOfChildren = $request->childrens;
+		$membersave->countryId = $request->country;
+		$membersave->mobileId = $request->conId; 
+		$membersave->mobileNo = $request->mobileno;
+		$membersave->LandlineNo = $request->landlineno;
+		$membersave->aboutHeera = $request->aboutheera;
+		$membersave->email = $request->email;
+		$membersave->membership_details=json_encode(['inr'=>['type'=>$request->type_amount_inr,'amount'=>$request->amount_inr],
+            'aed'=>['type'=>$request->type_amount_aed,'amount'=>$request->amount_aed],
+            'usd'=>['type'=>$request->type_amount_usd,'amount'=>$request->amount_usd],
+            'sar'=>['type'=>$request->type_amount_sar,'amount'=>$request->amount_sar],
+            'cad'=>['type'=>$request->type_amount_cad,'amount'=>$request->amount_cad]
+            ]);
+		$membersave->save();
+
+		//permanent
+		$address1->address = $request->per_address;
+		$address1->city = $request->per_city;
+		$address1->state = $request->per_state;
+		$address1->Country=$request->per_country;
+		$address1->pin = $request->per_pin;
+		$address1->typeOfAddress = 'permanent';
+		$address1->save();
+		
+		//correspondance
+		$address2->address = $request->corr_address;
+		$address2->city = $request->corr_city;
+		$address2->state = $request->corr_state;
+		$address2->Country=$request->corr_country;
+		$address2->pin = $request->corr_pin;
+		$address2->typeOfAddress = 'correspondance';
+		$address2->save();
+
+		//official
+		$add->address = $request->official_addr;
+		$add->city = $request->official_city;
+		$add->state = $request->official_state;
+		$add->Country=$request->official_country;
+		$add->pin = $request->official_pin;
+		$add->typeOfAddress = 'official';
+		$add->save();
+
+		$proof->typeOfProof = $request->proofId;
+		$proof->proofNumber = $request->proof_number;
+		$proof->save();
+
+		return redirect('/web/member/createMember/'.$userId);
+	}
+
+	 public function viewcreated($userId)
+    {
+        $login=login::where('id',$userId)->first();
+        $login->status='Pending';
+        $login->save();
+        session()->flash('message','Registration Success');
+
+        return redirect('/web/member/pdfview/'.$userId);
+    }
+
+
+	public function checkCountryId(Request $request)
+	{
+
+	   $countryIds = country::where('countries.id', $request->countryName)->select('countries.countryId as conId')->first();
+	
+		return $countryIds->conId;
+	
+	}
+
+
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function destroy($userId)
+	{   
+	   
+	// $viewmembers = memberregistration::find('userId',$userId);
+	// $viewmembers->delete($userId);
+
+	// return redirect('/admin/member/viewMember');
+		
+	}
+
+	public function approveMember(Request $request,$userId)
+	{
+	  //$id =  Auth::guard('admin')->user()->id;
+
+	   $user =  Auth::guard('admin')->user();
+	   $id = $user->id;
+
+		$approvemember = memberregistration::find($userId);
+		$login = logins::find($id);
+		$approvemember->approvedDate = Carbon::now();
+		$approvemember->save();
+		$login->status = 'Active';
+		$login->save();
+		return view("/admin/member/approveMember");
+
+	}
+
+	public function viewMemberList()
+	{
+		$viewmember = memberregistration::join('logins','username','=','code')
+		->get();
+		$countryname = memberregistration::join('countries','countries.id','=','memberregistrations.countryId')
+		->select('countries.countryName as countryNames')->first();
+
+		return view("admin.members.viewMemberRequest",compact('viewmember','countryname'));
+	}
+
+	public function prefix_generate(){
+		$digits_needed=7;
+		$random_number='APPNO'; // set up a blank string
+		$count=0;
+		while ( $count < $digits_needed ) {
+			$random_digit = mt_rand(0, 9);
+			
+			$random_number .= $random_digit;
+			$count++;   
+		}
+		return $random_number; 
+	}
+
+
+	public function pdfMember($id){
+      $memberregistration = memberregistration::where('userId',$id)->first();
+    //  return view('web.member.pdf.member',compact('memberregistration'));
+     $pdf =PDF::loadView('web.member.pdf.member',compact('memberregistration'));
+     return $pdf->stream();
+	}
+	public function viewpdf($id){
+		$id=$id;
+		return view('web.member.pdf.pdfview',compact('id'));
+	}
+
+
+
+	function captcha($len = 6){
+		$charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+		$base = strlen($charset);
+		$result = '';
+		$now = explode(' ', microtime())[1];
+		while ($now >= $base)
+		{
+			$i = $now % $base;
+			$result = $charset[$i] . $result;
+			$now /= $base;
+		}
+		return substr($result, -5);
+	}
+}
+
