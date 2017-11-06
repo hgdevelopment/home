@@ -156,7 +156,12 @@ Route::group(['middleware' => ['admin']], function ()
     Route::post('admin/partialWithdraw/viewData', 'admin\partialWithdrawalController@viewData');  
     Route::get('admin/partialWithdraw/{id}','admin\partialWithdrawalController@show');
     Route::post('admin/partialWithdraw/withdraw', 'admin\partialWithdrawalController@withdraw'); 
+
+    Route::get('admin/partialWithdraw/pdf/{id}', 'admin\partialWithdrawalController@get_partial_view_PDF'); 
+    Route::get('admin/partialWithdraw/view/pdf/{id}', 'admin\partialWithdrawalController@get_partial_PDF');
+    
     Route::resource('admin/partialWithdraw', 'admin\partialWithdrawalController'); 
+
 
 
     

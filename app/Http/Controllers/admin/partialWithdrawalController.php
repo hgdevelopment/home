@@ -289,6 +289,7 @@ class partialWithdrawalController extends Controller
         $withdraw->save();
         }
         Session::flash('message', 'Partial Withdrawal Request is Approved!');
+        Session::flash('pdf_id', $id);
 
         $view=DB::table('withdrawalrequests')->where('withdrawalrequests.id','=',$id)
         ->join('memberregistrations','withdrawalrequests.userId','=','memberregistrations.userId')
@@ -313,7 +314,19 @@ class partialWithdrawalController extends Controller
         }); 
 
 
-    $withDraw = withdrawalrequest::all()->where('id',$id);
+    
+                       
+      return redirect('admin/partialWithdraw/pdf/'.$id);
+        
+        
+        } 
+
+    }
+    public function get_partial_view_PDF($id){
+      return view('admin.withdraw.partialWithdrawdetail_pdf',compact('id'));
+    }
+    public function get_partial_PDF($id){
+         $withDraw = withdrawalrequest::all()->where('id',$id);
     foreach($withDraw as $withDraws);
 
     $tcnrequest = tcnrequest::all()->where('id',$withDraws->tcnId);
@@ -326,15 +339,10 @@ class partialWithdrawalController extends Controller
     foreach($memberregistration as $members);
 
     $addres = address::all()->where('userId',$members->userId)->where('typeOfAddress','permanent');
+
     foreach($addres as $address);
         $pdf =PDF::loadView('admin.withdraw.pdf.partial_withdrawal_pdf',compact('tcnrequests','banks','address','members','withDraws'));
         return $pdf->stream();
-                       
-    return redirect('admin/partialWithdraw/view');
-        
-        
-        } 
-
     }
 
     public function deny($id)

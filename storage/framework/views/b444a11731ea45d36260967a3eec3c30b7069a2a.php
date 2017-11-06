@@ -194,7 +194,7 @@
          <div class="col-md-3 col-xs-12 divTableCell text-center">ID Proof  <img src="<?php echo e(URL::asset('storage/img/proof/'.$dsaProof->file)); ?>" style="width:96px;height:96px; " ></div>
          <div class="col-md-3 col-xs-12 divTableCell text-center" >Signature <img src="<?php echo e(URL::asset('storage/img/dsa_img/'.$dsaDetails->signature)); ?>" style="width:96px;height:96px;" ></div>
          <div class="col-md-3 col-xs-12 divTableCell text-center">Payment Proof <img src="<?php echo e(URL::asset('storage/img/payProof/'.$dsapaymentdetails->file)); ?>"  style="width:96px;height: 96px;"></div>
-         <div class="col-md-3 col-xs-12 divTableCell text-center">ccount Proof  <img src="<?php echo e(URL::asset('storage/img/Accproof/'.$dsabank->Accproof)); ?>"  style="width:96px;height: 96px;"></div>
+         <div class="col-md-3 col-xs-12 divTableCell text-center">Account Proof  <img src="<?php echo e(URL::asset('storage/img/Accproof/'.$dsabank->Accproof)); ?>"  style="width:96px;height: 96px;"></div>
       </div>
     </div>
   </div>

@@ -175,7 +175,7 @@ class tcnTransferController extends Controller
         $newMember  =memberregistration::find($newMemberId);
 
         $code_member=1000000+$newMemberId;
-        $newPass=='M'.substr($newMember->name,0,2).str_random(5);
+        $newPass='M'.substr($newMember->name,0,2).str_random(5);
 
         $password=Hash::make($newPass);
 
@@ -476,7 +476,7 @@ class tcnTransferController extends Controller
     'oldName'=>$oldMember->name,
     'username'=>'IBG'.$code_member
     );
-
+// return var_dump($data);
     Mail::send('admin.mail.memberapprove', compact('data'), function ($message) use ($data){
     $message->from('heeraerptl@gmail.com', 'TCN Transferred to a New Member');
     $message->to($data['email'])->subject('HI! Now you are a new MEMBER '.$data['oldName'].'-s TCN has been transferred to you.. ');

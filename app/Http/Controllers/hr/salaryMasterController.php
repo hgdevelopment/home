@@ -82,8 +82,10 @@ class salaryMasterController extends Controller
 
         if($request->process=='getBranches')
         {
+            if($request->company!='All')
             $branch=hr_branch::where('company_id',$request->company)->where('status','1')->get();
-
+            else
+            $branch=hr_branch::join('hr_companies','hr_companies.id','=','hr_branch.company_id')->where('hr_branch.status','1')->get();
             return $branch;
         }
 
@@ -113,17 +115,22 @@ class salaryMasterController extends Controller
 
         ->join('hr_attendance as att','logins.id','=','att.staffId')
 
+        ->join('hr_companies','hr_companies.id','=','employee.company_id')
+
+        ->join('hr_branch','hr_branch.company_id','=','hr_companies.id')
+
         // ->where('logins.status','Active')
 
         ->whereYear('att.date',$request->year)                              //select employees based on filters   and
 
-        ->whereMonth('att.date',$request->month)                            //from attentance ad employee personal details
+        ->whereMonth('att.date',$request->month);                            //from attentance ad employee personal details
+        if($request->company!='All')
+        $employees=$employees->where('employee.company_id',$request->company);  
 
-        ->where('employee.company_id',$request->company)        
+        if($request->branch!='All')
+        $employees=$employees->where('employee.branch_id',$request->branch);
 
-        ->where('employee.branch_id',$request->branch)
-
-        ->groupBy('att.staffId')
+        $employees=$employees->groupBy('att.staffId')
 
         ->get();
 
@@ -153,9 +160,18 @@ class salaryMasterController extends Controller
             if(Auth::guard('admin')->check())
             $LogInId    =$logins->id;
 
-            $salary=new hr_salary_details;
 
 
+            $check=DB::table('hr_salary_details')->where('month',$request->month)->where('employee_id',$request->employee_id)->count();
+            if($check>0)
+            {
+            Alert::error('Already Salary generated for this employee','Info');
+
+            return redirect('hr/salaryMaster');
+            }
+
+
+                $salary=new hr_salary_details;
 
                 $salary->employee_id        =$request->employee_id;
 
@@ -163,7 +179,9 @@ class salaryMasterController extends Controller
 
                 $salary->salary             =$request->salary;
 
-                $salary->working_days       =$request->working_days;
+                $salary->allowances         =$request->allowances;
+
+                $salary->worked_days       =$request->worked_days;
 
                 $salary->working_weekoff    =$request->working_weekoff;
 
@@ -171,7 +189,9 @@ class salaryMasterController extends Controller
 
                 $salary->one_mine_late      =$request->one_mine_late;
 
-                $salary->more_one_min       =$request->more_one_min;
+                $salary->more_one_min       =$request->more_one_min_late;
+
+                $salary->late_amount        =max($request->one_min_late_amount + $request->one_min_late_amount,0);
 
                 $salary->available_leave    =$request->available_leave;
 
@@ -185,6 +205,14 @@ class salaryMasterController extends Controller
 
                 $salary->un_approve_leave   =$request->un_approve_leave;
 
+                $salary->sandwitch_leave    =$request->loss_pay_sunday;
+
+                $salary->sandwitch_leave_amount=$request->sandwitch_leave_amount;
+
+                $salary->leave_amount       =$request->approve_leave_amount;
+
+                $salary->unapprove_leave_amount=$request->unapprove_leave_amount;
+ 
                 $salary->remaining_leave    =$request->remaining_leave;
 
                 $salary->fine_deduction     =$request->fine_deduction;
@@ -192,8 +220,6 @@ class salaryMasterController extends Controller
                 $salary->misc_deduction     =$request->misc_deduction;
 
                 $salary->misc_deduction_reason=$request->misc_deduction_reason;
-
-                $salary->loss_pay_sunday    =$request->loss_pay_sunday;
 
                 $salary->overtime           =$request->overtime;
 
@@ -218,7 +244,17 @@ class salaryMasterController extends Controller
                 $salary->save();
 
 
+        $company=hr_company::where('status','1')->get();
 
+        $mY=explode('-', $request->month);
+        $month=$mY[0];
+        $year=$mY[1];
+
+        $company_id=$request->company_id;
+        $branch_id=$request->branch_id;
+
+        Alert::success('Salary generated succssfully','success');
+        return View('hr.salary.salaryMaster',compact('company','company_id','branch_id','year','month'));
     }
 
 
@@ -284,12 +320,12 @@ class salaryMasterController extends Controller
             //salary
             $salary=$data[0]->salary;
 
-            $perDaySalary=number_format($salary/30,2);
+            $perDaySalary=($salary/30);
 
-            $perHourSalary=number_format(($salary/30)/9,2);
+            $perHourSalary=(($salary/30)/9);
 
 
-            $perMinuteSalary=number_format($perHourSalary/60,2);
+             $perMinuteSalary=$perHourSalary/60;
 
 
             // DB::connection()->enableQueryLog();
@@ -535,7 +571,7 @@ class salaryMasterController extends Controller
 
             $fromDate =date('Y-m-d', strtotime($endDate));
 
-            $emp_working_half_days;$emp_working_days=$emp_working_full_days + ($emp_working_half_days*0.5);
+            $emp_working_days=$emp_working_full_days + ($emp_working_half_days*0.5);
 
             $leave          =$nonHolidayLeave+$fullDayLeave+($halfDayLeave*0.5);
 
@@ -555,6 +591,7 @@ class salaryMasterController extends Controller
 
 
             }
+
 
 
 
@@ -643,81 +680,5 @@ class salaryMasterController extends Controller
     {
         //
     }
-    // public function showsalary(){
-    //     $holidays=array("2017-10-06","2017-10-07","2017-10-08");
-    //      $d=cal_days_in_month(CAL_GREGORIAN,10,2017);
-    //    return $this->getWorkingDays("2017-10-01","2017-10-".$d,$holidays);
-        
-    //    //return hr_emp_personal_details::where('user_id','516')->first();
-    // }
-
-
-
-    
-    // public function getWorkingDays($startDate,$endDate,$holidays){
-    //    $endDate = strtotime($endDate);
-    //     $startDate = strtotime($startDate);
-
-
-    //     //The total number of days between the two dates. We compute the no. of seconds and divide it to 60*60*24
-    //     //We add one to inlude both dates in the interval.
-    //     $days = ($endDate - $startDate) / 86400 + 1;
-
-    //     $no_full_weeks = floor($days / 7);
-    //     $no_remaining_days = fmod($days, 7);
-
-    //     //It will return 1 if it's Monday,.. ,7 for Sunday
-    //     $the_first_day_of_week = date("N", $startDate);
-    //     $the_last_day_of_week = date("N", $endDate);
-
-    //     //---->The two can be equal in leap years when february has 29 days, the equal sign is added here
-    //     //In the first case the whole interval is within a week, in the second case the interval falls in two weeks.
-    //     if ($the_first_day_of_week <= $the_last_day_of_week) {
-    //        // if ($the_first_day_of_week <= 6 && 6 <= $the_last_day_of_week) $no_remaining_days--;
-    //         if ($the_first_day_of_week <= 7 && 7 <= $the_last_day_of_week) $no_remaining_days--;
-    //     }
-    //     else {
-    //         // (edit by Tokes to fix an edge case where the start day was a Sunday
-    //         // and the end day was NOT a Saturday)
-
-    //         // the day of the week for start is later than the day of the week for end
-    //         if ($the_first_day_of_week == 7) {
-    //             // if the start date is a Sunday, then we definitely subtract 1 day
-    //             $no_remaining_days--;
-
-    //             if ($the_last_day_of_week == 6) {
-    //                 // if the end date is a Saturday, then we subtract another day
-    //                // $no_remaining_days--;
-    //             }
-    //         }
-    //         else {
-    //             // the start date was a Saturday (or earlier), and the end date was (Mon..Fri)
-    //             // so we skip an entire weekend and subtract 2 days
-    //             $no_remaining_days -= 1;
-    //             //$no_remaining_days -= 2;
-    //         }
-    //     }
-
-    //     //The no. of business days is: (number of weeks between the two dates) * (5 working days) + the remainder
-    // //---->february in none leap years gave a remainder of 0 but still calculated weekends between first and last day, this is one way to fix it
-    //    $workingDays = $no_full_weeks * 6;
-    //    //$workingDays = $no_full_weeks * 5;
-    //     if ($no_remaining_days > 0 )
-    //     {
-    //       $workingDays += $no_remaining_days;
-    //     }
-
-    //     //We subtract the holidays
-    //     foreach($holidays as $holiday){
-    //         $time_stamp=strtotime($holiday);
-    //         //If the holiday doesn't fall in weekend
-    //         //if ($startDate <= $time_stamp && $time_stamp <= $endDate && date("N",$time_stamp) != 6 && date("N",$time_stamp) != 7)
-    //         if ($startDate <= $time_stamp && $time_stamp <= $endDate  && date("N",$time_stamp) != 7){
-    //             $workingDays--;
-           
-    //         }
-    //     }
-
-    //     return array('working_days'=>$workingDays);
-    // }
+ 
 }

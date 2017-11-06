@@ -51,6 +51,7 @@
     .table-data tr td:nth-child(3){
     padding-left:20px;
     }*/
+    
     .pull-left{
     float: left;
     }

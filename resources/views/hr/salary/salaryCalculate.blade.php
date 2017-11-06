@@ -18,6 +18,8 @@
 	}
 	.divTableCell{
 		border-bottom: 0 !important;
+		text-transform: capitalize !important; font-size: 15px !important;
+
 	}
 	.f{
 		width: 50px !important; margin-right: 5px !important;padding:3px !important;
@@ -32,9 +34,7 @@ border-width: 1px;
 border-style: solid;
 border-color: #bcaf78;
 	}
-	.divTableCell{
-		text-transform: capitalize !important; font-size: 15px !important;
-	}
+
 	.see-more{
 		float: right;
 margin-right: 12px;
@@ -68,25 +68,28 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededed', end
 			<input type="hidden" name="employee_id" id="employee_id" value="{{ $employee_id }}">
 			<input type="hidden" name="payslip_no" id="payslip_no" value="{{ $payslip }}">
 
-			<input type="hidden" name="working_days" id="working_days" value="{{ $emp_working_days }}">
-			<input type="hidden" name="per_day_salary" id="per_day_salary" value="{{ floor($perDaySalary) }}">
-			<input type="hidden" name="per_min_salary" id="per_min_salary" value="{{ floor($perMinuteSalary) }}">
+			<input type="hidden" name="worked_days" id="worked_days" value="{{ $emp_working_days ? : 0  }}">
+			<input type="hidden" name="per_day_salary" id="per_day_salary" value="{{ floor($perDaySalary ? : 0 ) }}">
+			<input type="hidden" name="per_min_salary" id="per_min_salary" value="{{ floor($perMinuteSalary ? : 0 ) }}">
 
-			<input type="hidden" name="working_weekoff" id="working_weekoff" value="{{ $emp_working_weekoff }}">
-			<input type="hidden" name="working_holidays" id="working_holidays" value="{{ $emp_working_holidays }}">
+			<input type="hidden" name="working_weekoff" id="working_weekoff" value="{{ $emp_working_weekoff ? : 0  }}">
+			<input type="hidden" name="working_holidays" id="working_holidays" value="{{ $emp_working_holidays ? : 0  }}">
 
-			<input type="hidden" name="one_mine_late" id="one_mine_late" value="{{ $oneMinuteLate }}">
-			<input type="hidden" name="more_one_min" id="more_one_min" value="{{ $moreOneMinute }}">
+			<input type="hidden" name="one_mine_late" id="one_mine_late" value="{{ $oneMinuteLate ? : 0  }}">
+			<input type="hidden" name="more_one_min_late" id="more_one_min_late" value="{{ $moreOneMinute ? : 0  }}">
 
-			<input type="hidden" name="total_leave" id="total_leave" value="{{ $leave }}">
-			<input type="hidden" name="full_day_leave" id="full_day_leave" value="{{ $fullDayLeave }}">
-			<input type="hidden" name="half_day_leave" id="half_day_leave" value="{{ $halfDayLeave }}">
-			<input type="hidden" name="approve_leave" id="approve_leave" value="{{ $approveLeave }}">
+			<input type="hidden" name="total_leave" id="total_leave" value="{{ $leave ? : 0  }}">
+			<input type="hidden" name="full_day_leave" id="full_day_leave" value="{{ $fullDayLeave ? : 0  }}">
+			<input type="hidden" name="half_day_leave" id="half_day_leave" value="{{ $halfDayLeave ? : 0  }}">
+			<input type="hidden" name="approve_leave" id="approve_leave" value="{{ $approveLeave ? : 0  }}">
 
-			<input type="hidden" name="available_leave" id="available_leave" value="{{ $TotalAvailLeave }}">
+			<input type="hidden" name="available_leave" id="available_leave" value="{{ $TotalAvailLeave ? : 0  }}">
 			<input type="hidden" name="remaining_leave" id="remaining_leave" value="{{ max($TotalAvailLeave-$approveLeave,0) }}">
 
 			<input type="hidden" name="month" id="month" value="{{date('m-Y',strtotime($fromDate)) }}">
+
+			<input type="hidden" name="company_id" id="company_id" value="{{$data[0]->company_id}}">
+			<input type="hidden" name="branch_id" id="branch_id" value="{{$data[0]->branch_id }}">
 
 
 
@@ -126,7 +129,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededed', end
 					<div class="row">
 
 						<div class="col-md-12 col-xs-12 divTableCell">
-						Employee ID
+						Employee Code
 						<b class="data-lab">{{$data[0]->code}}</b>
 						</div>
 						<div class="col-md-12 col-xs-12 divTableCell">
@@ -168,9 +171,13 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededed', end
 		           <div class="col-md-12 col-xs-12 divTableCell">
 		              {{ strtoupper($salaryAllowance->allowances) }}
 		               <b class="data-lab">{{$data[0]->salary/100*$salaryAllowance->percentage}}</b>
+
+		               @php
+		               	$allowances=$allowances.strtoupper($salaryAllowance->allowances).'@@'.$data[0]->salary/100*$salaryAllowance->percentage.'##';
+		               @endphp
 		            </div>
 		      	  	@endforeach
-
+		      	  	<input type="hidden" name="allowances" id="allowances" value="{{ $allowances }}">
 		         </div>
 		        </div>
 		    </div> 
@@ -185,41 +192,53 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededed', end
 				<div class="panel-body sal">
 					<div class="row">
 
-							<div class="col-md-4 col-xs-4  font-bold">
+							<div class="col-md-3 col-xs-3  font-bold">
 							Payslip No : {{ $payslip }}
 							</div>
 
-							<div class="col-md-4 col-xs-4  font-bold">
+							<div class="col-md-3 col-xs-3  font-bold">
 							Gross Salary : {{ $salary }}
 							</div>
 
-							<div class="col-md-4 col-xs-4  font-bold">
-							Paid Days : {{ $emp_working_days + $weekoff }}
+							<div class="col-md-3 col-xs-3  font-bold">
+							Paid Days : {{ $totalday }}
+							</div>
+
+							<div class="col-md-3 col-xs-3  text-right font-bold">
+							<a class="text-primary see-more" onclick="showDetails('hideDetails')">See more...</a>
 							</div>
 
 					</div>  
 
-					<div class="row"><a class="text-primary see-more" onclick="showDetails('hideDetails')">See more...</a>
-						<div class="col-md-12" id="details" class="row">			<input type="hidden" id="hideDetails" value="0">
+					<div class="row" id="details">
+						<div class="col-md-12 well m-t bg-light lt" style="margin:0 !important;padding:0 !important">			<input type="hidden" id="hideDetails" value="0">
 
 							<div class="col-md-3 col-xs-3 divTableCell  font-bold">
 							Monthly Salary  <b class="data-lab text-danger">{{ $salary }}</b>
 							</div>
 
 							<div class="col-md-3 col-xs-3 divTableCell  font-bold">
-							Day Salary   <b class="data-lab text-danger">{{ $perDaySalary }}</b>
+							Day Salary   <b class="data-lab text-danger">{{ number_format($perDaySalary) }}</b>
 							</div>
 
 							<div class="col-md-3 col-xs-3 divTableCell  font-bold">
-							per Hour Salary   <b class="data-lab text-danger">{{ $perHourSalary }}</b>
+							per Hour Salary   <b class="data-lab text-danger">{{ number_format($perHourSalary) }}</b>
 							</div>
 
 							<div class="col-md-3 col-xs-3 divTableCell  font-bold">
-							per Minute Salary   <b class="data-lab text-danger">{{ $perMinuteSalary }}</b>
+							per Minute Salary   <b class="data-lab text-danger">{{ number_format($perMinuteSalary) }}</b>
 							</div>
 
 							<div class="col-md-3 col-xs-3 divTableCell font-bold">
-							Full worked Days   <b class="data-lab text-danger">{{ $emp_working_full_days }}</b>
+							worked Days  <b class="data-lab text-danger">{{ ($emp_working_full_days + ($emp_working_half_days*0.5)) }}</b>
+							</div>
+
+							<div class="col-md-3 col-xs-3 divTableCell font-bold">
+							Full working Days  <b class="data-lab text-danger">{{ $emp_working_full_days  }}</b>
+							</div>
+
+							<div class="col-md-3 col-xs-3 divTableCell font-bold">
+							Half working Days   <b class="data-lab text-danger">{{ $emp_working_half_days.' * 0.5 = '}}{{ $emp_working_half_days*0.5 }}</b>
 							</div>
 
 							<div class="col-md-3 col-xs-3 divTableCell font-bold">
@@ -235,7 +254,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededed', end
 							</div>
 
 							<div class="col-md-3 col-xs-3 divTableCell font-bold">
-							Half Day     <b class="data-lab text-danger">{{ $halfDayLeave }}{{ '(day) * 0.5 = ' }}{{ $halfDayLeave*0.5 }}</b>
+							Half Day Leave     <b class="data-lab text-danger">{{ $halfDayLeave }}{{ ' * 0.5 = ' }}{{ $halfDayLeave*0.5 }}</b>
 							</div>
 
 							<div class="col-md-3 col-xs-3 divTableCell font-bold">
@@ -448,13 +467,13 @@ function showDetails(id)
 	if(val=='0')
 	{
 		$('#'+id).val('1');
-		$('#details').show();
+		$('#details').show(500);
 		$('.see-more').html('See Less');
 	}
 		if(val=='1')
 	{
 		$('#'+id).val('0');
-		$('#details').hide();
+		$('#details').hide(500);
 		$('.see-more').html('See More');
 	}
 }
@@ -531,7 +550,17 @@ function setvalue(id)
 
 var val=$('#'+id).val();
 
-if (!val || val ==='0' || isNaN(val) || val=='' || val==' ') 	$('#'+id).val('');  else return $('#'+id).val(val);
+if (!val  || isNaN(val) || val=='' || val==' ') 	$('#'+id).val('');  else return $('#'+id).val(val);
+
+}
+
+//set value by ID return valuable value
+function setvalue0(id)
+{
+
+var val=$('#'+id).val();
+
+if (!val  || isNaN(val) || val=='' || val==' ') 	$('#'+id).val('0');  else return $('#'+id).val(val);
 
 }
 
@@ -542,11 +571,11 @@ if (!val || val ==='0' || isNaN(val) || val=='' || val==' ') 	$('#'+id).val('');
 function submitvalidate()
 {
 
-if(readvalue('final_salary')<=0)
-{
+// if(readvalue('final_salary')<=0)
+// {
 
-	return;
-}
+// 	return;
+// }
 
 swal({
   title: "Confirm!",
@@ -562,6 +591,21 @@ swal({
   {
     if (isConfirm) 
     {
+		$('#deductionDiv  input.s').map(function(){
+
+			setvalue0(this.id);
+
+		});
+
+
+
+		$('#netpayDiv  input').map(function(){
+
+		setvalue0(this.id);
+
+		})
+
+
     	$('#form').submit();
     }
     else
@@ -580,6 +624,5 @@ $('#calculator').calculator({onClose: true});
 
 
 </script>
-
 
 @endsection

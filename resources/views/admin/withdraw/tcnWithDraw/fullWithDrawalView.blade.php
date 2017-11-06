@@ -36,7 +36,7 @@ use \App\Http\Controllers\Controller;
 		<div class="panel-heading font-bold">
 		<div class="col-sm-4 font-bold text-success h4">TCN CODE: <span class="text-danger">{{$tcnrequests->tcnCode}}</span></div>
 		<div class="col-sm-4 font-bold text-success h4">TCN : <span class="text-danger">{{$tcnrequests->tcn->tcnType}}</span></div>
-		<div class="col-sm-4 font-bold text-success h4">WITHDARW STATUS : <span class="text-danger">{{$withDraws->status}}</span></div>&nbsp;
+		<div class="col-sm-4 font-bold text-success h4">WITHDRAW STATUS : <span class="text-danger">{{$withDraws->status}}</span></div>&nbsp;
 		</div>
 	</div>
 

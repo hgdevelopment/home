@@ -386,7 +386,7 @@
           <div class="col-sm-6">
             <div class="form-group">
               <label>AMOUNT OF HOLDING(IF ANY)</label>
-              <input type="text" class="form-control" name="type_amount_inr" id="type_amount_inr" placeholder="INR" data-parsley-type="number">
+              <input type="text" class="form-control" name="type_amount_inr" id="type_amount_inr" placeholder="INR">
               <?php if($errors->has('type_amount_inr')): ?>
               <span class="help-inline"><?php echo e($errors->first('type_amount_inr')); ?></span>
               <?php endif; ?>
@@ -395,7 +395,7 @@
           <div class="col-sm-6">
             <div class="form-group">
               <label>AMOUNT APPLYING FOR </label>
-              <input type="text" class="form-control" placeholder="AMOUNT APPLYING FOR" id="amount_inr" name="amount_inr" value="<?php echo e(old('amount_inr')); ?>" >
+              <input type="text" class="form-control" placeholder="AMOUNT APPLYING FOR" id="amount_inr" name="amount_inr" data-parsley-type="number" value="<?php echo e(old('amount_inr')); ?>" >
               <?php if($errors->has('amount_inr')): ?>
               <span class="help-inline"><?php echo e($errors->first('amount_inr')); ?></span>
               <?php endif; ?>
@@ -404,7 +404,7 @@
           <div class="col-sm-6">
             <div class="form-group">
               <label>AMOUNT OF HOLDING(IF ANY)</label>
-              <input type="text" name="type_amount_aed" class="form-control" data-parsley-type="number" id="type_amount_aed" placeholder="AED">
+              <input type="text" name="type_amount_aed" class="form-control"  id="type_amount_aed" placeholder="AED">
               <?php if($errors->has('type_amount_aed')): ?>
               <span class="help-inline"><?php echo e($errors->first('type_amount_aed')); ?></span>
               <?php endif; ?>
@@ -413,7 +413,7 @@
           <div class="col-sm-6">
             <div class="form-group">
               <label>AMOUNT APPLYING FOR </label>
-              <input type="text" class="form-control" placeholder="AMOUNT APPLYING FOR" id="amount_aed" name="amount_aed" value="<?php echo e(old('amount_aed')); ?>">
+              <input type="text" class="form-control" placeholder="AMOUNT APPLYING FOR" id="amount_aed" name="amount_aed" data-parsley-type="number" value="<?php echo e(old('amount_aed')); ?>">
               <?php if($errors->has('amount_aed')): ?>
               <span class="help-inline"><?php echo e($errors->first('amount_aed')); ?></span>
               <?php endif; ?>
@@ -422,7 +422,7 @@
           <div class="col-sm-6">
             <div class="form-group">
               <label>AMOUNT OF HOLDING(IF ANY)</label>
-              <input type="text" name="type_amount_usd" class="form-control" data-parsley-type="number" id="type_amount_usd" placeholder="USD">
+              <input type="text" name="type_amount_usd" class="form-control" id="type_amount_usd" placeholder="USD">
               <?php if($errors->has('type_amount_usd')): ?>
               <span class="help-inline"><?php echo e($errors->first('type_amount_usd')); ?></span>
               <?php endif; ?>
@@ -431,7 +431,7 @@
           <div class="col-sm-6">
             <div class="form-group">
               <label>AMOUNT APPLYING FOR </label>
-              <input type="text" class="form-control" placeholder="AMOUNT APPLYING FOR" id="amount_usd" name="amount_usd"  value="<?php echo e(old('amount_usd')); ?>">
+              <input type="text" class="form-control" placeholder="AMOUNT APPLYING FOR" id="amount_usd" name="amount_usd" data-parsley-type="number"  value="<?php echo e(old('amount_usd')); ?>">
               <?php if($errors->has('amount_usd')): ?>
               <span class="help-inline"><?php echo e($errors->first('amount_usd')); ?></span>
               <?php endif; ?>
@@ -440,7 +440,7 @@
           <div class="col-sm-6">
             <div class="form-group">
               <label>AMOUNT OF HOLDING(IF ANY)</label>
-              <input type="text" name="type_amount_sar" class="form-control" data-parsley-type="number" id="type_amount_sar" placeholder="SAR">
+              <input type="text" name="type_amount_sar" class="form-control"  id="type_amount_sar" placeholder="SAR">
               <?php if($errors->has('type_amount_sar')): ?>
               <span class="help-inline"><?php echo e($errors->first('type_amount_sar')); ?></span>
               <?php endif; ?>
@@ -449,7 +449,7 @@
           <div class="col-sm-6">
             <div class="form-group">
               <label>AMOUNT APPLYING FOR </label>
-              <input type="text" class="form-control" placeholder="AMOUNT APPLYING FOR" id="amount_sar" name="amount_sar"  value="<?php echo e(old('amount_sar')); ?>">
+              <input type="text" class="form-control" placeholder="AMOUNT APPLYING FOR" id="amount_sar" name="amount_sar" data-parsley-type="number" value="<?php echo e(old('amount_sar')); ?>">
               <?php if($errors->has('amount_sar')): ?>
               <span class="help-inline"><?php echo e($errors->first('amount_sar')); ?></span>
               <?php endif; ?>
@@ -458,7 +458,7 @@
           <div class="col-sm-6">
             <div class="form-group">
               <label>AMOUNT OF HOLDING(IF ANY)</label>
-              <input type="text" name="type_amount_cad" class="form-control" data-parsley-type="number" id="type_amount_cad" placeholder="CAD">
+              <input type="text" name="type_amount_cad" class="form-control"  id="type_amount_cad" placeholder="CAD">
               <?php if($errors->has('type_amount_cad')): ?>
               <span class="help-inline"><?php echo e($errors->first('type_amount_cad')); ?></span>
               <?php endif; ?>
@@ -467,7 +467,7 @@
           <div class="col-sm-6">
             <div class="form-group"> 
               <label>AMOUNT APPLYING FOR</label>
-              <input type="text" class="form-control" placeholder="AMOUNT APPLYING FOR" id="amount_cad" name="amount_cad"  value="<?php echo e(old('amount_cad')); ?>">
+              <input type="text" class="form-control" placeholder="AMOUNT APPLYING FOR" id="amount_cad" name="amount_cad" data-parsley-type="number" value="<?php echo e(old('amount_cad')); ?>">
               <?php if($errors->has('amount_cad')): ?>
               <span class="help-inline"><?php echo e($errors->first('amount_cad')); ?></span>
               <?php endif; ?>

@@ -77,28 +77,48 @@ class salaryDetailsController extends Controller
     {
 
 
-        $employees=DB::table('hr_emp_personal_details')
+    }
 
 
-        ->join('hr_salary_details','hr_salary_details.employee_id','=','hr_emp_personal_details.user_id')
 
-        ->where('hr_salary_details.month',$request->month.'-'.$request->year)        
 
-        ->get();
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
 
+         $employees= DB::table('hr_emp_personal_details')
+
+                      ->join('hr_salary_details','hr_salary_details.employee_id','=','hr_emp_personal_details.user_id')
+                     ->leftJoin('hr_companies', 'hr_emp_personal_details.company_id', '=', 'hr_companies.id')
+                     ->leftJoin('countries','countries.id', '=', 'hr_emp_personal_details.nationality') 
+                     ->leftJoin('hr_branch', 'hr_emp_personal_details.branch_id', '=', 'hr_branch.id')
+                     ->leftJoin('hr_departments', 'hr_emp_personal_details.department_id', '=', 'hr_departments.id')
+                     ->leftJoin('hr_designation','hr_emp_personal_details.designation_id', '=', 'hr_designation.id')
+                     ->leftJoin('hr_religions','hr_religions.id', '=', 'hr_emp_personal_details.religion') 
+                     ->leftJoin('hr_emp_proofs', 'hr_emp_proofs.user_id', '=', 'hr_emp_personal_details.user_id')
+                     ->where('hr_salary_details.month',$request->month.'-'.$request->year)
+                     ->orderBy('hr_emp_personal_details.code',ASC)        
+                     ->get();
 
   ob_end_clean();
   ob_start();
+  $M=date('M',strtotime($request->month));
 
   $excelData=array();
   $i=1;
   foreach ($employees as $data)
   {
   $excelData[$i]['Sl No'] = $i;
+  $excelData[$i]['MONTH'] =$M.'-'.$request->year;
   $excelData[$i]['EMPLOYEE CODE'] = $data->code;
   $excelData[$i]['NAME'] =$data->salutation_name.' '.$data->name;
-  // $excelData[$i]['ACCOUNT NO'] =$data->benefit->accountNumber;
-  // $excelData[$i]['IFSC CODE'] =$data->benefit->ifsc;
+  $excelData[$i]['ACCOUNT NO'] =$data->accountNumber;
+  $excelData[$i]['AMOUNT'] =$data->final_salary;
   // $excelData[$i]['BANK'] =$data->benefit->bankName;
   // $excelData[$i]['BRANCH'] =$data->benefit->branchName;
   // $excelData[$i]['WITHDRAWAL TYPE'] =$data->type;
@@ -113,16 +133,15 @@ class salaryDetailsController extends Controller
   } 
 
 
-  $lastcell= 'A3:N'.(1+$i);
-  $M=date('M',strtotime($month));
-  $pagename = $year.'-'.$M.'-'.'TCN_Full_Withdrawal';
+  $lastcell= 'A3:H'.(1+$i);
+  $pagename = 'employeesalry-'.$M.'-'.$request->year;
 
 
   Excel::create($pagename, function($excel) use ($excelData,$pagename,$lastcell) {
   $excel->sheet('mySheet', function($sheet) use ($excelData,$pagename,$lastcell)
   {
   $sheet->fromArray($excelData);
-  $sheet->cell('A1:N1', function($cell)
+  $sheet->cell('A1:H1', function($cell)
   {
   $cell->setFontSize(11);
   $cell->setBackground('#7cde9c');
@@ -131,12 +150,12 @@ class salaryDetailsController extends Controller
 
   });
   $sheet->setFreeze('A2');
-  $sheet->prependRow(1, array("TCN FULL WITHDRAWAL"));
+  $sheet->prependRow(1, array("EMPLOYEE SALARY DETAILS "));
 
 
 
-  $sheet->mergeCells('A1:N1');
-  $sheet->cell('A1:N1', function($cell) 
+  $sheet->mergeCells('A1:H1');
+  $sheet->cell('A1:H1', function($cell) 
   {
   $cell->setFontSize(12);
   $cell->setBackground('#43a061');
@@ -159,20 +178,6 @@ class salaryDetailsController extends Controller
   });
   })->download('xls');
 
-    }
-
-
-
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**

@@ -25,10 +25,10 @@
 					<label> Company Name{{ $passwords }}</label><br>
 					<select id="company" name="company" class="chosen-select" onchange="getBranches()">
 						<option value=" ">--Select--</option>
-						{{-- <option value="All">All</option> --}}
+						<option value="All">All</option>
 
 						@foreach($company as $company)
-						<option value="{{ $company->id }}" @if($company->id==$id){{'selected' }}@endif>{{ $company->company_name }}</option>
+						<option value="{{ $company->id }}" @if(isset($company_id) && $company->id==$company_id){{'selected' }}@endif >{{ $company->company_name }}</option>
 						@endforeach
 					</select>
 					<span class="text-danger company" style="display: none" >Select Company </span>
@@ -37,6 +37,7 @@
 
 				<div class="form-group col-sm-2">
 					<label> Branch Name</label>
+					<input type="hidden" name="branch_id" id="branch_id" value="{{ $branch_id ? : 0 }}">
 					<select id="branch" name="branch" class="chosen-select">
 
 
@@ -49,18 +50,18 @@
 					<label>Month </label>
 					<select id="month" name="month" class="chosen-select">
 						<option value=" ">--Select--</option>
-						<option value="01">January</option>
-						<option value="02">February</option>
-						<option value="03">March</option>
-						<option value="04">April</option>
-						<option value="05">May</option>
-						<option value="06">June</option>
-						<option value="07">July</option>
-						<option value="08">August</option>
-						<option value="09">September</option>
-						<option value="10">October</option>
-						<option value="11">November</option>
-						<option value="12">December</option>
+						<option value="01" @if(isset($month) && '01'==$month){{'selected' }}@endif >January</option>
+						<option value="02" @if(isset($month) && '02'==$month){{'selected' }}@endif >February</option>
+						<option value="03" @if(isset($month) && '03'==$month){{'selected' }}@endif >March</option>
+						<option value="04" @if(isset($month) && '04'==$month){{'selected' }}@endif >April</option>
+						<option value="05" @if(isset($month) && '05'==$month){{'selected' }}@endif >May</option>
+						<option value="06" @if(isset($month) && '06'==$month){{'selected' }}@endif >June</option>
+						<option value="07" @if(isset($month) && '07'==$month){{'selected' }}@endif >July</option>
+						<option value="08" @if(isset($month) && '08'==$month){{'selected' }}@endif >August</option>
+						<option value="09" @if(isset($month) && '09'==$month){{'selected' }}@endif >September</option>
+						<option value="10" @if(isset($month) && '10'==$month){{'selected' }}@endif >October</option>
+						<option value="11" @if(isset($month) && '11'==$month){{'selected' }}@endif >November</option>
+						<option value="12" @if(isset($month) && '12'==$month){{'selected' }}@endif >December</option>
 					</select>
 					<span class="text-danger month" style="display: none"  >Select Month </span>
 
@@ -77,29 +78,21 @@
 						<select id="year" name="year" class="form-control chosen-select">
 							<option value=" ">--select--</option>
 							{{-- <option value="All">All</option> --}}
-							@foreach($year as $year)
-							<option @if(date('Y')==$year->year){{ 'selected' }}@endif value="{{ $year->year }}">{{ $year->year }}</option>
+							@foreach($year as $years)
+							<option @if(date('Y')==$years->year ||  (isset($year) && $year==$years->year) ){{ 'selected' }}@endif value="{{ $years->year }}">{{ $years->year }}</option>
 							@endforeach
 
 						</select>
 					<span class="text-danger year" style="display: none"  >Select Year</span>
 				</div>
 
-{{-- 			<div class="form-group col-sm-1">
-			<label>&nbsp;</label><br>
-				<button onclick="getSalaryDetails('generate')" class="btn btn-sm btn-danger font-bold">Generate</button>
-			</div>
- --}}
+
 			<div class="form-group col-sm-1">
 			<label>&nbsp;</label><br>
-				<button onclick="getSalaryDetails('list')" class="btn btn-sm btn-primary font-bold">&nbsp;&nbsp; List &nbsp;&nbsp;</button>
+				<button onclick="getSalaryDetails()" class="btn btn-sm btn-primary font-bold">&nbsp;&nbsp; List &nbsp;&nbsp;</button>
 			</div>
 
-{{-- 			<div class="form-group col-sm-1">
-			<label>&nbsp;</label><br>
-				<button onclick="getSalaryDetails('excel')" class="btn btn-sm btn-danger font-bold">Export Excel</button>
-			</div>
- --}}
+
 
 			</div>
 
@@ -122,8 +115,13 @@
 @endsection
 @section('jquery')
 <script type="text/javascript">
+
+
 $(".chosen-select").chosen({width:'100%'});
-getBranches();
+
+
+
+
 function getBranches()
 {
 var company = $('#company').val();
@@ -140,12 +138,28 @@ data:{process:'getBranches',company:company},
 
 
 		$('#branch').append('<option value=" ">--Select--</option>').trigger("chosen:updated");
+		$('#branch').append('<option value="All">All</option>').trigger("chosen:updated");
 
 		for (var i=0;i<data.length;i++)
 		{
-		$('#branch').append('<option value="'+data[i].id+'">'+data[i].branch_name+'</option>').trigger("chosen:updated");    	
+		$('#branch').append('<option  value="'+data[i].id+'">'+data[i].branch_name+'</option>').trigger("chosen:updated");    	
 		}
+
+
+
+		var branch_id=$('#branch_id').val();
+
+
+		if(branch_id!='0')
+		{
+		$('#branch').val(branch_id).trigger("chosen:updated");;
+		$('#branch_id').val('0');	
+
+		}
+
+
 	}
+
 });
 
 }	
@@ -159,7 +173,7 @@ data:{process:'getBranches',company:company},
 
 //************based on 
 
-function getSalaryDetails(type)
+function getSalaryDetails()
 {
  var details='';
  var status=true;
@@ -178,41 +192,16 @@ function getSalaryDetails(type)
 
 if(status==false) return;
 
-var company=$('#company').val();
 
 var branch=$('#branch').val();
+
+var company=$('#company').val();
 
 var year=$('#year').val();
 
 var month=$('#month').val();
 
 
-	// if(type=='generate')
-	// {
-
-	// 	$.ajax({
-
-	// 	type: "get",
-
-	// 	url: "{{URL::to('/') }}/hr/salaryMaster/create",
-
-	// 	data:{process:'generateSalary',company:company,branch:branch,year:year,month:month},
-
-	// 		success: function (data) 
-
-	// 		{
-
-	// 	$('#getSalaryDetails').html(data);
-
-	// 		}
-
-	// 		});
-
-	// }
-
-
-	if(type=='list')
-	{
 
 		$.ajax({
 
@@ -232,37 +221,23 @@ var month=$('#month').val();
 
 			});
 		
-	}
-
-
-	if(type=='excel')
-	{
-
-		$.ajax({
-
-		type: "get",
-
-		url: "{{URL::to('/') }}/hr/salaryMaster/create",
-
-		data:{process:'SalaryExcel',company:company,branch:branch,year:year,month:month},
-
-			success: function (data) 
-
-			{
-
-		$('#getSalaryDetails').html(data);
-
-			}
-
-			});
-		
-	}
-
-
 }
 
+getBranches();
+
+
+
+window.history.forward();
 
 </script>
+
+@if(isset($branch_id))
+<script>
+getSalaryDetails();
+</script>
+
+@endif
+
 
 @if (Session::has('sweet_alert.alert'))
     <script>

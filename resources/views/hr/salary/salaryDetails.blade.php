@@ -26,7 +26,7 @@
 					<select id="month" name="month" class="chosen-select">
 						<option value=" ">--Select--</option>
 						{{-- <option value="All">All</option> --}}
-						<option value="01">January</option>
+						<option value="01")>January</option>
 						<option value="02">February</option>
 						<option value="03">March</option>
 						<option value="04">April</option>
@@ -88,11 +88,11 @@
 		</div>
 	</div> 
 
-<form id="form1" action="{{ url('/hr/salaryDetailsExcel') }}" method="post">
+<form id="form1" action="{{ url('/hr/salaryDetails') }}" method="post">
 	{{ csrf_field() }}
 
-<input type="hidden" name="year" id="year">
-<input type="hidden" name="month" id="month">
+<input type="hidden" name="year" id="year1">
+<input type="hidden" name="month" id="month1">
 </form>
 </div>
 

@@ -103,4 +103,10 @@ $(document).ready(function(){
 $('#view').DataTable();
 });
 </script>
+@if (Session()->has('pdf_id'))
+<script type="text/javascript">
+ window.location.href='{{URL::to('/')}}/admin/partialWithdraw/pdf/{{Session()->get('pdf_id')}}';
+
+</script>
+@endif
 @endsection

@@ -8,15 +8,13 @@
 
 
     Route::get('admin/tcn_request_listDataTable','admin\tcnRequestController@listTcnNotConfirmDataTable');
+
     Route::resource('admin/tcnRequest','admin\tcnRequestController');
 
 
     Route::resource('admin/tcnApplicationForm','admin\tcnApplicationFormController');
 
     Route::resource('admin/tcnApprove','admin\tcnApproveController');
-
-
-    Route::resource('admin/tcnviewprint','admin\tcnviewprintController');
 
     Route::resource('admin/tcnTransfer','admin\tcnTransferController');
 
@@ -29,8 +27,11 @@
 
     /*User Access Module - Suresh/Dominic */
     Route::get('admin/checkSortInNo','admin\userAccessController@checkSortInOrder');
+
     Route::get('admin/checkSortNo','admin\userAccessController@checkSortOrder');
+
     Route::get('admin/useraccess/fetchParent','admin\userAccessController@fetchParent');// Shift Module
+
     Route::resource('admin/useraccess','admin\userAccessController');
 
 
@@ -39,6 +40,9 @@
     /*Change Password - Suresh*/
     Route::resource('admin/changePassword', 'admin\changePasswordController');   
 
+
+    /****PDF EXCEL **/
+    Route::resource('admin/tcnviewprint','admin\tcnviewprintController');
 
     Route::get('admin/tcnviewprintpdf/{id}','admin\tcnviewprintController@tcnpdf');
 
@@ -59,4 +63,6 @@
 
     Route::resource('hr/salaryDetails','hr\salaryDetailsController');
 
-    Route::post('hr/salaryDetailsExcel','hr\salaryDetailsController@Excel');
+
+    Route::resource('hr/employeePayslip','hr\payslipController');
+

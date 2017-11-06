@@ -101,5 +101,11 @@ $(document).ready(function(){
 $('#view').DataTable();
 });
 </script>
+<?php if(Session()->has('pdf_id')): ?>
+<script type="text/javascript">
+ window.location.href='<?php echo e(URL::to('/')); ?>/admin/partialWithdraw/pdf/<?php echo e(Session()->get('pdf_id')); ?>';
+
+</script>
+<?php endif; ?>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('admin.layout.erp1', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -391,7 +391,7 @@
                           <!--===================================================-->
                           <!--|                      TITLE                      |-->
                           <!--===================================================-->
-                          <font face="'Open Sans', sans-serif">You Have Been Approved</font>
+                          <font face="'Open Sans', sans-serif">Your TCN Request Have Been Approved</font>
                         </td>
                       </tr>
                       <tr>
