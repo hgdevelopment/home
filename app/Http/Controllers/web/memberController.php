@@ -477,7 +477,9 @@ class memberController extends Controller
 	public function pdfMember($id){
       $memberregistration = memberregistration::where('userId',$id)->first();
     //  return view('web.member.pdf.member',compact('memberregistration'));
-      
+      $pdf = App::make('dompdf.wrapper');
+$pdf->loadHTML('<h1>Test</h1>');
+return $pdf->stream();
      $pdf =PDF::loadView('web.member.pdf.member',compact('memberregistration'));
      return $pdf->stream();
 	}
