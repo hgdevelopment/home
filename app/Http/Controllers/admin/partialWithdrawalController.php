@@ -10,7 +10,7 @@ use App\memberregistration;
 use App\tcnrequest;
 use App\tcnmaster;
 use App\bank;
-use App\address;
+use App\address; 
 use DB;
 use Auth;
 use Excel;
