@@ -25,7 +25,7 @@
 	<div class="panel panel-default">
 		<div class="panel-heading font-bold">SELECT WITHDRAWAL REQUEST</div>
 		<div class="panel-body">
-			<div class="col-sm-9" style="border-color: #cfdadd;border-radius: 2px;border:1px solid #ccc;">
+			<div class="col-sm-9" style="border-color: #cfdadd;border-radius: 2px;border:1px solid #ccc;border-right: 0 !important">
 				<div class="col-lg-12">&nbsp;</div>
 				<div class="col-sm-12">
 					<div class="col-sm-1"  style=" padding:0 3px"><label>DATE</label>
@@ -75,7 +75,7 @@
 				<div class="col-lg-12 text-right"><br>&nbsp;</div>
 			</div>
 
-			<div class="col-sm-3" style="border-color: #cfdadd;border-radius: 2px;border:1px solid #ccc;">
+			<div class="col-sm-3" style="border-color: #cfdadd;border-radius: 2px;border:1px solid #ccc;border-left: 0 !important">
 				<div class="col-sm-12" style=" padding:0 3px;"><br>
 					<label>USER TYPE</label>
 					<select id="userType" name="userType" class="form-control chosen-select">
@@ -88,7 +88,7 @@
 					
 				</div>
 				<div class="col-lg-12 text-left">
-				<button style=" margin-top: 6px" class="btn m-b-xs btn-sm btn-primary btn-addon" onclick="withDrawalDetails('list')">Search</button>
+				<button style=" margin-top: 6px;margin-bottom: 9px" class="btn m-b-xs btn-sm btn-primary btn-addon" onclick="withDrawalDetails('list')">Search</button>
 				<button style=" margin-top: 6px" class="btn m-b-xs btn-sm btn-primary btn-addon" onclick="withDrawalDetails('excel')">Export Excel</button>
 				</div>
 			</div> 

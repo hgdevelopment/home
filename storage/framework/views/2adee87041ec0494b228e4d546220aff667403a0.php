@@ -195,6 +195,11 @@ use \App\Http\Controllers\Controller;
 
 		<!---                   SUPPORTING DOCUMENTS           -->
 
+		<style type="text/css">
+			#parsley-id-23 {
+			    display: initial;
+			}
+		</style>
 		<div class="panel panel-default">
 			<div class="panel-heading font-bold">SUPPORTING DOCUMENTS</div>
 			<div class="panel-body">
@@ -205,8 +210,10 @@ use \App\Http\Controllers\Controller;
 							<img src="<?php echo e(URL::to('/')); ?>/storage/img/tcndocs/<?php echo e($Edit['doc1']); ?>" style="height:200px;width:200px;"  onclick="window.open('<?php echo e(URL::to('/')); ?>/storage/img/tcndocs/<?php echo e($Edit['doc1']); ?>')">
 							<?php endif; ?>
 							<br>Doc 1<span style="color:red;">*</span>
-							<input class="form-control" ui-jq="filestyle" ui-options="{icon: false, buttonName: 'btn m-b-xs w-xs btn-dark btn-rounded'}" type="file" name="doc1" id="doc1"  <?php  
-							if(!isset($Edit)) echo 'required data-parsley-required-message="Select Document 1"  accept="image/png,image/jpeg"';   ?> onchange="imageCheck(this)">
+
+							<input class="form-control" ui-jq="filestyle" ui-options="{icon: false, buttonName: 'btn m-b-xs w-xs btn-dark btn-rounded'}"   type="file" name="doc1" id="doc1"   <?php  
+							if(!isset($Edit)) echo 'required data-parsley-required-message="Select Document 1" data-parsley-max-file-size="50" ';   ?> onchange="imageCheck(this)">
+
 							(Upload passbook/cancelled cheque/bank statement.) 
 							<span class="doc1 text-danger"></span> 
 							<?php if($errors->has('doc1')): ?>
@@ -219,8 +226,10 @@ use \App\Http\Controllers\Controller;
 							<img src="<?php echo e(URL::to('/')); ?>/storage/img/tcndocs/<?php echo e($Edit['doc2']); ?>" style="height:200px;width:200px;"  onclick="window.open('<?php echo e(URL::to('/')); ?>/storage/img/tcndocs/<?php echo e($Edit['doc2']); ?>')">
 							<?php endif; ?>
 							<br>Doc 2<span style="color:red;">*</span>
+
 							<input class="form-control" ui-jq="filestyle" ui-options="{icon: false, buttonName: 'btn m-b-xs w-xs btn-dark btn-rounded'}" type="file" name="doc2" id="doc2" <?php  
 							if(!isset($Edit)) echo 'required data-parsley-required-message="Select Document 2" data-parsley-max-file-size="50" ';   ?> onchange="imageCheck(this)">
+
 							(Upload Transfer statement proof.) 
 							<span class="doc2 text-danger"></span> 
 							<?php if($errors->has('doc2')): ?>
@@ -589,32 +598,12 @@ function getNomineeDetails(n)
 	}
 
 
-<<<<<<< .mine
-	if(id=='Others'+n  && Nphoto!=1)
-	document.getElementById('nomineePhotos'+n).style.display = 'block';
-||||||| .r621
-	if(id=='Others'+n  && Nphoto!=1)
-		$('#nomineePhotos'+n).css('display','block');
-	//document.getElementById('nomineePhotos'+n).style.display = 'block';
-=======
->>>>>>> .r777
 
 	if(n==2)
 	{
-<<<<<<< .mine
-	$(".removeattr"+n).attr("required", false);	
-	document.getElementById('nomineePhotos'+n).style.display = 'none';
-	}
-||||||| .r621
-	$(".removeattr"+n).attr("required", false);	
-	$('#nomineePhotos'+n).css('display','none');
-	//document.getElementById('nomineePhotos'+n).style.display = 'none';
-	}
-=======
 		<?php  
 		if(isset($Edit['nominee2'])){  ?>	var Nphoto=1;	<?php  } else
 		{  ?>	var Nphoto=0;	<?php  	}  ?>
->>>>>>> .r777
 
 	if(n==2 && nominee==' ')
 	{

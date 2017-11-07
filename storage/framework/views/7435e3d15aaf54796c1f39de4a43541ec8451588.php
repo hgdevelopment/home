@@ -56,7 +56,7 @@
                   <div class="col-md-6 col-xs-12 divTableCell">Guardian<b class="data-lab"><?php echo e($memberregistrations->guardian); ?></b></div>
                   <div class="col-md-6 col-xs-12 divTableCell">Religion<b class="data-lab"><?php echo e($memberregistrations->religion); ?></b></div>
                   <div class="col-md-6 col-xs-12 divTableCell">City<b class="data-lab"><?php echo e($address1->city); ?></b></div>
-                  <div class="col-md-6 col-xs-12 divTableCell">Gender<b class="data-lab"><?php echo e($memberregistrations->code); ?></b></div>
+                  <div class="col-md-6 col-xs-12 divTableCell">Gender<b class="data-lab"><?php echo e($memberregistrations->gender); ?></b></div>
                   <div class="col-md-6 col-xs-12 divTableCell">Caste<b class="data-lab"><?php echo e($memberregistrations->caste); ?></b></div>
                   <div class="col-md-6 col-xs-12 divTableCell">State<b class="data-lab"><?php echo e($address1->state); ?></b></div>
                   <div class="col-md-6 col-xs-12 divTableCell">D O B<b class="data-lab"><?php echo e(date('d-m-Y',strtotime($memberregistrations->dob))); ?></b></div>
@@ -173,6 +173,7 @@
 			</div>
 		</div>	
 	</div>
+	<?php if($tcnrequests->nominee2_id): ?>
 
 	<div class="col-lg-12">
 		<div class="row">
@@ -220,7 +221,7 @@
 			</div>
 		</div>	
 	</div>
-
+	<?php endif; ?>
 	<div class="col-lg-12">
 		<div class="row">
 			<div class="panel panel-warning">

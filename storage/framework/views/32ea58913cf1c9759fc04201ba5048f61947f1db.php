@@ -29,7 +29,7 @@
               <div class="col-sm-12"><BR></div>
               <div class="col-md-5 col-md-offset-5">
                 <button name="show" type="buttom"  value="show" onclick="getDSA()" class="btn  btn-primary" id="showvalue">show</button>
-                <button name="Upgrade" type="buttom" class="btn  btn-info" id="upgrade" style="display:none" onclick="upgrateDSA();">Upgrade</button>
+                <button name="Upgrade" type="buttom" class="btn  btn-info" id="upgrade" style="display:none" onclick="dsaDetails();">DSA Details</button>
               </div>
             </div>
           </div>
@@ -65,6 +65,24 @@ function getDSA()
   });
   $("#upgrade").show();
 }
+
+function dsaDetails()
+{
+  var dsaCode=$('#dsaCode').val();
+    // $.ajax({
+    // type: "get",
+    // url: "<?php echo e(URL::to('/')); ?>/admin/dsaUpgrade/"+dsaCode,
+    // data:{dsaCode:dsaCode},
+    // success: function (data) 
+    // {
+    // alert(data);
+
+    // }
+    // });
+
+    window.location="<?php echo e(URL::to('/')); ?>/admin/dsaUpgrade/"+dsaCode;
+}
+
 
 function upgrateDSA()
 {

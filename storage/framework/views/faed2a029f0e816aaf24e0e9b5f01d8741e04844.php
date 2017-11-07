@@ -17,7 +17,7 @@
 		<th>TCN&nbsp;TYPE</th>
 		<th>UNIT</th>
 		<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AMOUNT</th>
-		<th>NOMINEE&nbsp;NAME</th>
+		<th>TRANSFER&nbsp;TO</th>
 		<th>ACTION</th>
 		</tr>
 	</thead>
@@ -34,18 +34,6 @@
 		<td align="left" style="padding-left: 20px"><?php echo e($detail->tcn->tcnType); ?></td>
 		<td align="center"><?php echo e($detail->unit); ?></td>
 		<td align="right" style="padding-right: 30px"><?php echo e($detail->amount); ?></td>
-<<<<<<< .mine
-		<td align="left"><?php echo e($detail->nominee->name); ?></td>
-||||||| .r621
-		<td align="left">
-		<select id="nominee<?php echo e($detail->tcnId); ?>" id="nominee<?php echo e($detail->tcnId); ?>" class="chosen-select">
-			<option value="<?php echo e($detail->nominee1_id); ?>"><?php echo e($detail->nominee_one->name); ?></option>
-			<option value="<?php echo e($detail->nominee2_id); ?>"><?php echo e($detail->nominee_two->name); ?></option>
-		</select>
-		<?php echo e($detail->nominee->name); ?>
-
-		</td>
-=======
 		<td align="left">
 		<select id="nominee<?php echo e($detail->tcnId); ?>" id="nominee<?php echo e($detail->tcnId); ?>" class="chosen-select">
 			<option value="<?php echo e($detail->nominee1_id); ?>"><?php echo e($detail->nominee_one->name); ?></option>
@@ -56,10 +44,9 @@
 		<?php echo e($detail->nominee->name); ?>
 
 		</td>
->>>>>>> .r777
 		<td style="cursor:pointer">
 
-		      <a style="padding:2px 12px" class="btn btn-primary sm" href="<?php echo e(URL::to('/')); ?>/admin/tcnTransfer/<?php echo e('Show@@@'); ?><?php echo e($detail->tcnId); ?>">Transfer</a> 
+		      <a style="padding:2px 12px" class="btn btn-primary sm" onclick="transferTcn(<?php echo e($detail->tcnId); ?>)">Transfer</a> 
 		</td>
 		</tr>
 		<?php $i++;?>
