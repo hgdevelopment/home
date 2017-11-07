@@ -77,7 +77,7 @@
 		</div>
 	</div>
 </form> 
-<?php if($count>0): ?>
+<?php if(isset($count) && $count>0): ?>
 	<div class="row">
 			<div class="col-sm-12">
 				<div class="blog-post">                   
