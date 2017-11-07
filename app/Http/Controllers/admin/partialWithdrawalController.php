@@ -68,7 +68,7 @@ class partialWithdrawalController extends Controller
         }
         else
         {
-            foreach($tcn_data as $datas)
+            foreach ($tcn_data as $datas)
             {
                 $tcnId=$datas->id;
                 $TCNunit=$datas->unit;

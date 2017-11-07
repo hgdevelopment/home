@@ -31,14 +31,14 @@
                 Partial Withdrawal Request
               </div>
               <div class="panel-body">
-              <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
+              <input type="hidden" name="_token " value="{{ csrf_token() }}" id="token">
               <div class="col-sm-6">
-                <label>Member Code</label>
+                <label>Member Code </label>
                 <input type="text" id="member_code" name="member_code" id="member_code" class="form-control" required/>
               </div>
             
               <div class="col-sm-6">
-                <label>&nbsp;</label><br>
+                <label>&nbsp;</label> <br>
                 <input type="submit"  name="show" id="show"  value="show"  class="btn btn-sm btn-success">
               </div>
               </div>
