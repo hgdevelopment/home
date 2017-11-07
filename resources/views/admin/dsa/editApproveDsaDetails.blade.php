@@ -1,4 +1,4 @@
-@extends('admin.dsa.UpdateApproveDsa')
+@extends('admin.dsa.updateApproveDsa')
 
 @section('companyName',$dsaDetails->companyName)
 @section('name',$dsaDetails->name)

@@ -359,7 +359,7 @@ class dsaController extends Controller
         ->where('dsas.userId', $id)
         ->first();
         
-        $dsaSimilarDetails=dsa::join('logins','dsas.userId','=','logins.id')->select('logins.username as code','logins.status as status','dsas.*')->where('dsas.name','=', $dsaDetails->name)->where('dsas.gender', '=', $dsaDetails->gender)->where('dsas.userId', '!=' , $id) ->orWhere(function ($query) {
+        $dsaSimilarDetails=dsa::join('logins','dsas.userId','=','logins.id')->select('logins.username as code','logins.status as status','dsas.*')->where('dsas.name','=', $dsaDetails->name)->where('dsas.gender', '=', $dsaDetails->gender)->where('dsas.userId', '!=' , $id) ->orWhere(function ($query) use($dsaDetails) {
                 $query->where('dsas.mobileNumber', '=',$dsaDetails->mobileNumber);
             })->get();
         
