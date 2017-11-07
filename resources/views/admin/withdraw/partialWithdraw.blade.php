@@ -51,7 +51,7 @@
   </form> 
 
 
-@if($count>0)
+@if(isset($count) && $count>0)
   <div class="wrapper-md">
   <div class="line line-dashed b-b line-lg pull-in"></div>
   <div class="col-md-12"><br></div>

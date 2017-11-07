@@ -12,10 +12,10 @@
         font-weight: normal;
         font-style: normal;
         font-variant: normal;
-        src: local("GOTHIC"), url("{{URL::to('/') }}/vendor/dompdf.dompdf/lib/fonts/GOTHIC.ttf") format("truetype");
+        src: local("ariali"), url("{{URL::to('/') }}/vendor/dompdf.dompdf/lib/fonts/ariali.ufm") format("truetype");
         }
         body {
-            font-family: GOTHIC, sans-serif!important;
+            font-family: ariali, sans-serif!important;
         }
        
 

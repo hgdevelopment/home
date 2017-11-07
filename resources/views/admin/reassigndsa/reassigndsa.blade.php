@@ -49,7 +49,7 @@
 		</div>
 	</div>
 	</form> 
-	@if(count($reassign)>0) 
+	@if(isset($reassign) && count($reassign)>0) 
 	  
 		<form action="{{ URL::to('/') }}/admin/reassigndsa/solve" method="post" name="form1" id="form1" data-parsley-validate >
 		{{csrf_field()}}

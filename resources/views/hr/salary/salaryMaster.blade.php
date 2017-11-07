@@ -22,7 +22,7 @@
 		<div class="panel-body" style="background: #f2b6f34d;">
 			<div class="row" id="searchDiv">
 				<div class="form-group col-sm-2">
-					<label> Company Name{{ $passwords }}</label><br>
+					<label> Company Name</label><br>
 					<select id="company" name="company" class="chosen-select" onchange="getBranches()">
 						<option value=" ">--Select--</option>
 						<option value="All">All</option>

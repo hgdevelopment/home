@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Application Form - {{$dsa->name}}</title>
+<title>Application Form - {{ucfirst($tcnrequest->tcnCode)}}</title>
 <link href = "https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
 <style type="text/css" media="screen">
 html,body{
