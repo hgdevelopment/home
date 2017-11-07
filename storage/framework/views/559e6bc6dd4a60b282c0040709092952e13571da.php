@@ -75,12 +75,12 @@
 									<label><strong>Member Name</strong></label><br>
 									<label><?php echo e($reassigns->name); ?></label>
 								</div><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-								  <?php $__currentLoopData = $login; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $logins): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+								 
 								<div class="col-md-4">
 									<label><strong>Added By</strong></label><br>
 								
-									<label><?php echo e($logins->username); ?>(<?php echo e($addedunder); ?>)</label>
-								</div><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+									<label><?php echo e($data); ?>(<?php echo e($addedunder); ?>)</label>
+								</div>
 								<div class="col-md-12"><br></div>
 								<div class="col-md-12"><br></div>
 								<div class="col-md-6">
