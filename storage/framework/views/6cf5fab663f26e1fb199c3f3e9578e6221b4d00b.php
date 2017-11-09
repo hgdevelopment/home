@@ -100,6 +100,7 @@
 												<?php $i = 1; ?>
 												</thead>
 												<tbody>
+                                                <?php if(isset($resign)): ?>
 												<?php $__currentLoopData = $resign; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $resigns): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 													<tr>
 														<td><?php echo e($i++); ?></td>													
@@ -118,6 +119,7 @@
 														<td><span style="width: 100px;height: 25px;padding-bottom: 22px;padding-top: 0px;" class="btn btn-<?php echo $color;?>"><?php echo e($resigns->resign_status); ?></span></td>														
 													</tr>
 												<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                <?php endif; ?>
 												</tbody>
 											</table>										
 									</div>

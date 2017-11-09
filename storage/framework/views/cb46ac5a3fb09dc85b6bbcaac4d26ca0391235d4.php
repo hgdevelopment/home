@@ -326,7 +326,7 @@ function CheckAccNo(accountNo)
       $("#no_error").html("Already Exit");
       return false;
      }else{
-      $("#no_error").html("Already Exit");
+      $("#no_error").html(" ");
      }
      
     }
